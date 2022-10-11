@@ -12,7 +12,8 @@
     "next": "12.3.1",
     "next-auth": "^4.4.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "twitter-api-v2": "^1.12.8"
   },
   "devDependencies": {
     "@types/node": "18.8.3",
