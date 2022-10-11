@@ -5,7 +5,6 @@ import { signOut, useSession } from "next-auth/react";
 const TweetPage: NextPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log({ session });
 
   if (status === "loading") return <p>Loading...</p>;
 
@@ -22,7 +21,7 @@ const TweetPage: NextPage = () => {
       <button
         onClick={() =>
           signOut({
-            callbackUrl: `${process.env.NEXTAUTH_URL}`,
+            callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
           })
         }
       >

@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         <button
           onClick={() =>
             signIn("twitter", {
-              callbackUrl: `${process.env.NEXTAUTH_URL}/tweets`,
+              callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/tweets`,
             })
           }
         >
