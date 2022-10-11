@@ -2,8 +2,17 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import { useRouter } from "next/router";
+import { signIn, useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "loading") return <p>Loading...</p>;
+
+  if (status === "authenticated") router.push("/tweets");
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +23,15 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to Perma-Tweeter!</h1>
-        <button>Login with Twitter here</button>
+        <button
+          onClick={() =>
+            signIn("twitter", {
+              callbackUrl: `${process.env.NEXTAUTH_URL}/tweets`,
+            })
+          }
+        >
+          Login with Twitter here
+        </button>
       </main>
 
       <footer className={styles.footer}>
