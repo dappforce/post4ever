@@ -10,6 +10,18 @@ export const authOptions: NextAuthOptions = {
       version: "2.0",
     }),
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub!;
+        session.token = process.env.TWITTER_BEARER_TOKEN;
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
