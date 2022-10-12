@@ -20,6 +20,10 @@ export const authOptions: NextAuthOptions = {
         throw new Error("Missing token, please set it first!");
       session.token = process.env.TWITTER_BEARER_TOKEN;
 
+      if (!process.env.MNEMONIC)
+        throw new Error("Missing mnemonic, please set it first!");
+      session.mnemonic = process.env.MNEMONIC;
+
       return session;
     },
   },

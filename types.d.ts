@@ -6,5 +6,6 @@ declare module "next-auth" {
       id: string;
     };
     token: string;
+    mnemonic: string;
   }
 }
