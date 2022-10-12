@@ -5,17 +5,32 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
-type PostProps = {
-  id: string;
+type PostProps = TweetProps & {
   image?: string;
   tags?: string[];
   body?: string;
 };
 
+enum MediaType {
+  ANIMATED_GIF = "animated_gif",
+  PHOTO = "photo",
+  VIDEO = "video",
+}
+
+type MediaProps = {
+  media_key: string;
+  type: MediaType;
+  url: string;
+};
+
 type TweetProps = {
+  attachments: {
+    media_keys: string[];
+  };
   edit_history_tweet_ids: string[];
   id: string;
   text: string;
+  medias?: MediaProps[];
 };
 
 type TweetsProps = {
@@ -122,12 +137,25 @@ export async function getServerSideProps() {
   const id = "435050680";
   const myTimeline = await readOnlyClient.v2.userTimeline(id, {
     exclude: "replies",
+    expansions: ["attachments.media_keys"],
+    "media.fields": ["url"],
   });
 
   let tweets = [];
 
   for await (const tweet of myTimeline) {
-    tweets.push(tweet);
+    const medias = myTimeline.includes.medias(tweet);
+
+    if (medias.length) {
+      const tweetObj = {
+        ...tweet,
+        medias,
+      };
+
+      tweets.push(tweetObj);
+    } else {
+      tweets.push(tweet);
+    }
   }
 
   return {
