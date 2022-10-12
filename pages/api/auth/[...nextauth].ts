@@ -14,8 +14,12 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }) => {
       if (session?.user) {
         session.user.id = token.sub!;
-        session.token = process.env.TWITTER_BEARER_TOKEN;
       }
+
+      if (!process.env.TWITTER_BEARER_TOKEN)
+        throw new Error("Missing token, please set it first!");
+      session.token = process.env.TWITTER_BEARER_TOKEN;
+
       return session;
     },
   },
