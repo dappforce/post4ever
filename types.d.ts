@@ -5,5 +5,6 @@ declare module "next-auth" {
     user?: DefaultUser & {
       id: string;
     };
+    token: string;
   }
 }
