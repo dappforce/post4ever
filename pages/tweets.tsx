@@ -1,9 +1,11 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { SubsocialApi } from "@subsocial/api";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 
 type PostProps = TweetProps & {
   image?: string;
@@ -40,10 +42,14 @@ type TweetsProps = {
 const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-
+  const { postTransaction, subsocialApi, initApi } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
-  console.log({ savedPosts });
+  useEffect(() => {
+    if (savedPosts.length === 2 && session) {
+      initApi(session?.mnemonic);
+    }
+  }, [savedPosts.length, session]);
 
   if (status === "loading") return <p>Loading...</p>;
 
@@ -54,6 +60,8 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
         <button onClick={() => router.push("/")}>Go back to login</button>
       </div>
     );
+
+  if (!session) return null;
 
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -69,7 +77,9 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
     }
   };
 
-  if (!session) return null;
+  const handlePostTransaction = () => {
+    postTransaction(session.mnemonic);
+  };
 
   return (
     <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
@@ -119,7 +129,15 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
           ))}
         </div>
       </div>
-      <div>This is wallet section</div>
+      <div>
+        <button
+          onClick={handlePostTransaction}
+          disabled={savedPosts.length < 2 ? true : false}
+        >
+          Send to IPFS!
+        </button>
+        <div>This is wallet section</div>
+      </div>
     </div>
   );
 };
