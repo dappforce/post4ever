@@ -20,7 +20,7 @@ const TweetPage: NextPage = (props) => {
     );
 
   return (
-    <div className="flex flex-row items-center justify-center max-w-full m-auto">
+    <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
       <div>
         <div>{session.user.name}</div>
         <img src={session.user.image} alt="user-avatar" />
@@ -34,7 +34,7 @@ const TweetPage: NextPage = (props) => {
           Logout
         </button>
       </div>
-      <div className="flex flex-row max-h-screen">
+      <div className="flex flex-row max-h-screen p-4">
         <div className="flex flex-col overflow-y-auto max-w-[640px]">
           {tweets.map((tweet) => (
             <div
@@ -45,7 +45,20 @@ const TweetPage: NextPage = (props) => {
               <div className="flex flex-col items-start py-2 px-4">
                 {tweet.text}
               </div>
-              <button>Make this permanent!</button>
+              <div className="flex items-center">
+                <input
+                  id="select-check-box"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label
+                  for="select-check-box"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Select this tweet!
+                </label>
+              </div>
             </div>
           ))}
         </div>
