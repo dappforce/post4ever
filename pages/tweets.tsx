@@ -1,13 +1,34 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
-import { instantiateClient } from "src/lib/TwitterClient.ts";
+import Image from "next/image";
 
-const TweetPage: NextPage = (props) => {
-  const { data: tweets } = props;
+type PostProps = {
+  id: string;
+  image?: string;
+  tags?: string[];
+  body?: string;
+};
+
+type TweetProps = {
+  edit_history_tweet_ids: string[];
+  id: string;
+  text: string;
+};
+
+type TweetsProps = {
+  tweets: TweetProps[];
+};
+
+const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
+
+  console.log({ savedPosts });
 
   if (status === "loading") return <p>Loading...</p>;
 
@@ -19,11 +40,32 @@ const TweetPage: NextPage = (props) => {
       </div>
     );
 
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const selectedTweet = tweets.filter(
+        (tweet: TweetProps) => tweet.id === e.target.value
+      )[0];
+
+      setSavedPosts((oldArray) => [...oldArray, selectedTweet]);
+    } else {
+      setSavedPosts(
+        savedPosts.filter((savedPost) => savedPost.id !== e.target.value)
+      );
+    }
+  };
+
+  if (!session) return null;
+
   return (
     <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
       <div>
-        <div>{session.user.name}</div>
-        <img src={session.user.image} alt="user-avatar" />
+        <div>{session?.user?.name ?? "Twitter user"}</div>
+        <Image
+          src={session.user?.image ?? ""}
+          alt="user-avatar"
+          width="32"
+          height="32"
+        />
         <button
           onClick={() =>
             signOut({
@@ -49,13 +91,11 @@ const TweetPage: NextPage = (props) => {
                 <input
                   id="select-check-box"
                   type="checkbox"
-                  value=""
+                  value={tweet.id}
+                  onChange={handleSelect}
                   className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                <label
-                  for="select-check-box"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
+                <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                   Select this tweet!
                 </label>
               </div>
@@ -68,11 +108,11 @@ const TweetPage: NextPage = (props) => {
   );
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   //TODO: change token here to get token from session.token
   const token = process.env.TWITTER_BEARER_TOKEN;
   // Instantiate with desired auth type (here's Bearer v2 auth)
-  const twitterClient = new TwitterApi(token);
+  const twitterClient = new TwitterApi(token ?? "");
 
   // Tell typescript it's a readonly app
   const readOnlyClient = twitterClient.readOnly;
@@ -80,12 +120,18 @@ export async function getServerSideProps(context) {
   // get TweetUserTimelineV2Paginator
   // TODO: change id to get from session.user.id
   const id = "435050680";
-  const myTimeline = await readOnlyClient.v2.userTimeline(id);
+  const myTimeline = await readOnlyClient.v2.userTimeline(id, {
+    exclude: "replies",
+  });
 
-  const tweets = myTimeline._realData.data;
+  let tweets = [];
+
+  for await (const tweet of myTimeline) {
+    tweets.push(tweet);
+  }
 
   return {
-    props: { data: tweets },
+    props: { tweets },
   };
 }
 
