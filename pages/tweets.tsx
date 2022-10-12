@@ -74,13 +74,6 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   return (
     <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
       <div>
-        <div>{session?.user?.name ?? "Twitter user"}</div>
-        <Image
-          src={session.user?.image ?? ""}
-          alt="user-avatar"
-          width="32"
-          height="32"
-        />
         <button
           onClick={() =>
             signOut({
@@ -98,7 +91,15 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
               key={tweet.id}
               className="flex flex-col min-w-full items-center p-4 mb-4 border-2 border-white rounded"
             >
-              <div>This is the header</div>
+              <div className="flex flex-row items-center self-start justify-center gap-2">
+                <Image
+                  src={session.user?.image ?? ""}
+                  alt="user-avatar"
+                  width="32"
+                  height="32"
+                />
+                <div>{session?.user?.name ?? "Twitter user"}</div>
+              </div>
               <div className="flex flex-col items-start py-2 px-4">
                 {tweet.text}
               </div>
