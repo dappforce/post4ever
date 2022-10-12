@@ -15,14 +15,14 @@ export const useSubSocialApiHook = () => {
 
   //TODO: need to add postContent payload
   const postTransaction = async (mnemonic: string) => {
-    const keyring = new Keyring({ type: "sr25519" });
-    const pair = keyring.addFromMnemonic(mnemonic);
-    const spaceId = "9960";
-
-    const ipfs = subsocialApi?.subsocial.ipfs;
-
     try {
       await cryptoWaitReady();
+
+      const keyring = new Keyring({ type: "sr25519" });
+      const pair = keyring.addFromMnemonic(mnemonic);
+      const spaceId = "9960";
+
+      const ipfs = subsocialApi?.subsocial.ipfs;
 
       let cid = await ipfs?.saveContent({
         about:
