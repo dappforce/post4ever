@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@polkadot/util-crypto": "^10.1.10",
     "@subsocial/api": "0.7.2",
     "autoprefixer": "^10.4.12",
     "next": "12.3.1",

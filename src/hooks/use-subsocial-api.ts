@@ -3,7 +3,7 @@ import type { SubsocialApi } from "@subsocial/api";
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
 import { Keyring } from "@polkadot/keyring";
-import { waitReady } from "@polkadot/wasm-crypto";
+import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
@@ -22,7 +22,7 @@ export const useSubSocialApiHook = () => {
     const ipfs = subsocialApi?.subsocial.ipfs;
 
     try {
-      await waitReady();
+      await cryptoWaitReady();
 
       let cid = await ipfs?.saveContent({
         about:
