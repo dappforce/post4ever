@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import { instantiateClient } from "src/lib/TwitterClient.ts";
 
 const TweetPage: NextPage = (props) => {
-  const { data } = props;
+  const { data: tweets } = props;
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -20,32 +20,54 @@ const TweetPage: NextPage = (props) => {
     );
 
   return (
-    <div>
-      <button
-        onClick={() =>
-          signOut({
-            callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
-          })
-        }
-      >
-        Logout
-      </button>
-      <div>This is the tweet page</div>
+    <div className="flex flex-row items-center justify-center max-w-full m-auto">
+      <div>
+        <div>{session.user.name}</div>
+        <img src={session.user.image} alt="user-avatar" />
+        <button
+          onClick={() =>
+            signOut({
+              callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
+            })
+          }
+        >
+          Logout
+        </button>
+      </div>
+      <div className="flex flex-row max-h-screen">
+        <div className="flex flex-col overflow-y-auto max-w-[640px]">
+          {tweets.map((tweet) => (
+            <div
+              key={tweet.id}
+              className="flex flex-col min-w-full items-center p-4 mb-4 border-2 border-white rounded"
+            >
+              <div>This is the header</div>
+              <div className="flex flex-col items-start py-2 px-4">
+                {tweet.text}
+              </div>
+              <button>Make this permanent!</button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>This is wallet section</div>
     </div>
   );
 };
 
 export async function getServerSideProps(context) {
+  //TODO: change token here to get token from session.token
   const token = process.env.TWITTER_BEARER_TOKEN;
   // Instantiate with desired auth type (here's Bearer v2 auth)
-  //
   const twitterClient = new TwitterApi(token);
 
   // Tell typescript it's a readonly app
   const readOnlyClient = twitterClient.readOnly;
 
   // get TweetUserTimelineV2Paginator
-  const myTimeline = await readOnlyClient.v2.userTimeline("435050680", {});
+  // TODO: change id to get from session.user.id
+  const id = "435050680";
+  const myTimeline = await readOnlyClient.v2.userTimeline(id);
 
   const tweets = myTimeline._realData.data;
 
