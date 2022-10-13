@@ -14,6 +14,7 @@ type PostTransactionProps = {
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const initApi = async (mnemonic: string): Promise<void> => {
     const api = await initializeApi(mnemonic);
@@ -24,6 +25,7 @@ export const useSubSocialApiHook = () => {
     savedPosts,
     mnemonic,
   }: PostTransactionProps) => {
+    setLoading(true);
     try {
       await cryptoWaitReady();
 
@@ -82,11 +84,14 @@ export const useSubSocialApiHook = () => {
       });
     } catch (err) {
       console.log({ err });
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
     subsocialApi,
+    loading,
     initApi,
     postTransaction,
   };

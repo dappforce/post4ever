@@ -15,7 +15,7 @@ import { TweetsProps, TweetProps, PostProps } from "src/types/common";
 const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { postTransaction, subsocialApi, initApi } = useSubSocialApiHook();
+  const { initApi, loading, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
   useEffect(() => {
@@ -126,6 +126,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
               savedPosts.length === 0 ? "" : savedPosts.length
             } post(s) to IPFS!`}
           </button>
+          <a>{loading ? "Sending tx, open your console" : ""}</a>
           <a>
             {savedPosts.length > 2
               ? "Max 2 posts to be saved!"
