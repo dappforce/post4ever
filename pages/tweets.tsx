@@ -78,7 +78,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
           <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
         </div>
         <div className="flex flex-row max-h-screen p-4">
-          <div className="flex flex-col overflow-y-auto max-w-[640px]">
+          <div className="flex flex-col overflow-y-auto overflow-x-hidden">
             {tweets.map((tweet) => (
               <div
                 key={tweet.id}
