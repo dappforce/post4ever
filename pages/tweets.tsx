@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useEffect, useState } from "react";
-import type { SubsocialApi } from "@subsocial/api";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
@@ -82,63 +82,73 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   };
 
   return (
-    <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
-      <div>
-        <button
-          onClick={() =>
-            signOut({
-              callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
-            })
-          }
-        >
-          Logout
-        </button>
-      </div>
-      <div className="flex flex-row max-h-screen p-4">
-        <div className="flex flex-col overflow-y-auto max-w-[640px]">
-          {tweets.map((tweet) => (
-            <div
-              key={tweet.id}
-              className="flex flex-col min-w-full items-center p-4 mb-4 border-2 border-white rounded"
-            >
-              <div className="flex flex-row items-center self-start justify-center gap-2">
-                <Image
-                  src={session.user?.image ?? ""}
-                  alt="user-avatar"
-                  width="32"
-                  height="32"
-                />
-                <div>{session?.user?.name ?? "Twitter user"}</div>
+    <>
+      <Head>
+        <title>Perma-Tweeter - Home</title>
+        <meta name="description" content="Store your Tweet, permanently" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
+        <div>
+          <button
+            onClick={() =>
+              signOut({
+                callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
+              })
+            }
+          >
+            Logout
+          </button>
+        </div>
+        <div className="flex flex-row max-h-screen p-4">
+          <div className="flex flex-col overflow-y-auto max-w-[640px]">
+            {tweets.map((tweet) => (
+              <div
+                key={tweet.id}
+                className="flex flex-col min-w-full items-center p-4 mb-4 border-2 border-white rounded"
+              >
+                <div className="flex flex-row items-center self-start justify-center gap-2">
+                  <Image
+                    src={session.user?.image ?? ""}
+                    alt="user-avatar"
+                    width="32"
+                    height="32"
+                  />
+                  <div>{session?.user?.name ?? "Twitter user"}</div>
+                </div>
+                <div className="flex flex-col items-start py-2 px-4">
+                  {tweet.text}
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="select-check-box"
+                    type="checkbox"
+                    value={tweet.id}
+                    onChange={handleSelect}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Select this tweet!
+                  </label>
+                </div>
               </div>
-              <div className="flex flex-col items-start py-2 px-4">
-                {tweet.text}
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="select-check-box"
-                  type="checkbox"
-                  value={tweet.id}
-                  onChange={handleSelect}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Select this tweet!
-                </label>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div>
+          <button
+            onClick={handlePostTransaction}
+            disabled={
+              !(savedPosts.length > 0 || savedPosts.length <= 2) ? true : false
+            }
+          >
+            Send to IPFS!
+          </button>
+          <div>This is wallet section</div>
         </div>
       </div>
-      <div>
-        <button
-          onClick={handlePostTransaction}
-          disabled={savedPosts.length < 2 ? true : false}
-        >
-          Send to IPFS!
-        </button>
-        <div>This is wallet section</div>
-      </div>
-    </div>
+    </>
   );
 };
 

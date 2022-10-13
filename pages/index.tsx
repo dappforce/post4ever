@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Perma-Tweeter</title>
+        <title>Perma-Tweeter - Login</title>
         <meta name="description" content="Store your Tweet, permanently" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
