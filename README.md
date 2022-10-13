@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+An app to help you save your tweets to Subsocial (https://subsocial.network/), making them permanent and censorship-resistant in the blockchain. 
+
+Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
 ## App Demo
 
@@ -10,6 +12,8 @@ Logging in using your own Twitter account and submitting tweets to be sent to Su
 ![](create-post-success.gif)
 
 Tweets sent and submission successful
+
+An example of [successful batch tweets submission](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frco-para.subsocial.network#/explorer/query/0xdf53ff2d73e3cc2f57ad03a96fc9a47faacc54f4d42f2df23c49f51e64bda990)
 
 NOTE: Currently, the app is only tested on the latest version of Google Chrome.
 
