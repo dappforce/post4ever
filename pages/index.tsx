@@ -3,7 +3,8 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
-import { signIn, useSession } from "next-auth/react";
+import AuthButton from "src/components/Button";
+import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
   const { status } = useSession();
@@ -23,15 +24,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to Perma-Tweeter!</h1>
-        <button
-          onClick={() =>
-            signIn("twitter", {
-              callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/tweets`,
-            })
-          }
-        >
-          Login with Twitter here
-        </button>
+        <AuthButton text={"Login with Twitter"} isSignIn={true} />
       </main>
 
       <footer className={styles.footer}>

@@ -4,7 +4,8 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { useEffect, useState } from "react";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import AuthButton from "src/components/Button";
 import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
@@ -67,15 +68,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
 
       <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
         <div>
-          <button
-            onClick={() =>
-              signOut({
-                callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
-              })
-            }
-          >
-            Logout
-          </button>
+          <AuthButton text={"Logout"} />
         </div>
         <div className="flex flex-row max-h-screen p-4">
           <div className="flex flex-col overflow-y-auto max-w-[640px]">
