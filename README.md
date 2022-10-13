@@ -2,9 +2,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## App Demo
 
-![demo](https://user-images.githubusercontent.com/14356826/195548175-a4e975e9-bb84-4f30-9686-3b78e86941d2.mov)
+![](login-and-create-posts.gif)
 
-Currently, the app is only tested on the latest version of Google Chrome.
+Logging in using your own Twitter account and submitting tweets to be sent to Subsocial chain
+
+
+![](create-post-success.gif)
+
+Tweets sent and submission successful
+
+NOTE: Currently, the app is only tested on the latest version of Google Chrome.
 
 ## Getting Started
 
