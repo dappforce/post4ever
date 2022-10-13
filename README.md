@@ -1,4 +1,4 @@
-An app to help you save your tweets to Subsocial (https://subsocial.network/), making them permanent and censorship-resistant in the blockchain. 
+An app to help you save your tweets to [Subsocial](https://subsocial.network/), making them permanent and censorship-resistant in the blockchain. 
 
 Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
