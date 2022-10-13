@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## App Demo
+
+![demo](https://user-images.githubusercontent.com/14356826/195548175-a4e975e9-bb84-4f30-9686-3b78e86941d2.mov)
+
+Currently, the app is only tested on the latest version of Google Chrome.
+
 ## Getting Started
 
 First, run the development server:
