@@ -1,9 +1,16 @@
 import initializeApi from "src/lib/SubsocialApi";
 import type { SubsocialApi } from "@subsocial/api";
+
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
+import { PostProps } from "src/types/common";
+
+type PostTransactionProps = {
+  savedPosts: PostProps[];
+  mnemonic: string;
+};
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
@@ -13,43 +20,46 @@ export const useSubSocialApiHook = () => {
     setSubsocialApi(api);
   };
 
-  //TODO: need to add postContent payload
-  const postTransaction = async (mnemonic: string) => {
+  const postTransaction = async ({
+    savedPosts,
+    mnemonic,
+  }: PostTransactionProps) => {
     try {
       await cryptoWaitReady();
 
       const keyring = new Keyring({ type: "sr25519" });
       const pair = keyring.addFromMnemonic(mnemonic);
+
+      //Use already made space by current pair
       const spaceId = "9960";
 
       const ipfs = subsocialApi?.subsocial.ipfs;
 
-      let cid = await ipfs?.saveContent({
-        about:
-          "Subsocial is an open protocol for decentralized social networks and marketplaces. It`s built with Substrate and IPFS",
-        image: "Qmasp4JHhQWPkEpXLHFhMAQieAH1wtfVRNHWZ5snhfFeBe", // ipfsImageCid = await api.subsocial.ipfs.saveFile(file)
-        name: "Subsocial",
-        tags: ["subsocial"],
-      });
-
       const substrateApi = await subsocialApi?.substrateApi;
 
-      //Then we createPost
-      //TODO: needs to be populated with postContent above
-      cid = await ipfs?.saveContent({
-        title: "What is Subsocial?",
-        image: null,
-        tags: ["Hello world", "FAQ"],
-        body: "Subsocial is an open protocol for decentralized social networks and marketplaces. It`s built with Substrate and IPFS.",
+      if (!substrateApi) return new Error("Error when calling substrateApi");
+
+      //Init creating batchTx for posts
+      let result: any[] = [];
+
+      savedPosts.forEach(async (savedPost) => {
+        const cid = await ipfs?.saveContent({
+          title: "My exported tweets",
+          //TODO: able to add image
+          image: null,
+          tags: ["exported tweet", "perma-tweet"],
+          body: savedPost.text,
+        });
+        result.push([spaceId, { RegularPost: null }, IpfsContent(cid)]);
       });
 
-      const postTx = substrateApi?.tx.posts.createPost(
-        spaceId,
-        { RegularPost: null },
-        IpfsContent(cid)
+      const submittablePosts = result.map((args) =>
+        // @ts-ignore
+        substrateApi.tx.posts.createPost(...args)
       );
+      const batchTx = substrateApi.tx.utility.batch(submittablePosts);
 
-      postTx?.signAndSend(pair, async (result) => {
+      batchTx?.signAndSend(pair, async (result) => {
         const { status } = result;
 
         if (!result || !status) {

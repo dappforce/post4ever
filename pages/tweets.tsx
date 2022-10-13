@@ -1,43 +1,14 @@
-import type { NextPage } from "next";
+import type { NextPage, GetServerSidePropsContext } from "next";
 import Head from "next/head";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import { useEffect, useState } from "react";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
-
-type PostProps = TweetProps & {
-  image?: string;
-  tags?: string[];
-  body?: string;
-};
-
-enum MediaType {
-  ANIMATED_GIF = "animated_gif",
-  PHOTO = "photo",
-  VIDEO = "video",
-}
-
-type MediaProps = {
-  media_key: string;
-  type: MediaType;
-  url: string;
-};
-
-type TweetProps = {
-  attachments: {
-    media_keys: string[];
-  };
-  edit_history_tweet_ids: string[];
-  id: string;
-  text: string;
-  medias?: MediaProps[];
-};
-
-type TweetsProps = {
-  tweets: TweetProps[];
-};
+import { TweetsProps, TweetProps, PostProps } from "src/types/common";
 
 const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { data: session, status } = useSession();
@@ -78,7 +49,12 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   };
 
   const handlePostTransaction = () => {
-    postTransaction(session.mnemonic);
+    const { mnemonic } = session;
+
+    postTransaction({
+      savedPosts,
+      mnemonic,
+    });
   };
 
   return (
@@ -152,18 +128,29 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   );
 };
 
-export async function getServerSideProps() {
-  //TODO: change token here to get token from session.token
-  const token = process.env.TWITTER_BEARER_TOKEN;
-  // Instantiate with desired auth type (here's Bearer v2 auth)
-  const twitterClient = new TwitterApi(token ?? "");
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  let session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const { token } = session;
+
+  if (!token) throw new Error("Token not defined!");
+
+  const twitterClient = new TwitterApi(token);
 
   // Tell typescript it's a readonly app
   const readOnlyClient = twitterClient.readOnly;
 
   // get TweetUserTimelineV2Paginator
-  // TODO: change id to get from session.user.id
-  const id = "435050680";
+  const { id } = session?.user;
   const myTimeline = await readOnlyClient.v2.userTimeline(id, {
     exclude: "replies",
     expansions: ["attachments.media_keys"],
