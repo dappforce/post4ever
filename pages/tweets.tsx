@@ -1,6 +1,7 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import FullScreenLoading from "src/components/FullScreenLoading";
 import { useEffect, useState } from "react";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
@@ -23,7 +24,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
     }
   }, [savedPosts.length, session]);
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading") return <FullScreenLoading />;
 
   if (status === "unauthenticated")
     return (

@@ -5,12 +5,13 @@ import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import AuthButton from "src/components/Button";
 import { useSession } from "next-auth/react";
+import FullScreenLoading from "src/components/FullScreenLoading";
 
 const Home: NextPage = () => {
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading") return <FullScreenLoading />;
 
   if (status === "authenticated") router.push("/tweets");
 
