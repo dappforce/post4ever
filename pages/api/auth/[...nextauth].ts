@@ -14,6 +14,8 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }) => {
       if (session?.user) {
         session.user.id = token.sub!;
+      } else {
+        throw new Error("No authenticated user found!");
       }
 
       if (!process.env.TWITTER_BEARER_TOKEN)
