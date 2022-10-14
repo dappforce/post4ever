@@ -2,6 +2,16 @@ An app to help you save your tweets to [Subsocial](https://subsocial.network/), 
 
 Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
+## Features Checklist
+
+✅ Login to your Twitter account (using NextAuth Provider)
+
+✅ Show your tweets (excluding replies, text-only)
+
+✅ Choose tweets to backup (limited to 2 tweets each submission)
+
+✅ Submit tweets to SoonSocialX (Subsocial testnet) via Subsocial SDK
+
 ## App Demo
 
 ![](login-and-create-posts.gif)
