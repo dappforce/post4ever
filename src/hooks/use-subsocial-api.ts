@@ -12,13 +12,21 @@ type PostTransactionProps = {
   mnemonic: string;
 };
 
+type InitApiProps = {
+  mnemonic?: string;
+};
+
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const initApi = async (mnemonic: string): Promise<void> => {
-    const api = await initializeApi(mnemonic);
-    setSubsocialApi(api);
+  const initApi = async ({ mnemonic }: InitApiProps): Promise<void> => {
+    if (mnemonic) {
+      const api = await initializeApi(mnemonic);
+      setSubsocialApi(api);
+    } else {
+      //TODO: initApi using wallet
+    }
   };
 
   const postTransaction = async ({
@@ -37,51 +45,104 @@ export const useSubSocialApiHook = () => {
 
       const ipfs = subsocialApi?.subsocial.ipfs;
 
-      const substrateApi = await subsocialApi?.substrateApi;
+      //if (!subsocialApi) throw new Error("No subsocialApi instantiated!");
+
+      const substrateApi = await subsocialApi?.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
-      //Init creating batchTx for posts
-      let result: any[] = [];
+      if (!ipfs) return new Error("IPFS instance not ready!");
 
-      savedPosts.forEach(async (savedPost) => {
-        const cid = await ipfs?.saveContent({
-          title: "My exported tweets",
-          //TODO: able to add image
+      if (savedPosts.length === 1) {
+        //Init creating single post tx
+        const singlePostCid = await ipfs.saveContent({
+          title: "My exported tweet",
           image: null,
           tags: ["exported tweet", "perma-tweet"],
-          body: savedPost.text,
+          body: savedPosts[0].text,
+          //TODO: add tweet link as canonical
         });
-        result.push([spaceId, { RegularPost: null }, IpfsContent(cid)]);
-      });
 
-      const submittablePosts = result.map((args) =>
-        // @ts-ignore
-        substrateApi.tx.posts.createPost(...args)
-      );
-      const batchTx = substrateApi.tx.utility.batch(submittablePosts);
+        const postTx = substrateApi.tx.posts.createPost(
+          spaceId,
+          { RegularPost: null },
+          IpfsContent(singlePostCid)
+        );
 
-      batchTx?.signAndSend(pair, async (result) => {
-        const { status } = result;
+        postTx.signAndSend(pair, async (result) => {
+          const { status } = result;
 
-        if (!result || !status) {
-          return;
+          if (!result || !status) {
+            return;
+          }
+
+          if (status.isFinalized || status.isInBlock) {
+            const blockHash = status.isFinalized
+              ? status.asFinalized
+              : status.asInBlock;
+
+            console.log(
+              `✅ singleCreatePostTx finalized. Block hash: ${blockHash.toString()}`
+            );
+          } else if (result.isError) {
+            console.log(JSON.stringify(result));
+          } else {
+            console.log(`⏱ Current tx status: ${status.type}`);
+          }
+        });
+      } else {
+        //Init creating batchTx for posts
+        let result: any[] = [];
+
+        for (const savedPost of savedPosts) {
+          const cid = await ipfs.saveContent({
+            title: "My exported tweets",
+            //TODO: able to add image
+            image: null,
+            tags: ["exported tweet", "perma-tweet"],
+            body: savedPost.text,
+          });
+          result.push([spaceId, { RegularPost: null }, IpfsContent(cid)]);
         }
 
-        if (status.isFinalized || status.isInBlock) {
-          const blockHash = status.isFinalized
-            ? status.asFinalized
-            : status.asInBlock;
+        const submittablePosts: any[] = [];
 
-          console.log(
-            `✅ createPostTx finalized. Block hash: ${blockHash.toString()}`
+        for (const element of result) {
+          const [spaceId, regularPost, content] = element;
+          const tx = substrateApi.tx.posts.createPost(
+            spaceId,
+            regularPost,
+            content
           );
-        } else if (result.isError) {
-          console.log(JSON.stringify(result));
-        } else {
-          console.log(`⏱ Current tx status: ${status.type}`);
+          submittablePosts.push(tx);
         }
-      });
+
+        const batchTx = substrateApi.tx.utility.batch(submittablePosts);
+
+        if (!batchTx) throw new Error("batchTx creation error!");
+
+        batchTx.signAndSend(pair, async (result) => {
+          const { status } = result;
+
+          if (!result || !status) {
+            return;
+          }
+
+          if (status.isFinalized || status.isInBlock) {
+            const blockHash = status.isFinalized
+              ? status.asFinalized
+              : status.asInBlock;
+
+            console.log(
+              `✅ batchCreatePostTx finalized. Block hash: ${blockHash.toString()}`
+            );
+          } else if (result.isError) {
+            console.log(JSON.stringify(result));
+          } else {
+            console.log(`⏱ Current tx status: ${status.type}`);
+          }
+        });
+      }
     } catch (err) {
       console.log({ err });
     } finally {
