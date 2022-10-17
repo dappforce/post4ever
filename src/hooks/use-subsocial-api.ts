@@ -60,7 +60,7 @@ export const useSubSocialApiHook = () => {
           image: null,
           tags: ["exported tweet", "perma-tweet"],
           body: savedPosts[0].text,
-          //TODO: add tweet link as canonical
+          canonical: savedPosts[0].url,
         });
 
         const postTx = substrateApi.tx.posts.createPost(
@@ -101,6 +101,7 @@ export const useSubSocialApiHook = () => {
             image: null,
             tags: ["exported tweet", "perma-tweet"],
             body: savedPost.text,
+            canonical: savedPost.url,
           });
           result.push([spaceId, { RegularPost: null }, IpfsContent(cid)]);
         }

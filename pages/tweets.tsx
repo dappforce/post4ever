@@ -3,6 +3,7 @@ import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useEffect, useState } from "react";
+import { ExpandedTweetProps } from "src/types/common";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -43,7 +44,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
 
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const selectedTweet = tweets.filter(
+      let selectedTweet = tweets.filter(
         (tweet: TweetProps) => tweet.id === e.target.value
       )[0];
 
@@ -167,21 +168,27 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     "media.fields": ["url"],
   });
 
+  const user = await readOnlyClient.v2.user(id);
+
   let tweets = [];
 
   for await (const tweet of myTimeline) {
     const medias = myTimeline.includes.medias(tweet);
 
+    let tweetObj: ExpandedTweetProps = {
+      ...tweet,
+      url: `https://twitter.com/${user.data.username}/status/${tweet.id}`,
+    };
+
     if (medias.length) {
-      const tweetObj = {
+      tweetObj = {
         ...tweet,
         medias,
+        url: `https://twitter.com/${user.data.username}/status/${tweet.id}`,
       };
-
-      tweets.push(tweetObj);
-    } else {
-      tweets.push(tweet);
     }
+
+    tweets.push(tweetObj);
   }
 
   return {
