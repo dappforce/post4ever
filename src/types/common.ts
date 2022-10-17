@@ -1,4 +1,6 @@
-export type PostProps = TweetProps & {
+import { MediaObjectV2, TweetAttachmentV2 } from "twitter-api-v2";
+
+export type PostProps = ExpandedTweetProps & {
   image?: string;
   tags?: string[];
   body?: string;
@@ -10,20 +12,16 @@ export enum MediaType {
   VIDEO = "video",
 }
 
-export type MediaProps = {
-  media_key: string;
-  type: MediaType;
-  url: string;
-};
-
 export type TweetProps = {
-  attachments: {
-    media_keys: string[];
-  };
   edit_history_tweet_ids: string[];
   id: string;
   text: string;
-  medias?: MediaProps[];
+  attachments?: TweetAttachmentV2;
+  medias?: MediaObjectV2[];
+};
+
+export type ExpandedTweetProps = TweetProps & {
+  url?: string;
 };
 
 export type TweetsProps = {
