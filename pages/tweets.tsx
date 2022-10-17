@@ -19,8 +19,8 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
   useEffect(() => {
-    if (savedPosts.length === 2 && session) {
-      initApi(session?.mnemonic);
+    if (savedPosts.length > 0 && session) {
+      initApi({ mnemonic: session.mnemonic });
     }
   }, [savedPosts.length, session]);
 
@@ -124,7 +124,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
           >
             {`Send ${
               savedPosts.length === 0 ? "" : savedPosts.length
-            } post(s) to IPFS!`}
+            } post(s) to Subsocial!`}
           </button>
           <a>{loading ? "Sending tx, open your console" : ""}</a>
           <a>
