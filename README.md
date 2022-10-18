@@ -23,7 +23,11 @@ Logging in using your own Twitter account and submitting tweets to be sent to Su
 
 Tweets sent and submission successful
 
-An example of [successful batch tweets submission](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frco-para.subsocial.network#/explorer/query/0xdf53ff2d73e3cc2f57ad03a96fc9a47faacc54f4d42f2df23c49f51e64bda990)
+Example of succesful txs (connect to SoonSocialX network on Polkadot.js apps):
+
+[Creating a single post](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frco-para.subsocial.network#/explorer/query/0xf154347d77ac55d8a9a7e1c53f9e30ee49dacdfd50222f027a6e4df8f8c45d52)
+
+[Creating batch posts](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frco-para.subsocial.network#/explorer/query/0xdd387d5bb462cd11ba2835752bb66b3a5bbea8d5e485d355d825822276b93a04)
 
 NOTE: Currently, the app is only tested on the latest version of Google Chrome.
 
