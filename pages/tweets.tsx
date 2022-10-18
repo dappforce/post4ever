@@ -19,6 +19,8 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { initApi, loading, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
+  const IS_ABOVE_LIMIT = Boolean(savedPosts.length > 5);
+
   useEffect(() => {
     if (savedPosts.length > 0 && session) {
       initApi({ mnemonic: session.mnemonic });
@@ -120,7 +122,9 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
             className="bg-blue-500 disabled:bg-gray-300 disabled:hover:bg-gray-100 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={handlePostTransaction}
             disabled={
-              savedPosts.length === 0 || savedPosts.length > 2 ? true : false
+              savedPosts.length === 0 || IS_ABOVE_LIMIT
+                ? true
+                : false || loading
             }
           >
             {`Send ${
@@ -129,8 +133,10 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
           </button>
           <a>{loading ? "Sending tx, open your console" : ""}</a>
           <a>
-            {savedPosts.length > 2
-              ? "Max 2 posts to be saved!"
+            {IS_ABOVE_LIMIT
+              ? "Max 5 posts to be saved!"
+              : loading
+              ? ""
               : "Select tweets to be saved"}
           </a>
         </div>
