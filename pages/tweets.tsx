@@ -1,4 +1,5 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import FullScreenLoading from "src/components/FullScreenLoading";
@@ -12,6 +13,9 @@ import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { TweetsProps, TweetProps, PostProps } from "src/types/common";
+const Appbar = dynamic(() => import("src/components/Appbar"), {
+  ssr: false,
+});
 
 const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
   const { data: session, status } = useSession();
@@ -75,72 +79,70 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
-        <div className="flex flex-col self-start mt-4 p-4 gap-2 max-w-[500px]">
-          <AuthButton text={"Logout"} />
-          <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
-        </div>
-        <div className="flex flex-row max-h-screen p-4">
-          <div className="flex flex-col overflow-y-auto overflow-x-hidden">
-            {tweets.map((tweet) => (
-              <div
-                key={tweet.id}
-                className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
+      <Appbar>
+        <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
+          <div className="flex flex-col self-start mt-4 p-4 gap-2 max-w-[500px]">
+            <AuthButton text={"Logout"} />
+            <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
+          </div>
+          <div className="flex flex-row max-h-screen p-4">
+            <div className="flex flex-col overflow-y-auto overflow-x-hidden">
+              {tweets.map((tweet) => (
+                <div
+                  key={tweet.id}
+                  className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
                 flex flex-col items-center mb-4"
-              >
-                <div className="flex flex-row items-center self-start justify-center gap-2">
-                  <Image
-                    src={session.user?.image ?? ""}
-                    alt="user-avatar"
-                    className="rounded-full"
-                    width="32"
-                    height="32"
-                  />
-                  <div>{session?.user?.name ?? "Twitter user"}</div>
+                >
+                  <div className="flex flex-row items-center self-start justify-center gap-2">
+                    <Image
+                      src={session.user?.image ?? ""}
+                      alt="user-avatar"
+                      className="rounded-full"
+                      width="32"
+                      height="32"
+                    />
+                    <div>{session?.user?.name ?? "Twitter user"}</div>
+                  </div>
+                  <div className="flex flex-col items-start py-2 px-4">
+                    {tweet.text}
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      id="select-check-box"
+                      type="checkbox"
+                      value={tweet.id}
+                      onChange={handleSelect}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Select this tweet!
+                    </label>
+                  </div>
                 </div>
-                <div className="flex flex-col items-start py-2 px-4">
-                  {tweet.text}
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="select-check-box"
-                    type="checkbox"
-                    value={tweet.id}
-                    onChange={handleSelect}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Select this tweet!
-                  </label>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col self-start items-center justify-center mt-4 p-4 gap-2 max-w-[500px]">
+            <button
+              className="bg-blue-500 disabled:bg-gray-300 disabled:hover:bg-gray-100 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handlePostTransaction}
+              disabled={
+                savedPosts.length === 0 || savedPosts.length > 2 ? true : false
+              }
+            >
+              {`Send ${
+                savedPosts.length === 0 ? "0" : savedPosts.length
+              } post(s) to Subsocial!`}
+            </button>
+            <a>{loading ? "Sending tx, open your console" : ""}</a>
+            <a>
+              {savedPosts.length > 2
+                ? "Max 2 posts to be saved!"
+                : "Select tweets to be saved"}
+            </a>
           </div>
         </div>
-        <div className="flex flex-col self-start items-center justify-center mt-4 p-4 gap-2 max-w-[500px]">
-          <button
-            className="bg-blue-500 disabled:bg-gray-300 disabled:hover:bg-gray-100 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handlePostTransaction}
-            disabled={
-              savedPosts.length === 0 || IS_ABOVE_LIMIT
-                ? true
-                : false || loading
-            }
-          >
-            {`Send ${
-              savedPosts.length === 0 ? "" : savedPosts.length
-            } post(s) to Subsocial!`}
-          </button>
-          <a>{loading ? "Sending tx, open your console" : ""}</a>
-          <a>
-            {IS_ABOVE_LIMIT
-              ? "Max 5 posts to be saved!"
-              : loading
-              ? ""
-              : "Select tweets to be saved"}
-          </a>
-        </div>
-      </div>
+      </Appbar>
     </>
   );
 };

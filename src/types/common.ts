@@ -20,6 +20,18 @@ export type TweetProps = {
   medias?: MediaObjectV2[];
 };
 
+export type TweetUserProps = {
+  id: string;
+  name: string;
+  profile_image_url: string;
+  username: string;
+};
+
+export type TweetWithAuthorProps = TweetProps & {
+  author_id: string;
+  users?: TweetUserProps[];
+};
+
 export type ExpandedTweetProps = TweetProps & {
   url?: string;
 };

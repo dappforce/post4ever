@@ -1,11 +1,14 @@
 import initializeApi from "src/lib/SubsocialApi";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
+import { bnsToIds } from "@subsocial/utils";
+import type { SpaceData } from "@subsocial/api/types";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { PostProps } from "src/types/common";
+import { PostProps, TweetWithAuthorProps } from "src/types/common";
 
 type PostTransactionProps = {
   savedPosts: PostProps[];
@@ -16,8 +19,20 @@ type InitApiProps = {
   mnemonic?: string;
 };
 
+type CreateSpaceProps = {
+  account: InjectedAccountWithMeta;
+  content: TweetWithAuthorProps;
+};
+
+type CreatePostWithSpaceIdProps = {
+  spaceId: string;
+  account: InjectedAccountWithMeta;
+  content: TweetWithAuthorProps;
+};
+
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
+  const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
   const [loading, setLoading] = useState(false);
 
   const initApi = async ({ mnemonic }: InitApiProps): Promise<void> => {
@@ -26,6 +41,157 @@ export const useSubSocialApiHook = () => {
       setSubsocialApi(api);
     } else {
       //TODO: initApi using wallet
+    }
+  };
+
+  const createSpaceWithTweet = async ({
+    account,
+    content,
+  }: CreateSpaceProps) => {
+    setLoading(true);
+
+    try {
+      const { web3FromSource } = await import("@polkadot/extension-dapp");
+
+      const injector = await web3FromSource(account.meta.source);
+
+      const temp = content.users?.find((user) => user.id === content.author_id);
+
+      const cid = await subsocialApi?.ipfs.saveContent({
+        title: `Tweet by ${temp?.name}`,
+        body: content.text,
+        tags: [temp?.name, temp?.username, temp?.profile_image_url],
+      });
+
+      const substrateApi = await subsocialApi?.blockchain.api;
+
+      if (!substrateApi) return new Error("Error when calling substrateApi");
+
+      const tx = substrateApi.tx.spaces.createSpace(IpfsContent(cid), null);
+
+      tx.signAndSend(
+        account.address,
+        {
+          signer: injector.signer,
+        },
+        async (result) => {
+          const { status } = result;
+
+          if (!result || !status) {
+            return;
+          }
+
+          if (status.isFinalized || status.isInBlock) {
+            const blockHash = status.isFinalized
+              ? status.asFinalized
+              : status.asInBlock;
+
+            console.log(
+              `✅ createSpaceWithTweet finalized. Block hash: ${blockHash.toString()}`
+            );
+          } else if (result.isError) {
+            console.log(JSON.stringify(result));
+          } else {
+            console.log(`⏱ Current tx status: ${status.type}`);
+          }
+        }
+      );
+    } catch (error) {
+      console.warn({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createPostWithSpaceId = async ({
+    content,
+    spaceId,
+    account,
+  }: CreatePostWithSpaceIdProps) => {
+    setLoading(true);
+
+    try {
+      await cryptoWaitReady();
+
+      const { web3FromSource } = await import("@polkadot/extension-dapp");
+
+      const injector = await web3FromSource(account.meta.source);
+
+      const temp = content.users?.find((user) => user.id === content.author_id);
+
+      const cid = await subsocialApi?.ipfs.saveContent({
+        title: `Tweet by ${temp?.name}`,
+        tags: [temp?.name, temp?.username, temp?.profile_image_url],
+        body: content.text,
+      });
+
+      const substrateApi = await subsocialApi?.blockchain.api;
+
+      if (!substrateApi) return new Error("Error when calling substrateApi");
+
+      const tx = substrateApi.tx.posts.createPost(
+        spaceId,
+        { RegularPost: null },
+        IpfsContent(cid)
+      );
+
+      tx.signAndSend(
+        account.address,
+        {
+          signer: injector.signer,
+        },
+        async (result) => {
+          const { status } = result;
+
+          if (!result || !status) {
+            return;
+          }
+
+          if (status.isFinalized || status.isInBlock) {
+            const blockHash = status.isFinalized
+              ? status.asFinalized
+              : status.asInBlock;
+
+            console.log(
+              `✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`
+            );
+          } else if (result.isError) {
+            console.log(JSON.stringify(result));
+          } else {
+            console.log(`⏱ Current tx status: ${status.type}`);
+          }
+        }
+      );
+    } catch (error) {
+      console.warn({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
+    setLoading(true);
+
+    try {
+      await cryptoWaitReady();
+      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(
+        account.address
+      );
+
+      if (spaceIds) {
+        const spaces = await subsocialApi?.findPublicSpaces(bnsToIds(spaceIds));
+        if (spaces) {
+          setSpaces(spaces);
+        }
+
+        if (spaces && !spaces.length) {
+          setSpaces(null);
+        }
+      }
+    } catch (error) {
+      console.warn({ error });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,6 +325,10 @@ export const useSubSocialApiHook = () => {
     subsocialApi,
     loading,
     initApi,
+    createSpaceWithTweet,
+    createPostWithSpaceId,
+    spaces,
+    checkSpaceOwnedBy,
     postTransaction,
   };
 };
