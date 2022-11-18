@@ -57,18 +57,22 @@ const Appbar = ({ children }: AppbarProps) => {
 
   return (
     <div>
-      <div className="bg-gray-400 flex flex-row p-2 justify-start items-center">
-        <div className="mr-auto text-blue-600">Perma-Tweeter</div>
+      <div className="flex flex-row p-2 justify-start items-center border-b-2 border-b-gray-500">
+        <div className="mr-auto text-blue-500 text-2xl font-bold">
+          Perma-Tweeter
+        </div>
 
         <ul className="flex">
           <li className="mr-6">
             <Link href="/tweets" legacyBehavior>
-              <a className="text-blue-500 hover:text-blue-800">Timeline</a>
+              <a className="text-blue-500 hover:text-blue-800 text-lg font-semibold">
+                Timeline
+              </a>
             </Link>
           </li>
           <li className="mr-6">
             <Link href="/crosspost" legacyBehavior>
-              <a className="text-blue-500 hover:text-blue-800">
+              <a className="text-blue-500 hover:text-blue-800 text-lg font-semibold">
                 Cross-post tweet
               </a>
             </Link>

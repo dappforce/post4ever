@@ -1,4 +1,5 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
+import type { SpaceData } from "@subsocial/api/types";
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
@@ -21,8 +22,9 @@ const CrossPostPage: NextPage = () => {
   const router = useRouter();
   const {
     initApi,
-    loading,
     checkSpaceOwnedBy,
+    loadingSpaces,
+    loadingCreatePost,
     spaces,
     createSpaceWithTweet,
     createPostWithSpaceId,
@@ -139,6 +141,14 @@ const CrossPostPage: NextPage = () => {
     }
   };
 
+  const handleToggleSelect = (space: SpaceData) => {
+    if (selectedSpaceId === space.id) {
+      setSelectedSpaceId("");
+    } else {
+      setSelectedSpaceId(space.id);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -148,14 +158,21 @@ const CrossPostPage: NextPage = () => {
       </Head>
 
       <Appbar>
-        <div className="grid grid-cols-[0.75fr_1.75fr_0.75fr] max-w-full max-h-screen">
+        <h1 className="text-3xl font-bold text-center p-4">
+          Cross-post Tweet to Subsocial
+        </h1>
+
+        <div className="grid grid-cols-[0.75fr_1.75fr_1.75fr] max-w-full h-screen">
           <div className="flex flex-col self-start mt-4 p-4 gap-2">
             <AuthButton text={"Logout"} />
             <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
           </div>
 
-          <div className="flex flex-col max-h-screen p-4">
-            <h2>Cross-post a tweet into Subsocial</h2>
+          <div
+            id="fetch-tweet-container"
+            className="flex flex-col max-h-screen p-4 gap-2"
+          >
+            <h2 className="text-lg font-bold">1. Find tweet using URL</h2>
             {fetchedTweet ? (
               <div
                 key={fetchedTweet.id}
@@ -199,16 +216,16 @@ const CrossPostPage: NextPage = () => {
               onChange={handleChange}
               required
             />
-            <div>
+            <div className="flex flex-row gap-2 mt-2">
               <button
-                className="disabled:bg-gray-300 disabled:hover:bg-gray-100 text-red font-bold py-2 px-4 rounded"
+                className="disabled:bg-gray-500 disabled:hover:bg-gray-700 text-red font-bold py-2 px-4 rounded"
                 disabled={!tweetUrl}
                 onClick={handleClearUrl}
               >
                 Clear URL
               </button>
               <button
-                className="bg-blue-500 disabled:bg-gray-300 disabled:hover:bg-gray-100 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 disabled={loadingTweet || !tweetUrl}
                 onClick={handleFetchTweet}
               >
@@ -217,45 +234,60 @@ const CrossPostPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col self-start items-center justify-center mt-4 p-4 gap-2">
-            <div className="flex flex-col">
-              <p>Space you owned: {spaces ? "" : "0"}</p>
-              <div>
-                {spaces?.map((space) => (
-                  <button
-                    className="rounded border border-gray-700 p-2"
-                    key={space.id}
-                    onClick={() => setSelectedSpaceId(space.id)}
-                  >
-                    {space.id}
-                  </button>
-                ))}
-              </div>
-              <button disabled={Boolean(!account)} onClick={handleFetchSpaces}>
-                Find my space(s)
-              </button>
-              {!spaces ? (
+          <div className="flex flex-col self-start items-center justify-center p-4 gap-2">
+            <h2 className="text-lg font-bold">
+              2. Connect your wallet and select a space
+            </h2>
+            <p>Space you owned: {spaces ? "" : "0"}</p>
+            <div>
+              {spaces?.map((space) => (
                 <button
-                  disabled={
-                    !spaces && Boolean(!account) && Boolean(!fetchedTweet)
-                  }
-                  onClick={handleCreateSpaceWithTweet}
+                  className={`${
+                    selectedSpaceId === space.id
+                      ? "bg-blue-600 border border-blue-300 font-bold"
+                      : ""
+                  } rounded border-2 border-gray-700 p-2`}
+                  key={space.id}
+                  onClick={() => handleToggleSelect(space)}
                 >
-                  Create space with tweet
+                  Space ID: {space.id}
                 </button>
-              ) : (
-                <></>
-              )}
+              ))}
             </div>
-            <div className="group relative inline-block">
+            <button
+              className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled={Boolean(!account)}
+              onClick={handleFetchSpaces}
+            >
+              {loadingSpaces ? "Loading" : "Find my space(s)"}
+            </button>
+            {!spaces ? (
               <button
-                className="bg-blue-500 disabled:bg-gray-300 disabled:hover:bg-gray-100 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={!fetchedTweet || !selectedSpaceId}
-                onClick={handleCreatePostWithSpaceId}
+                className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                disabled={
+                  !spaces && Boolean(!account) && Boolean(!fetchedTweet)
+                }
+                onClick={handleCreateSpaceWithTweet}
               >
-                Send post to Subsocial!
+                Create space with tweet
               </button>
-              <a>{loading ? "Sending tx, open your console" : ""}</a>
+            ) : (
+              <></>
+            )}
+            <div className="group relative inline-block">
+              <div>
+                <button
+                  className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  disabled={
+                    !fetchedTweet || !selectedSpaceId || loadingCreatePost
+                  }
+                  onClick={handleCreatePostWithSpaceId}
+                >
+                  {loadingCreatePost
+                    ? "Sending, sign and open console"
+                    : "Send post to Subsocial!"}
+                </button>
+              </div>
 
               {!fetchedTweet ? (
                 <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded text-red-500 bg-gray-700 py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">

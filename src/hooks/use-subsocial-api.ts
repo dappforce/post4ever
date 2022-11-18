@@ -34,6 +34,8 @@ export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingSpaces, setLoadingSpaces] = useState(false);
+  const [loadingCreatePost, setLoadingCreatePost] = useState(false);
 
   const initApi = async ({ mnemonic }: InitApiProps): Promise<void> => {
     if (mnemonic) {
@@ -103,12 +105,38 @@ export const useSubSocialApiHook = () => {
     }
   };
 
+  const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
+    setLoadingSpaces(true);
+
+    try {
+      await cryptoWaitReady();
+      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(
+        account.address
+      );
+
+      if (spaceIds) {
+        const spaces = await subsocialApi?.findPublicSpaces(bnsToIds(spaceIds));
+        if (spaces) {
+          setSpaces(spaces);
+        }
+
+        if (spaces && !spaces.length) {
+          setSpaces(null);
+        }
+      }
+    } catch (error) {
+      console.warn({ error });
+    } finally {
+      setLoadingSpaces(false);
+    }
+  };
+
   const createPostWithSpaceId = async ({
     content,
     spaceId,
     account,
   }: CreatePostWithSpaceIdProps) => {
-    setLoading(true);
+    setLoadingCreatePost(true);
 
     try {
       await cryptoWaitReady();
@@ -144,6 +172,7 @@ export const useSubSocialApiHook = () => {
           const { status } = result;
 
           if (!result || !status) {
+            setLoadingCreatePost(false);
             return;
           }
 
@@ -155,6 +184,7 @@ export const useSubSocialApiHook = () => {
             console.log(
               `✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`
             );
+            setLoadingCreatePost(false);
           } else if (result.isError) {
             console.log(JSON.stringify(result));
           } else {
@@ -164,34 +194,6 @@ export const useSubSocialApiHook = () => {
       );
     } catch (error) {
       console.warn({ error });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
-    setLoading(true);
-
-    try {
-      await cryptoWaitReady();
-      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(
-        account.address
-      );
-
-      if (spaceIds) {
-        const spaces = await subsocialApi?.findPublicSpaces(bnsToIds(spaceIds));
-        if (spaces) {
-          setSpaces(spaces);
-        }
-
-        if (spaces && !spaces.length) {
-          setSpaces(null);
-        }
-      }
-    } catch (error) {
-      console.warn({ error });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -199,7 +201,7 @@ export const useSubSocialApiHook = () => {
     savedPosts,
     mnemonic,
   }: PostTransactionProps) => {
-    setLoading(true);
+    setLoadingCreatePost(true);
     try {
       await cryptoWaitReady();
 
@@ -239,7 +241,7 @@ export const useSubSocialApiHook = () => {
           const { status } = result;
 
           if (!result || !status) {
-            setLoading(false);
+            setLoadingCreatePost(false);
             return;
           }
 
@@ -251,12 +253,12 @@ export const useSubSocialApiHook = () => {
             console.log(
               `✅ singleCreatePostTx finalized. Block hash: ${blockHash.toString()}`
             );
-            setLoading(false);
+            setLoadingCreatePost(false);
           } else if (result.isError) {
             console.log(JSON.stringify(result));
           } else {
             console.log(`⏱ Current tx status: ${status.type}`);
-            setLoading(true);
+            setLoadingCreatePost(true);
           }
         });
       } else {
@@ -295,7 +297,7 @@ export const useSubSocialApiHook = () => {
           const { status } = result;
 
           if (!result || !status) {
-            setLoading(false);
+            setLoadingCreatePost(false);
             return;
           }
 
@@ -307,11 +309,11 @@ export const useSubSocialApiHook = () => {
             console.log(
               `✅ batchCreatePostTx finalized. Block hash: ${blockHash.toString()}`
             );
-            setLoading(false);
+            setLoadingCreatePost(false);
           } else if (result.isError) {
             console.log(JSON.stringify(result));
           } else {
-            setLoading(true);
+            setLoadingCreatePost(true);
             console.log(`⏱ Current tx status: ${status.type}`);
           }
         });
@@ -328,6 +330,8 @@ export const useSubSocialApiHook = () => {
     createSpaceWithTweet,
     createPostWithSpaceId,
     spaces,
+    loadingSpaces,
+    loadingCreatePost,
     checkSpaceOwnedBy,
     postTransaction,
   };
