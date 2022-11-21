@@ -151,6 +151,7 @@ export const useSubSocialApiHook = () => {
         title: `Tweet by ${temp?.name}`,
         tags: [temp?.name, temp?.username, temp?.profile_image_url],
         body: content.text,
+        canonical: `https://twitter.com/${temp?.username}/status/${content.id}`,
       });
 
       const substrateApi = await subsocialApi?.blockchain.api;
@@ -209,21 +210,15 @@ export const useSubSocialApiHook = () => {
       const pair = keyring.addFromMnemonic(mnemonic);
 
       //Use already made space by current pair
-      const spaceId = "9960";
-
-      const ipfs = subsocialApi?.subsocial.ipfs;
-
-      //if (!subsocialApi) throw new Error("No subsocialApi instantiated!");
+      const spaceId = "1018";
 
       const substrateApi = await subsocialApi?.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
-      if (!ipfs) return new Error("IPFS instance not ready!");
-
       if (savedPosts.length === 1) {
         //Init creating single post tx
-        const singlePostCid = await ipfs.saveContent({
+        const singlePostCid = await subsocialApi?.ipfs.saveContent({
           title: "My exported tweet",
           image: null,
           tags: ["exported tweet", "perma-tweet"],
@@ -266,7 +261,7 @@ export const useSubSocialApiHook = () => {
         let result: any[] = [];
 
         for (const savedPost of savedPosts) {
-          const cid = await ipfs.saveContent({
+          const cid = await subsocialApi?.ipfs.saveContent({
             title: "My exported tweets",
             //TODO: able to add image
             image: null,
