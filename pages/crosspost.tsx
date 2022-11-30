@@ -15,7 +15,7 @@ import { TweetWithAuthorProps } from "src/types/common";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
-import { Card } from "react-daisyui";
+import { Button, Card, Tooltip, Input } from "react-daisyui";
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
@@ -171,63 +171,87 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="grid grid-cols-[0.75fr_1.5fr_1.5fr] px-4 max-w-full h-screen">
+        <div className="grid grid-cols-[0.75fr_1.8fr_1.2fr] px-4 max-w-full h-screen">
           <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
 
           <Card
             id="fetch-tweet-container"
             bordered={false}
             className="shadow-2xl bg-white m-4 flex flex-col p-4 gap-2 h-fit">
-            <h2 className="text-lg font-bold">1. Find tweet using URL</h2>
-            {fetchedTweet ? (
-              <div
-                key={fetchedTweet.id}
-                className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
-                flex flex-col items-center mb-4">
-                <div className="flex flex-row items-center self-start justify-center gap-2">
-                  <Image
-                    src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
-                    alt="user-avatar"
-                    className="rounded-full"
-                    width="32"
-                    height="32"
-                  />
-                  <div>
-                    <div>{getAuthor(fetchedTweet).temp?.name ?? "Twitter user"}</div>
-                    <div>{`@${getAuthor(fetchedTweet).temp?.username}` ?? "@username"}</div>
+            <Card.Body>
+              <h2 className="text-lg font-bold text-base-100">1. Find tweet using URL</h2>
+              <div className="flex flex-row gap-4">
+                <fieldset className="w-full space-y-1 text-base-100">
+                  <div className="relative">
+                    <Input
+                      type="url"
+                      name="tweet-url"
+                      id="tweet-url"
+                      placeholder="Tweet URL"
+                      value={tweetUrl}
+                      onChange={handleChange}
+                      required
+                      size="md"
+                      className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
+                    />
+                    <span className="absolute inset-y-0 right-0 flex items-center">
+                      <Button variant="link" onClick={handleClearUrl}>
+                        Clear URL
+                      </Button>
+                    </span>
                   </div>
-                </div>
-                <div className="flex flex-col items-start py-2 px-4">{fetchedTweet.text}</div>
+                </fieldset>
+                {!tweetUrl ? (
+                  <Tooltip message="Please enter tweet URL">
+                    <Button
+                      color="primary"
+                      className="normal-case w-auto"
+                      disabled
+                      onClick={handleFetchTweet}>
+                      Find tweet
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    color="primary"
+                    className="normal-case w-auto"
+                    disabled={loadingTweet}
+                    onClick={handleFetchTweet}>
+                    {loadingTweet ? "Fetching tweet..." : "Find tweet"}
+                  </Button>
+                )}
               </div>
-            ) : (
-              <></>
-            )}
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Tweet URL
-            </label>
-            <input
-              type="text"
-              id="tweet-url"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="https://twitter.com/cat_auras/status/1592442883424276486"
-              value={tweetUrl}
-              onChange={handleChange}
-              required
-            />
-            <div className="flex flex-row gap-2 mt-2">
-              <button
-                className="disabled:bg-gray-500 disabled:hover:bg-gray-700 text-red font-bold py-2 px-4 rounded"
-                disabled={!tweetUrl}
-                onClick={handleClearUrl}>
-                Clear URL
-              </button>
-              <button
-                className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={loadingTweet || !tweetUrl}
-                onClick={handleFetchTweet}>
-                {loadingTweet ? "Fetching tweet..." : "Find tweet"}
-              </button>
-            </div>
+
+              {fetchedTweet ? (
+                <Card
+                  key={fetchedTweet.id}
+                  bordered={false}
+                  className="drop-shadow-xl bg-white p-4 mt-4 h-fit border">
+                  <div className="flex flex-row items-center self-start justify-center gap-2">
+                    <Image
+                      src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
+                      alt="user-avatar"
+                      className="rounded-full"
+                      width="32"
+                      height="32"
+                    />
+                    <div>
+                      <div className="font-bold text-base-100">
+                        {getAuthor(fetchedTweet).temp?.name ?? "Twitter user"}
+                      </div>
+                      <div className="font-normal text-gray-500">
+                        {`@${getAuthor(fetchedTweet).temp?.username}` ?? "@username"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-start py-2 px-4 font-normal text-base-100">
+                    {fetchedTweet.text}
+                  </div>
+                </Card>
+              ) : (
+                <></>
+              )}
+            </Card.Body>
           </Card>
 
           <Card
