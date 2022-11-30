@@ -39,3 +39,8 @@ export type ExpandedTweetProps = TweetProps & {
 export type TweetsProps = {
   tweets: TweetProps[];
 };
+
+export type AuthenticatedPageProps = {
+  tweets: TweetsProps;
+  user: TweetUserProps;
+};
