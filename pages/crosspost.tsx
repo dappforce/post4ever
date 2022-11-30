@@ -8,16 +8,19 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { useWalletStore } from "src/store";
-import AuthButton from "src/components/Button";
+import { useTwitterUserStore, useWalletStore } from "src/store";
 import { unstable_getServerSession } from "next-auth/next";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { TweetWithAuthorProps } from "src/types/common";
+import TwitterUserProfileCard from "components/TwitterUserProfileCard";
+import { TwitterApi } from "twitter-api-v2";
+import { AuthenticatedPageProps } from "src/types/common";
+import { Card } from "react-daisyui";
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
 
-const CrossPostPage: NextPage = () => {
+const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const {
@@ -32,6 +35,19 @@ const CrossPostPage: NextPage = () => {
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
+
+  const { user: authenticatedUser, setNewUser } = useTwitterUserStore(state => ({
+    user: state.user,
+    setNewUser: state.setNewUser,
+  }));
+
+  useEffect(() => {
+    if (user) {
+      setNewUser({
+        ...user,
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     if (session) {
@@ -155,15 +171,13 @@ const CrossPostPage: NextPage = () => {
       </Head>
 
       <Layout>
-        <h1 className="text-3xl font-bold text-center p-4">Cross-post Tweet to Subsocial</h1>
+        <div className="grid grid-cols-[0.75fr_1.5fr_1.5fr] px-4 max-w-full h-screen">
+          <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
 
-        <div className="grid grid-cols-[0.75fr_1.75fr_1.75fr] max-w-full h-screen">
-          <div className="flex flex-col self-start mt-4 p-4 gap-2">
-            <AuthButton text={"Logout"} />
-            <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
-          </div>
-
-          <div id="fetch-tweet-container" className="flex flex-col max-h-screen p-4 gap-2">
+          <Card
+            id="fetch-tweet-container"
+            bordered={false}
+            className="shadow-2xl bg-white m-4 flex flex-col p-4 gap-2 h-fit">
             <h2 className="text-lg font-bold">1. Find tweet using URL</h2>
             {fetchedTweet ? (
               <div
@@ -214,9 +228,11 @@ const CrossPostPage: NextPage = () => {
                 {loadingTweet ? "Fetching tweet..." : "Find tweet"}
               </button>
             </div>
-          </div>
+          </Card>
 
-          <div className="flex flex-col self-start items-center justify-center p-4 gap-2">
+          <Card
+            bordered={false}
+            className="shadow-2xl m-4 bg-white flex flex-col self-start items-center justify-center p-4 gap-2">
             <h2 className="text-lg font-bold">2. Connect your wallet and select a space</h2>
             <p>Space you owned: {spaces ? "" : "0"}</p>
             <div>
@@ -268,7 +284,7 @@ const CrossPostPage: NextPage = () => {
                 <></>
               )}
             </div>
-          </div>
+          </Card>
         </div>
       </Layout>
     </>
@@ -287,8 +303,22 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   }
 
+  const { token } = session;
+
+  if (!token) throw new Error("Token not defined!");
+
+  const twitterClient = new TwitterApi(token);
+
+  // Tell typescript it's a readonly app
+  const readOnlyClient = twitterClient.readOnly;
+
+  const { id } = session?.user;
+  const { data: user } = await readOnlyClient.v2.user(id, {
+    "user.fields": ["id", "name", "profile_image_url"],
+  });
+
   return {
-    props: {},
+    props: { user },
   };
 }
 

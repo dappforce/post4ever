@@ -8,18 +8,33 @@ import { ExpandedTweetProps } from "src/types/common";
 import { TwitterApi } from "twitter-api-v2";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import AuthButton from "src/components/Button";
 import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
-import { TweetsProps, TweetProps, PostProps } from "src/types/common";
+import { AuthenticatedPageProps, TweetProps, PostProps } from "src/types/common";
+import { Button } from "react-daisyui";
+import { useTwitterUserStore } from "src/store";
+import TwitterUserProfileCard from "components/TwitterUserProfileCard";
+
 const Layout = dynamic(() => import("components/Layout"), {
   ssr: false,
 });
 
-const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
+const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const { user: authenticatedUser, setNewUser } = useTwitterUserStore(state => ({
+    user: state.user,
+    setNewUser: state.setNewUser,
+  }));
+
+  useEffect(() => {
+    setNewUser({
+      ...user,
+    });
+  }, [user]);
+
   const { initApi, loading, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
@@ -37,11 +52,9 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
     return (
       <div>
         <p>Access unauthorized, please login first</p>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => router.push("/")}>
+        <Button className="normal-case" color="primary" onClick={() => router.push("/")}>
           Go back to login
-        </button>
+        </Button>
       </div>
     );
 
@@ -76,10 +89,7 @@ const TweetPage: NextPage<TweetsProps> = ({ tweets }) => {
 
       <Layout>
         <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
-          <div className="flex flex-col self-start mt-4 p-4 gap-2 max-w-[500px]">
-            <AuthButton text={"Logout"} />
-            <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
-          </div>
+          <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
           <div className="flex flex-row max-h-screen p-4">
             <div className="flex flex-col overflow-y-auto overflow-x-hidden">
               {tweets.map(tweet => (
@@ -161,7 +171,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     "media.fields": ["url"],
   });
 
-  const user = await readOnlyClient.v2.user(id);
+  const { data: user } = await readOnlyClient.v2.user(id, {
+    "user.fields": ["id", "name", "profile_image_url"],
+  });
 
   let tweets = [];
 
@@ -170,14 +182,14 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
     let tweetObj: ExpandedTweetProps = {
       ...tweet,
-      url: `https://twitter.com/${user.data.username}/status/${tweet.id}`,
+      url: `https://twitter.com/${user.username}/status/${tweet.id}`,
     };
 
     if (medias.length) {
       tweetObj = {
         ...tweet,
         medias,
-        url: `https://twitter.com/${user.data.username}/status/${tweet.id}`,
+        url: `https://twitter.com/${user.username}/status/${tweet.id}`,
       };
     }
 
@@ -185,7 +197,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   }
 
   return {
-    props: { tweets },
+    props: { tweets, user },
   };
 }
 
