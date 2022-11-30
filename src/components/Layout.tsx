@@ -1,21 +1,20 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import {useWalletStore} from "src/store";
+import { useWalletStore } from "src/store";
 
-import {web3Accounts, web3Enable} from "@polkadot/extension-dapp";
-import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
+import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
-import {Button} from "react-daisyui";
+import { Button } from "react-daisyui";
 
-import {useRouter} from "next/router";
-import {trimUndefinedProperties} from "twitter-api-v2/dist/helpers";
+import { useRouter } from "next/router";
 
 type LayoutProps = {
   children?: React.ReactNode;
 };
 
-const Layout = ({children}: LayoutProps) => {
-  const {account, setAccount} = useWalletStore(state => ({
+const Layout = ({ children }: LayoutProps) => {
+  const { account, setAccount } = useWalletStore(state => ({
     account: state.account,
     setAccount: state.setAccount,
   }));
@@ -63,7 +62,7 @@ const Layout = ({children}: LayoutProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 shadow-xl p-4 backdrop-filter backdrop-blur-xl bg-slate-100 text-grey-600">
+      <header className="sticky top-0 z-30 shadow-xl px-4 py-2 backdrop-filter backdrop-blur-xl bg-white text-grey-600">
         <div className="flex justify-between items-center h-16 md:justify-center">
           <div className="text-primary text-2xl font-normal">Perma-Tweeter</div>
           <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
@@ -75,19 +74,19 @@ const Layout = ({children}: LayoutProps) => {
                 <a
                   rel="noopener noreferrer"
                   href="#"
-                  className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent ${
+                  className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
                     router.pathname === "/tweets" ? "text-primary border-primary" : ""
                   }`}>
                   Feeds
                 </a>
               </Link>
             </li>
-            <li className="flex">
+            <li className="flex hover:text-grey-500">
               <Link href="/crosspost" legacyBehavior>
                 <a
                   rel="noopener noreferrer"
                   href="#"
-                  className={`flex items-center px-4 -mb-1 border-b-2 border-transparent ${
+                  className={`flex items-center px-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
                     router.pathname === "/crosspost" ? "text-primary border-primary" : ""
                   }`}>
                   Cross-post a tweet
@@ -111,7 +110,7 @@ const Layout = ({children}: LayoutProps) => {
                 </svg>
               </Button>
               <ul className="absolute hidden text-white pt-1 group-hover:block">
-                {accounts.map(({address}) => (
+                {accounts.map(({ address }) => (
                   <li
                     key={address}
                     className="first:rounded-t last:rounded-b bg-primary hover:bg-gray-500">
@@ -130,8 +129,7 @@ const Layout = ({children}: LayoutProps) => {
               id="connect-button"
               onClick={handleConnect}
               className="normal-case"
-              color="primary"
-              variant="outline">
+              color="primary">
               Connect Polkadot.js
             </Button>
           )}
