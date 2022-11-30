@@ -13,7 +13,7 @@ import AuthButton from "src/components/Button";
 import { unstable_getServerSession } from "next-auth/next";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { TweetWithAuthorProps } from "src/types/common";
-const Appbar = dynamic(() => import("src/components/Appbar"), {
+const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
 
@@ -29,7 +29,7 @@ const CrossPostPage: NextPage = () => {
     createSpaceWithTweet,
     createPostWithSpaceId,
   } = useSubSocialApiHook();
-  const { account } = useWalletStore((state) => ({
+  const { account } = useWalletStore(state => ({
     account: state.account,
   }));
 
@@ -47,9 +47,7 @@ const CrossPostPage: NextPage = () => {
 
   const [tweetUrl, setTweetUrl] = useState("");
   const [loadingTweet, setLoadingTweet] = useState(false);
-  const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(
-    null
-  );
+  const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
   const [selectedSpaceId, setSelectedSpaceId] = useState("");
 
   if (status === "loading") return <FullScreenLoading />;
@@ -60,8 +58,7 @@ const CrossPostPage: NextPage = () => {
         <p>Access unauthorized, please login first</p>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => router.push("/")}
-        >
+          onClick={() => router.push("/")}>
           Go back to login
         </button>
       </div>
@@ -114,7 +111,7 @@ const CrossPostPage: NextPage = () => {
   };
 
   const getAuthor = (tweet: TweetWithAuthorProps) => {
-    const temp = tweet.users?.find((user) => user.id === tweet.author_id);
+    const temp = tweet.users?.find(user => user.id === tweet.author_id);
 
     return {
       temp,
@@ -157,10 +154,8 @@ const CrossPostPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Appbar>
-        <h1 className="text-3xl font-bold text-center p-4">
-          Cross-post Tweet to Subsocial
-        </h1>
+      <Layout>
+        <h1 className="text-3xl font-bold text-center p-4">Cross-post Tweet to Subsocial</h1>
 
         <div className="grid grid-cols-[0.75fr_1.75fr_1.75fr] max-w-full h-screen">
           <div className="flex flex-col self-start mt-4 p-4 gap-2">
@@ -168,17 +163,13 @@ const CrossPostPage: NextPage = () => {
             <a>{`Welcome! You are logged in as @${session.user.name}`}</a>
           </div>
 
-          <div
-            id="fetch-tweet-container"
-            className="flex flex-col max-h-screen p-4 gap-2"
-          >
+          <div id="fetch-tweet-container" className="flex flex-col max-h-screen p-4 gap-2">
             <h2 className="text-lg font-bold">1. Find tweet using URL</h2>
             {fetchedTweet ? (
               <div
                 key={fetchedTweet.id}
                 className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
-                flex flex-col items-center mb-4"
-              >
+                flex flex-col items-center mb-4">
                 <div className="flex flex-row items-center self-start justify-center gap-2">
                   <Image
                     src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
@@ -188,18 +179,11 @@ const CrossPostPage: NextPage = () => {
                     height="32"
                   />
                   <div>
-                    <div>
-                      {getAuthor(fetchedTweet).temp?.name ?? "Twitter user"}
-                    </div>
-                    <div>
-                      {`@${getAuthor(fetchedTweet).temp?.username}` ??
-                        "@username"}
-                    </div>
+                    <div>{getAuthor(fetchedTweet).temp?.name ?? "Twitter user"}</div>
+                    <div>{`@${getAuthor(fetchedTweet).temp?.username}` ?? "@username"}</div>
                   </div>
                 </div>
-                <div className="flex flex-col items-start py-2 px-4">
-                  {fetchedTweet.text}
-                </div>
+                <div className="flex flex-col items-start py-2 px-4">{fetchedTweet.text}</div>
               </div>
             ) : (
               <></>
@@ -220,27 +204,23 @@ const CrossPostPage: NextPage = () => {
               <button
                 className="disabled:bg-gray-500 disabled:hover:bg-gray-700 text-red font-bold py-2 px-4 rounded"
                 disabled={!tweetUrl}
-                onClick={handleClearUrl}
-              >
+                onClick={handleClearUrl}>
                 Clear URL
               </button>
               <button
                 className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 disabled={loadingTweet || !tweetUrl}
-                onClick={handleFetchTweet}
-              >
+                onClick={handleFetchTweet}>
                 {loadingTweet ? "Fetching tweet..." : "Find tweet"}
               </button>
             </div>
           </div>
 
           <div className="flex flex-col self-start items-center justify-center p-4 gap-2">
-            <h2 className="text-lg font-bold">
-              2. Connect your wallet and select a space
-            </h2>
+            <h2 className="text-lg font-bold">2. Connect your wallet and select a space</h2>
             <p>Space you owned: {spaces ? "" : "0"}</p>
             <div>
-              {spaces?.map((space) => (
+              {spaces?.map(space => (
                 <button
                   className={`${
                     selectedSpaceId === space.id
@@ -248,8 +228,7 @@ const CrossPostPage: NextPage = () => {
                       : ""
                   } rounded border-2 border-gray-700 p-2`}
                   key={space.id}
-                  onClick={() => handleToggleSelect(space)}
-                >
+                  onClick={() => handleToggleSelect(space)}>
                   Space ID: {space.id}
                 </button>
               ))}
@@ -257,18 +236,14 @@ const CrossPostPage: NextPage = () => {
             <button
               className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={Boolean(!account)}
-              onClick={handleFetchSpaces}
-            >
+              onClick={handleFetchSpaces}>
               {loadingSpaces ? "Loading" : "Find my space(s)"}
             </button>
             {!spaces ? (
               <button
                 className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={
-                  !spaces && Boolean(!account) && Boolean(!fetchedTweet)
-                }
-                onClick={handleCreateSpaceWithTweet}
-              >
+                disabled={!spaces && Boolean(!account) && Boolean(!fetchedTweet)}
+                onClick={handleCreateSpaceWithTweet}>
                 Create space with tweet
               </button>
             ) : (
@@ -278,14 +253,9 @@ const CrossPostPage: NextPage = () => {
               <div>
                 <button
                   className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  disabled={
-                    !fetchedTweet || !selectedSpaceId || loadingCreatePost
-                  }
-                  onClick={handleCreatePostWithSpaceId}
-                >
-                  {loadingCreatePost
-                    ? "Sending, sign and open console"
-                    : "Send post to Subsocial!"}
+                  disabled={!fetchedTweet || !selectedSpaceId || loadingCreatePost}
+                  onClick={handleCreatePostWithSpaceId}>
+                  {loadingCreatePost ? "Sending, sign and open console" : "Send post to Subsocial!"}
                 </button>
               </div>
 
@@ -300,7 +270,7 @@ const CrossPostPage: NextPage = () => {
             </div>
           </div>
         </div>
-      </Appbar>
+      </Layout>
     </>
   );
 };
