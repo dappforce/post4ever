@@ -1,4 +1,5 @@
 import { signOut, signIn } from "next-auth/react";
+import { Button } from "react-daisyui";
 
 type AuthButtonProps = {
   text: string;
@@ -14,24 +15,26 @@ const AuthButton = ({ text, isSignIn }: AuthButtonProps) => {
           signIn("twitter", {
             callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/tweets`,
           })
-        }
-      >
+        }>
         {text}
       </button>
     );
   }
 
   return (
-    <button
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+    <Button
+      className="normal-case"
+      variant="outline"
+      color="primary"
+      size="sm"
+      fullWidth={true}
       onClick={() =>
         signOut({
           callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}`,
         })
-      }
-    >
+      }>
       {text}
-    </button>
+    </Button>
   );
 };
 
