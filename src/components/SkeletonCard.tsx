@@ -8,7 +8,7 @@ const SkeletonCard = () => {
     <Card
       key="skeleton-card"
       bordered={false}
-      className="drop-shadow-xl bg-white p-4 mt-4 h-fit border">
+      className="drop-shadow-xl bg-white px-4 py-2 mt-4 h-fit border">
       <Card.Body>
         <div className="flex">
           <Skeleton inline circle width={40} height={40} containerClassName="w-50 mr-4" />
@@ -17,7 +17,7 @@ const SkeletonCard = () => {
             <Skeleton />
           </div>
         </div>
-        <div>
+        <div className="py-2 px-4">
           <Skeleton count={3} />
         </div>
       </Card.Body>

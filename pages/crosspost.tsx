@@ -15,7 +15,7 @@ import { TweetWithAuthorProps } from "src/types/common";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
-import { Button, Card, Tooltip, Input } from "react-daisyui";
+import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import SkeletonCard from "src/components/SkeletonCard";
 
@@ -232,27 +232,27 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                 <Card
                   key={fetchedTweet.id}
                   bordered={false}
-                  className="drop-shadow-xl bg-white p-4 mt-4 h-fit border">
-                  <div className="flex flex-row items-center self-start justify-center gap-2">
-                    <Image
-                      src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
-                      alt="user-avatar"
-                      className="rounded-full"
-                      width="32"
-                      height="32"
-                    />
-                    <div>
-                      <div className="font-bold text-base-100">
-                        {getAuthor(fetchedTweet).temp?.name}
-                      </div>
-                      <div className="font-normal text-gray-500">
-                        {`@${getAuthor(fetchedTweet).temp?.username}`}
+                  className="drop-shadow-xl bg-white px-4 py-2 mt-4 h-fit">
+                  <Card.Body>
+                    <div className="flex flex-row items-center self-start justify-center gap-2">
+                      <Avatar
+                        src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
+                        shape="circle"
+                        size="xs"
+                      />
+                      <div>
+                        <div className="font-bold text-base-100">
+                          {getAuthor(fetchedTweet).temp?.name}
+                        </div>
+                        <div className="font-normal text-gray-500">
+                          {`@${getAuthor(fetchedTweet).temp?.username}`}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col items-start py-2 px-4 font-normal text-base-100">
-                    {fetchedTweet.text}
-                  </div>
+                    <div className="flex flex-col items-start py-2 px-4 font-normal text-base-100">
+                      {fetchedTweet.text}
+                    </div>
+                  </Card.Body>
                 </Card>
               ) : (
                 <></>
