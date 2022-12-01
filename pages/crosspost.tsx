@@ -14,11 +14,12 @@ import { TweetWithAuthorProps } from "src/types/common";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
-import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
+import { Avatar, Button, Card, Tooltip, Input, Select } from "react-daisyui";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import SkeletonCard from "src/components/SkeletonCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import toast, { Toaster } from "react-hot-toast";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -35,6 +36,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     spaces,
     createSpaceWithTweet,
     createPostWithSpaceId,
+    successTx,
   } = useSubSocialApiHook();
   const { account } = useWalletStore(state => ({
     account: state.account,
@@ -65,10 +67,25 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     }
   }, [account]);
 
+  useEffect(() => {
+    if (successTx)
+      toast.custom(
+        <div>
+          <a
+            href={`https://polkadot.js.org/apps/?rpc=wss://rco-para.subsocial.network#/explorer/${successTx}`}>
+            Tx
+          </a>{" "}
+          succesful!
+        </div>,
+      );
+  }, [successTx]);
+
   const [tweetUrl, setTweetUrl] = useState("");
   const [loadingTweet, setLoadingTweet] = useState(false);
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
-  const [selectedSpaceId, setSelectedSpaceId] = useState("");
+  const [selectedSpaceId, setSelectedSpaceId] = useState(
+    spaces && spaces.length ? spaces[0].id : "",
+  );
 
   if (status === "loading") return <FullScreenLoading />;
 
@@ -88,6 +105,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   const handleFetchTweet = async () => {
     setLoadingTweet(true);
+    setFetchedTweet(null);
 
     try {
       const { token } = session;
@@ -176,161 +194,181 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="grid grid-cols-[0.75fr_1.8fr_1.2fr] px-4 max-w-full h-screen">
-          <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
-
-          <Card
-            id="fetch-tweet-container"
-            bordered={false}
-            className="shadow-2xl bg-white m-4 flex flex-col p-4 gap-2 h-fit">
-            <Card.Body>
-              <h2 className="text-lg font-bold text-base-100">1. Find tweet using URL</h2>
-              <div className="flex flex-row gap-4">
-                <fieldset className="w-full space-y-1 text-base-100">
-                  <div className="relative">
-                    <Input
-                      type="url"
-                      name="tweet-url"
-                      id="tweet-url"
-                      placeholder="Tweet URL"
-                      value={tweetUrl}
-                      onChange={handleChange}
-                      required
-                      size="md"
-                      className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
-                    />
-                    <span className="absolute inset-y-0 right-0 flex items-center">
-                      <Button onClick={handleClearUrl} shape="circle" className="btn btn-ghost">
-                        <XCircleIcon className="text-red-700 h-6 w-6" />
+        <div className="grid grid-cols-[0.5fr_1fr_0.5fr] px-4 max-w-full h-screen">
+          <Toaster position="bottom-right" />
+          <div></div>
+          <div className="flex flex-col mt-4 gap-4">
+            <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
+            <Card
+              id="fetch-tweet-container"
+              bordered={false}
+              className="shadow-2xl bg-white flex flex-col gap-2 h-fit">
+              <Card.Body>
+                <h2 className="text-lg font-bold text-base-100">1. Find tweet using URL</h2>
+                <div className="flex flex-row gap-4">
+                  <fieldset className="w-full space-y-1 text-base-100">
+                    <div className="relative">
+                      <Input
+                        type="url"
+                        name="tweet-url"
+                        id="tweet-url"
+                        placeholder="Tweet URL"
+                        value={tweetUrl}
+                        onChange={handleChange}
+                        required
+                        size="md"
+                        className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
+                      />
+                      <span className="absolute inset-y-0 right-0 flex items-center">
+                        <Button
+                          onClick={handleClearUrl}
+                          shape="circle"
+                          className="btn btn-ghost hover:bg-transparent disabled:bg-transparent"
+                          disabled={!tweetUrl}>
+                          <XCircleIcon
+                            className={`${tweetUrl ? "text-red-700" : "text-gray-500"} h-6 w-6`}
+                          />
+                        </Button>
+                      </span>
+                    </div>
+                  </fieldset>
+                  {!tweetUrl ? (
+                    <Tooltip message="Please enter tweet URL">
+                      <Button
+                        color="primary"
+                        className="normal-case whitespace-nowrap disabled:text-white"
+                        disabled
+                        onClick={handleFetchTweet}>
+                        Find tweet
                       </Button>
-                    </span>
-                  </div>
-                </fieldset>
-                {!tweetUrl ? (
-                  <Tooltip message="Please enter tweet URL">
+                    </Tooltip>
+                  ) : (
                     <Button
                       color="primary"
                       className="normal-case whitespace-nowrap"
-                      disabled
+                      disabled={loadingTweet}
                       onClick={handleFetchTweet}>
-                      Find tweet
+                      {loadingTweet ? "Fetching..." : "Find tweet"}
+                    </Button>
+                  )}
+                </div>
+
+                {loadingTweet ? <SkeletonCard /> : <></>}
+
+                {fetchedTweet ? (
+                  <Card
+                    key={fetchedTweet.id}
+                    bordered={false}
+                    className="drop-shadow-xl bg-white py-2 mt-4 h-fit">
+                    <Card.Body className="px-6">
+                      <div className="flex flex-row items-center self-start justify-center gap-2">
+                        <Avatar
+                          src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
+                          shape="circle"
+                          size="xs"
+                        />
+                        <div>
+                          <div className="font-bold text-base-100">
+                            {getAuthor(fetchedTweet).temp?.name}
+                          </div>
+                          <div className="font-normal text-gray-500">
+                            {`@${getAuthor(fetchedTweet).temp?.username}`}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start py-2 px-4 font-normal text-base-100">
+                        {fetchedTweet.text}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                ) : (
+                  <></>
+                )}
+              </Card.Body>
+            </Card>
+
+            <Card
+              bordered={false}
+              className="shadow-2xl bg-white flex flex-col self-center items-center justify-center gap-2">
+              <Card.Body>
+                <h2 className="text-lg font-bold text-base-100">
+                  2. Connect wallet and select a SS space
+                </h2>
+
+                {account ? (
+                  <Button
+                    disabled={loadingSpaces}
+                    onClick={handleFetchSpaces}
+                    color="primary"
+                    variant={spaces ? "outline" : undefined}
+                    fullWidth
+                    className="normal-case">
+                    {loadingSpaces ? "Loading" : "Find my SS space(s)"}
+                  </Button>
+                ) : (
+                  <Tooltip message="Please connect Polkadot.js first">
+                    <Button
+                      disabled
+                      color="primary"
+                      fullWidth
+                      className="normal-case disabled:text-white">
+                      Find my SS space(s)
+                    </Button>
+                  </Tooltip>
+                )}
+
+                <p>Select your Subsocial space:</p>
+                <div>
+                  {loadingSpaces ? (
+                    <Skeleton />
+                  ) : spaces ? (
+                    <Select
+                      value={selectedSpaceId}
+                      onChange={setSelectedSpaceId}
+                      color="primary"
+                      className="bg-transparent w-full">
+                      <option disabled selected>
+                        Select your Subsocial space
+                      </option>
+                      <>
+                        {spaces.map(space => (
+                          <option key={space.id} value={space.id}>
+                            Space ID: {space.id}
+                          </option>
+                        ))}
+                      </>
+                    </Select>
+                  ) : (
+                    "No space to be selected"
+                  )}
+                </div>
+
+                {!account ? (
+                  <Tooltip message="Please connect Polkadot.js first">
+                    <Button fullWidth className="normal-case disabled:text-white" disabled>
+                      Send tweet to Subsocial
+                    </Button>
+                  </Tooltip>
+                ) : !fetchedTweet ? (
+                  <Tooltip message="Please find a tweet first">
+                    <Button fullWidth className="normal-case disabled:text-white" disabled>
+                      Send tweet to Subsocial
                     </Button>
                   </Tooltip>
                 ) : (
                   <Button
-                    color="primary"
-                    className="normal-case whitespace-nowrap"
-                    disabled={loadingTweet}
-                    onClick={handleFetchTweet}>
-                    {loadingTweet ? "Fetching..." : "Find tweet"}
-                  </Button>
-                )}
-              </div>
-
-              {loadingTweet ? <SkeletonCard /> : <></>}
-
-              {fetchedTweet ? (
-                <Card
-                  key={fetchedTweet.id}
-                  bordered={false}
-                  className="drop-shadow-xl bg-white px-4 py-2 mt-4 h-fit">
-                  <Card.Body>
-                    <div className="flex flex-row items-center self-start justify-center gap-2">
-                      <Avatar
-                        src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
-                        shape="circle"
-                        size="xs"
-                      />
-                      <div>
-                        <div className="font-bold text-base-100">
-                          {getAuthor(fetchedTweet).temp?.name}
-                        </div>
-                        <div className="font-normal text-gray-500">
-                          {`@${getAuthor(fetchedTweet).temp?.username}`}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-start py-2 px-4 font-normal text-base-100">
-                      {fetchedTweet.text}
-                    </div>
-                  </Card.Body>
-                </Card>
-              ) : (
-                <></>
-              )}
-            </Card.Body>
-          </Card>
-
-          <Card
-            bordered={false}
-            className="shadow-2xl m-4 bg-white flex flex-col self-start items-center justify-center p-4 gap-2">
-            <Card.Body>
-              <h2 className="text-lg font-bold text-base-100">
-                2. Connect wallet and select a SS space
-              </h2>
-
-              {account ? (
-                <Button
-                  disabled={loadingSpaces}
-                  onClick={handleFetchSpaces}
-                  color="primary"
-                  fullWidth
-                  className="normal-case">
-                  {loadingSpaces ? "Loading" : "Find my SS space(s)"}
-                </Button>
-              ) : (
-                <Tooltip message="Please connect Polkadot.js account">
-                  <Button disabled color="primary" fullWidth className="normal-case">
-                    Find my SS space(s)
-                  </Button>
-                </Tooltip>
-              )}
-
-              <p>Select your Subsocial space:</p>
-              <div>
-                {loadingSpaces ? (
-                  <Skeleton />
-                ) : spaces ? (
-                  spaces.map(space => (
-                    <Button
-                      key={space.id}
-                      onClick={() => handleToggleSelect(space)}
-                      variant="outline"
-                      className={`${
-                        selectedSpaceId === space.id
-                          ? "bg-primary border border-base-100 font-bold text-white"
-                          : "border border-primary font-bold text-base-100"
-                      }`}>
-                      Space ID: {space.id}
-                    </Button>
-                  ))
-                ) : (
-                  "No space to be selected"
-                )}
-              </div>
-              <div className="group relative inline-block">
-                <div>
-                  <Button
                     fullWidth
                     color="primary"
-                    disabled={!fetchedTweet || !selectedSpaceId || loadingCreatePost}
-                    onClick={handleCreatePostWithSpaceId}
+                    disabled={!fetchedTweet || loadingCreatePost}
+                    onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}
                     className="normal-case disabled:text-white">
                     {loadingCreatePost ? "Sign and open console" : "Send tweet to Subsocial"}
                   </Button>
-                </div>
-
-                {!fetchedTweet ? (
-                  <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded text-red-500 bg-gray-700 py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
-                    <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm text-red-500 bg-gray-700"></span>
-                    Find tweet to be sent first
-                  </div>
-                ) : (
-                  <></>
                 )}
-              </div>
-            </Card.Body>
-          </Card>
+              </Card.Body>
+            </Card>
+          </div>
+          <div></div>
         </div>
       </Layout>
     </>
