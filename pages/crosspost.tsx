@@ -17,6 +17,8 @@ import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
 import { Button, Card, Tooltip, Input } from "react-daisyui";
 import { XCircleIcon } from "@heroicons/react/20/solid";
+import SkeletonCard from "src/components/SkeletonCard";
+
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
@@ -125,6 +127,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   const handleClearUrl = () => {
     setTweetUrl("");
+    setFetchedTweet(null);
   };
 
   const getAuthor = (tweet: TweetWithAuthorProps) => {
@@ -223,6 +226,8 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                 )}
               </div>
 
+              {loadingTweet ? <SkeletonCard /> : <></>}
+
               {fetchedTweet ? (
                 <Card
                   key={fetchedTweet.id}
@@ -238,10 +243,10 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                     />
                     <div>
                       <div className="font-bold text-base-100">
-                        {getAuthor(fetchedTweet).temp?.name ?? "Twitter user"}
+                        {getAuthor(fetchedTweet).temp?.name}
                       </div>
                       <div className="font-normal text-gray-500">
-                        {`@${getAuthor(fetchedTweet).temp?.username}` ?? "@username"}
+                        {`@${getAuthor(fetchedTweet).temp?.username}`}
                       </div>
                     </div>
                   </div>
