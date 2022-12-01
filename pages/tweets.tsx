@@ -88,7 +88,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
       </Head>
 
       <Layout>
-        <div className="flex flex-row items-center justify-center max-w-full max-h-screen">
+        <div className="grid grid-cols-[0.75fr_1.8fr_1.2fr] px-4 max-w-full h-screen">
           <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
           <div className="flex flex-row max-h-screen p-4">
             <div className="flex flex-col overflow-y-auto overflow-x-hidden">
