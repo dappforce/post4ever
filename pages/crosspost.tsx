@@ -16,6 +16,7 @@ import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
 import { Button, Card, Tooltip, Input } from "react-daisyui";
+import { XCircleIcon } from "@heroicons/react/20/solid";
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
@@ -195,11 +196,8 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                       className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
                     />
                     <span className="absolute inset-y-0 right-0 flex items-center">
-                      <Button
-                        variant="link"
-                        onClick={handleClearUrl}
-                        className="normal-case no-underline">
-                        Clear URL
+                      <Button onClick={handleClearUrl} shape="circle" className="btn btn-ghost">
+                        <XCircleIcon className="text-red-700 h-6 w-6" />
                       </Button>
                     </span>
                   </div>
