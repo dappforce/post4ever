@@ -195,7 +195,10 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                       className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
                     />
                     <span className="absolute inset-y-0 right-0 flex items-center">
-                      <Button variant="link" onClick={handleClearUrl}>
+                      <Button
+                        variant="link"
+                        onClick={handleClearUrl}
+                        className="normal-case no-underline">
                         Clear URL
                       </Button>
                     </span>
@@ -205,7 +208,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                   <Tooltip message="Please enter tweet URL">
                     <Button
                       color="primary"
-                      className="normal-case w-auto"
+                      className="normal-case whitespace-nowrap"
                       disabled
                       onClick={handleFetchTweet}>
                       Find tweet
@@ -214,10 +217,10 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                 ) : (
                   <Button
                     color="primary"
-                    className="normal-case w-auto"
+                    className="normal-case whitespace-nowrap"
                     disabled={loadingTweet}
                     onClick={handleFetchTweet}>
-                    {loadingTweet ? "Fetching tweet..." : "Find tweet"}
+                    {loadingTweet ? "Fetching..." : "Find tweet"}
                   </Button>
                 )}
               </div>
@@ -257,57 +260,52 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <Card
             bordered={false}
             className="shadow-2xl m-4 bg-white flex flex-col self-start items-center justify-center p-4 gap-2">
-            <h2 className="text-lg font-bold">2. Connect your wallet and select a space</h2>
-            <p>Space you owned: {spaces ? "" : "0"}</p>
-            <div>
-              {spaces?.map(space => (
-                <button
-                  className={`${
-                    selectedSpaceId === space.id
-                      ? "bg-blue-600 border border-blue-300 font-bold"
-                      : ""
-                  } rounded border-2 border-gray-700 p-2`}
-                  key={space.id}
-                  onClick={() => handleToggleSelect(space)}>
-                  Space ID: {space.id}
-                </button>
-              ))}
-            </div>
-            <button
-              className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              disabled={Boolean(!account)}
-              onClick={handleFetchSpaces}>
-              {loadingSpaces ? "Loading" : "Find my space(s)"}
-            </button>
-            {!spaces ? (
+            <Card.Body>
+              <h2 className="text-lg font-bold text-base-100">
+                2. Connect wallet and select a SS space
+              </h2>
+              <p>Space you owned: {spaces ? "" : "0"}</p>
+              <div>
+                {spaces?.map(space => (
+                  <button
+                    className={`${
+                      selectedSpaceId === space.id
+                        ? "bg-blue-600 border border-blue-300 font-bold"
+                        : ""
+                    } rounded border-2 border-gray-700 p-2`}
+                    key={space.id}
+                    onClick={() => handleToggleSelect(space)}>
+                    Space ID: {space.id}
+                  </button>
+                ))}
+              </div>
               <button
                 className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={!spaces && Boolean(!account) && Boolean(!fetchedTweet)}
-                onClick={handleCreateSpaceWithTweet}>
-                Create space with tweet
+                disabled={Boolean(!account)}
+                onClick={handleFetchSpaces}>
+                {loadingSpaces ? "Loading" : "Find my SS space(s)"}
               </button>
-            ) : (
-              <></>
-            )}
-            <div className="group relative inline-block">
-              <div>
-                <button
-                  className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  disabled={!fetchedTweet || !selectedSpaceId || loadingCreatePost}
-                  onClick={handleCreatePostWithSpaceId}>
-                  {loadingCreatePost ? "Sending, sign and open console" : "Send post to Subsocial!"}
-                </button>
-              </div>
-
-              {!fetchedTweet ? (
-                <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded text-red-500 bg-gray-700 py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
-                  <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm text-red-500 bg-gray-700"></span>
-                  Find tweet to be sent first
+              {!spaces ? <></> : <></>}
+              <div className="group relative inline-block">
+                <div>
+                  <button
+                    className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={!fetchedTweet || !selectedSpaceId || loadingCreatePost}
+                    onClick={handleCreatePostWithSpaceId}>
+                    {loadingCreatePost ? "Sign and open console" : "Send post to Subsocial!"}
+                  </button>
                 </div>
-              ) : (
-                <></>
-              )}
-            </div>
+
+                {!fetchedTweet ? (
+                  <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded text-red-500 bg-gray-700 py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
+                    <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm text-red-500 bg-gray-700"></span>
+                    Find tweet to be sent first
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </Card.Body>
           </Card>
         </div>
       </Layout>
