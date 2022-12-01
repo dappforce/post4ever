@@ -3,7 +3,6 @@ import type { SpaceData } from "@subsocial/api/types";
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useRouter } from "next/router";
@@ -18,6 +17,8 @@ import { AuthenticatedPageProps } from "src/types/common";
 import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import SkeletonCard from "src/components/SkeletonCard";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -267,36 +268,56 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
               <h2 className="text-lg font-bold text-base-100">
                 2. Connect wallet and select a SS space
               </h2>
-              <p>Space you owned: {spaces ? "" : "0"}</p>
+
+              {account ? (
+                <Button
+                  disabled={loadingSpaces}
+                  onClick={handleFetchSpaces}
+                  color="primary"
+                  fullWidth
+                  className="normal-case">
+                  {loadingSpaces ? "Loading" : "Find my SS space(s)"}
+                </Button>
+              ) : (
+                <Tooltip message="Please connect Polkadot.js account">
+                  <Button disabled color="primary" fullWidth className="normal-case">
+                    Find my SS space(s)
+                  </Button>
+                </Tooltip>
+              )}
+
+              <p>Select your Subsocial space:</p>
               <div>
-                {spaces?.map(space => (
-                  <button
-                    className={`${
-                      selectedSpaceId === space.id
-                        ? "bg-blue-600 border border-blue-300 font-bold"
-                        : ""
-                    } rounded border-2 border-gray-700 p-2`}
-                    key={space.id}
-                    onClick={() => handleToggleSelect(space)}>
-                    Space ID: {space.id}
-                  </button>
-                ))}
+                {loadingSpaces ? (
+                  <Skeleton />
+                ) : spaces ? (
+                  spaces.map(space => (
+                    <Button
+                      key={space.id}
+                      onClick={() => handleToggleSelect(space)}
+                      variant="outline"
+                      className={`${
+                        selectedSpaceId === space.id
+                          ? "bg-primary border border-base-100 font-bold text-white"
+                          : "border border-primary font-bold text-base-100"
+                      }`}>
+                      Space ID: {space.id}
+                    </Button>
+                  ))
+                ) : (
+                  "No space to be selected"
+                )}
               </div>
-              <button
-                className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={Boolean(!account)}
-                onClick={handleFetchSpaces}>
-                {loadingSpaces ? "Loading" : "Find my SS space(s)"}
-              </button>
-              {!spaces ? <></> : <></>}
               <div className="group relative inline-block">
                 <div>
-                  <button
-                    className="bg-blue-500 disabled:bg-gray-500 disabled:hover:bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  <Button
+                    fullWidth
+                    color="primary"
                     disabled={!fetchedTweet || !selectedSpaceId || loadingCreatePost}
-                    onClick={handleCreatePostWithSpaceId}>
-                    {loadingCreatePost ? "Sign and open console" : "Send post to Subsocial!"}
-                  </button>
+                    onClick={handleCreatePostWithSpaceId}
+                    className="normal-case disabled:text-white">
+                    {loadingCreatePost ? "Sign and open console" : "Send tweet to Subsocial"}
+                  </Button>
                 </div>
 
                 {!fetchedTweet ? (
