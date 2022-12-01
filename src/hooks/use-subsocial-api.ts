@@ -9,6 +9,7 @@ import { IpfsContent } from "@subsocial/api/substrate/wrappers";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { PostProps, TweetWithAuthorProps } from "src/types/common";
+import toast from "react-hot-toast";
 
 type PostTransactionProps = {
   savedPosts: PostProps[];
@@ -36,6 +37,7 @@ export const useSubSocialApiHook = () => {
   const [loading, setLoading] = useState(false);
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
+  const [successTx, setSuccessTx] = useState<string | null>(null);
 
   const initApi = async ({ mnemonic }: InitApiProps): Promise<void> => {
     if (mnemonic) {
@@ -46,23 +48,27 @@ export const useSubSocialApiHook = () => {
     }
   };
 
-  const createSpaceWithTweet = async ({
-    account,
-    content,
-  }: CreateSpaceProps) => {
+  const createSpaceWithTweet = async ({ account, content }: CreateSpaceProps) => {
     setLoading(true);
+
+    const toastId = toast.loading("Loading...", {
+      style: {
+        minWidth: "300px",
+      },
+    });
 
     try {
       const { web3FromSource } = await import("@polkadot/extension-dapp");
 
       const injector = await web3FromSource(account.meta.source);
 
-      const temp = content.users?.find((user) => user.id === content.author_id);
+      const temp = content.users?.find(user => user.id === content.author_id);
 
       const cid = await subsocialApi?.ipfs.saveContent({
         title: `Tweet by ${temp?.name}`,
         body: content.text,
         tags: [temp?.name, temp?.username, temp?.profile_image_url],
+        canonical: `https://twitter.com/${temp?.username}/status/${content.id}`,
       });
 
       const substrateApi = await subsocialApi?.blockchain.api;
@@ -76,7 +82,7 @@ export const useSubSocialApiHook = () => {
         {
           signer: injector.signer,
         },
-        async (result) => {
+        async result => {
           const { status } = result;
 
           if (!result || !status) {
@@ -84,19 +90,21 @@ export const useSubSocialApiHook = () => {
           }
 
           if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized
-              ? status.asFinalized
-              : status.asInBlock;
+            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
 
-            console.log(
-              `✅ createSpaceWithTweet finalized. Block hash: ${blockHash.toString()}`
-            );
+            console.log(`✅ createSpaceWithTweet finalized. Block hash: ${blockHash.toString()}`);
+            toast.success("Tx successful!", { id: toastId });
+            setSuccessTx(blockHash.toString());
           } else if (result.isError) {
+            console.log({ result });
             console.log(JSON.stringify(result));
           } else {
             console.log(`⏱ Current tx status: ${status.type}`);
+            toast(`⏱ Current tx status: ${status.type}`, {
+              id: toastId,
+            });
           }
-        }
+        },
       );
     } catch (error) {
       console.warn({ error });
@@ -110,9 +118,7 @@ export const useSubSocialApiHook = () => {
 
     try {
       await cryptoWaitReady();
-      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(
-        account.address
-      );
+      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(account.address);
 
       if (spaceIds) {
         const spaces = await subsocialApi?.findPublicSpaces(bnsToIds(spaceIds));
@@ -138,6 +144,12 @@ export const useSubSocialApiHook = () => {
   }: CreatePostWithSpaceIdProps) => {
     setLoadingCreatePost(true);
 
+    const toastId = toast.loading("Loading...", {
+      style: {
+        minWidth: "300px",
+      },
+    });
+
     try {
       await cryptoWaitReady();
 
@@ -145,7 +157,7 @@ export const useSubSocialApiHook = () => {
 
       const injector = await web3FromSource(account.meta.source);
 
-      const temp = content.users?.find((user) => user.id === content.author_id);
+      const temp = content.users?.find(user => user.id === content.author_id);
 
       const cid = await subsocialApi?.ipfs.saveContent({
         title: `Tweet by ${temp?.name}`,
@@ -158,18 +170,14 @@ export const useSubSocialApiHook = () => {
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
-      const tx = substrateApi.tx.posts.createPost(
-        spaceId,
-        { RegularPost: null },
-        IpfsContent(cid)
-      );
+      const tx = substrateApi.tx.posts.createPost(spaceId, { RegularPost: null }, IpfsContent(cid));
 
       tx.signAndSend(
         account.address,
         {
           signer: injector.signer,
         },
-        async (result) => {
+        async result => {
           const { status } = result;
 
           if (!result || !status) {
@@ -178,30 +186,28 @@ export const useSubSocialApiHook = () => {
           }
 
           if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized
-              ? status.asFinalized
-              : status.asInBlock;
+            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
 
-            console.log(
-              `✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`
-            );
+            console.log(`✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`);
             setLoadingCreatePost(false);
+            toast.success("Tx successful!", { id: toastId });
+            setSuccessTx(blockHash.toString());
           } else if (result.isError) {
             console.log(JSON.stringify(result));
           } else {
             console.log(`⏱ Current tx status: ${status.type}`);
+            toast(`⏱ Current tx status: ${status.type}`, {
+              id: toastId,
+            });
           }
-        }
+        },
       );
     } catch (error) {
       console.warn({ error });
     }
   };
 
-  const postTransaction = async ({
-    savedPosts,
-    mnemonic,
-  }: PostTransactionProps) => {
+  const postTransaction = async ({ savedPosts, mnemonic }: PostTransactionProps) => {
     setLoadingCreatePost(true);
     try {
       await cryptoWaitReady();
@@ -229,10 +235,10 @@ export const useSubSocialApiHook = () => {
         const postTx = substrateApi.tx.posts.createPost(
           spaceId,
           { RegularPost: null },
-          IpfsContent(singlePostCid)
+          IpfsContent(singlePostCid),
         );
 
-        postTx.signAndSend(pair, async (result) => {
+        postTx.signAndSend(pair, async result => {
           const { status } = result;
 
           if (!result || !status) {
@@ -241,13 +247,9 @@ export const useSubSocialApiHook = () => {
           }
 
           if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized
-              ? status.asFinalized
-              : status.asInBlock;
+            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
 
-            console.log(
-              `✅ singleCreatePostTx finalized. Block hash: ${blockHash.toString()}`
-            );
+            console.log(`✅ singleCreatePostTx finalized. Block hash: ${blockHash.toString()}`);
             setLoadingCreatePost(false);
           } else if (result.isError) {
             console.log(JSON.stringify(result));
@@ -276,11 +278,7 @@ export const useSubSocialApiHook = () => {
 
         for (const element of result) {
           const [spaceId, regularPost, content] = element;
-          const tx = substrateApi.tx.posts.createPost(
-            spaceId,
-            regularPost,
-            content
-          );
+          const tx = substrateApi.tx.posts.createPost(spaceId, regularPost, content);
           submittablePosts.push(tx);
         }
 
@@ -288,7 +286,7 @@ export const useSubSocialApiHook = () => {
 
         if (!batchTx) throw new Error("batchTx creation error!");
 
-        batchTx.signAndSend(pair, async (result) => {
+        batchTx.signAndSend(pair, async result => {
           const { status } = result;
 
           if (!result || !status) {
@@ -297,13 +295,9 @@ export const useSubSocialApiHook = () => {
           }
 
           if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized
-              ? status.asFinalized
-              : status.asInBlock;
+            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
 
-            console.log(
-              `✅ batchCreatePostTx finalized. Block hash: ${blockHash.toString()}`
-            );
+            console.log(`✅ batchCreatePostTx finalized. Block hash: ${blockHash.toString()}`);
             setLoadingCreatePost(false);
           } else if (result.isError) {
             console.log(JSON.stringify(result));
@@ -324,6 +318,7 @@ export const useSubSocialApiHook = () => {
     initApi,
     createSpaceWithTweet,
     createPostWithSpaceId,
+    successTx,
     spaces,
     loadingSpaces,
     loadingCreatePost,
