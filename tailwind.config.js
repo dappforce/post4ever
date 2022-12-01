@@ -10,6 +10,7 @@ module.exports = {
     extend: {},
   },
   variants: {
+    background: ["disabled"],
     extend: {
       display: ["group-hover"],
       border: ["first", "last"],
