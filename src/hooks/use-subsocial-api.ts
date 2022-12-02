@@ -190,7 +190,6 @@ export const useSubSocialApiHook = () => {
 
             console.log(`✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`);
             setLoadingCreatePost(false);
-            toast.success("Tx successful!", { id: toastId });
             setSuccessTx(blockHash.toString());
           } else if (result.isError) {
             console.log(JSON.stringify(result));
