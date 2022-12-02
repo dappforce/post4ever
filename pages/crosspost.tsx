@@ -200,12 +200,13 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <div></div>
           <div className="flex flex-col mt-4 gap-4">
             <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
+
             <Card
               id="fetch-tweet-container"
               bordered={false}
               className="shadow-2xl bg-white flex flex-col gap-2 h-fit">
               <Card.Body>
-                <h2 className="text-lg font-bold text-base-100">1. Find tweet using URL</h2>
+                <h2 className="text-lg font-bold text-base-100">2. Find tweet using URL</h2>
                 <div className="flex flex-row gap-4">
                   <fieldset className="w-full space-y-1 text-base-100">
                     <div className="relative">
@@ -293,7 +294,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
               className="shadow-2xl bg-white flex flex-col self-center items-center justify-center gap-2">
               <Card.Body>
                 <h2 className="text-lg font-bold text-base-100">
-                  2. Connect wallet and select a SS space
+                  3. Connect wallet and select a SS space
                 </h2>
 
                 <p>Select your Subsocial space:</p>
