@@ -10,8 +10,8 @@ type TwitterUserProfileCardProps = {
 };
 
 const TwitterUserProfileCard = ({ authenticatedUser }: TwitterUserProfileCardProps) => (
-  <Card className="shadow-2xl bg-white flex flex-col gap-2 h-fit" bordered={false}>
-    <Card.Body>
+  <Card className="shadow-2xl bg-white flex flex-col h-fit" bordered={false}>
+    <Card.Body className="gap-6">
       <h2 className="text-lg font-bold text-base-100">1. Connect your Twitter account</h2>
       <div className="flex flex-row justify-center gap-4">
         <div className="flex flex-row justify-center items-center gap-2">
