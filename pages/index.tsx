@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
   if (status === "loading") return <FullScreenLoading />;
 
-  if (status === "authenticated") router.push("/tweets");
+  if (status === "authenticated") router.push("/crosspost");
 
   return (
     <div className={styles.container}>
