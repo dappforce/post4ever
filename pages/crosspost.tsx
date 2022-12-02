@@ -247,6 +247,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                   ) : (
                     <Button
                       color="primary"
+                      variant={fetchedTweet ? "outline" : undefined}
                       className="normal-case whitespace-nowrap"
                       disabled={loadingTweet}
                       onClick={handleFetchTweet}>
