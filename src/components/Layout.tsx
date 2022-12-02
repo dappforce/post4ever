@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useWalletStore } from "src/store";
 
@@ -14,16 +14,17 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const { account, setAccount } = useWalletStore(state => ({
+  const { account, setAccount, readyAccounts } = useWalletStore(state => ({
     account: state.account,
     setAccount: state.setAccount,
+    readyAccounts: state.accounts,
   }));
 
   const router = useRouter();
 
   const [walletAuthorized, setWalletAuthorized] = useState(false);
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(null);
+  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>(readyAccounts);
+  const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(account);
 
   const getAccounts = async () => {
     const extensions = await web3Enable("Perma-Tweeter dapp");
@@ -94,14 +95,14 @@ const Layout = ({ children }: LayoutProps) => {
               </Link>
             </li>
           </ul>
-          {walletAuthorized && accounts.length ? (
+          {walletAuthorized && accounts && accounts.length && selectedAccount ? (
             <div className="group inline-block relative">
               <Button
                 className="normal-case"
                 variant="outline"
                 color="primary"
                 id="connect-button-with-address">
-                <span className="mr-1">{trimMiddleString(selectedAccount?.address)}</span>
+                <span className="mr-1">{trimMiddleString(selectedAccount.address)}</span>
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,9 +114,9 @@ const Layout = ({ children }: LayoutProps) => {
                 {accounts.map(({ address }) => (
                   <li
                     key={address}
-                    className="first:rounded-t last:rounded-b bg-primary hover:bg-gray-500">
+                    className="first:rounded-t last:rounded-b bg-white hover:bg-gray-100 text-black">
                     <button
-                      className="py-2 px-4 block whitespace-no-wrap"
+                      className="py-2 px-4 block whitespace-no-wrap text-black"
                       value={address}
                       onClick={handleChangeAccount}>
                       {trimMiddleString(address)}

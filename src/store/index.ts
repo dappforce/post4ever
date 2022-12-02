@@ -5,6 +5,8 @@ import produce from "immer";
 interface WalletState {
   account: InjectedAccountWithMeta | null;
   setAccount: (newAccount: InjectedAccountWithMeta) => void;
+  accounts: InjectedAccountWithMeta[];
+  setAccounts: (newAccounts: InjectedAccountWithMeta[]) => void;
 }
 
 interface TwitterUserState {
@@ -22,6 +24,8 @@ type TwitterUserProps = {
 export const useWalletStore = create<WalletState>()(set => ({
   account: null,
   setAccount: newAccount => set(state => ({ account: newAccount })),
+  accounts: [],
+  setAccounts: newAccounts => set(state => ({ accounts: newAccounts })),
 }));
 
 export const useTwitterUserStore = create<TwitterUserState>()(set => ({
