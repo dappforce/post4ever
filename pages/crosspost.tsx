@@ -1,5 +1,4 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
-import type { SpaceData } from "@subsocial/api/types";
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
@@ -14,7 +13,7 @@ import { TweetWithAuthorProps } from "src/types/common";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
-import { Avatar, Button, Card, Tooltip, Input, Select } from "react-daisyui";
+import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import SkeletonCard from "src/components/SkeletonCard";
 import Skeleton from "react-loading-skeleton";
@@ -68,16 +67,21 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   }, [account]);
 
   useEffect(() => {
-    if (successTx)
+    if (successTx) {
       toast.custom(
-        <div>
-          <a
-            href={`https://polkadot.js.org/apps/?rpc=wss://rco-para.subsocial.network#/explorer/${successTx}`}>
-            Tx
-          </a>{" "}
-          succesful!
+        <div className="flex justify-center items-center gap-2 bg-white color-[#363636] text-black min-w-[300px] leading-normal will-change-transform shadow-lg pointer-events-auto py-[8px] px-[10px] rounded-lg">
+          ✅{" "}
+          <div className="m-auto">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`https://polkadot.js.org/apps/?rpc=wss://rco-para.subsocial.network#/explorer/query/${successTx}`}>
+              Tx succesful!
+            </a>{" "}
+          </div>
         </div>,
       );
+    }
   }, [successTx]);
 
   const [tweetUrl, setTweetUrl] = useState("");
@@ -177,12 +181,9 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     }
   };
 
-  const handleToggleSelect = (space: SpaceData) => {
-    if (selectedSpaceId === space.id) {
-      setSelectedSpaceId("");
-    } else {
-      setSelectedSpaceId(space.id);
-    }
+  const handleChangeSpaceId = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const spaceId = event.currentTarget.value;
+    setSelectedSpaceId(spaceId);
   };
 
   return (
@@ -295,39 +296,17 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                   2. Connect wallet and select a SS space
                 </h2>
 
-                {account ? (
-                  <Button
-                    disabled={loadingSpaces}
-                    onClick={handleFetchSpaces}
-                    color="primary"
-                    variant={spaces ? "outline" : undefined}
-                    fullWidth
-                    className="normal-case">
-                    {loadingSpaces ? "Loading" : "Find my SS space(s)"}
-                  </Button>
-                ) : (
-                  <Tooltip message="Please connect Polkadot.js first">
-                    <Button
-                      disabled
-                      color="primary"
-                      fullWidth
-                      className="normal-case disabled:text-white">
-                      Find my SS space(s)
-                    </Button>
-                  </Tooltip>
-                )}
-
                 <p>Select your Subsocial space:</p>
                 <div>
                   {loadingSpaces ? (
                     <Skeleton />
                   ) : spaces ? (
-                    <Select
+                    <select
                       value={selectedSpaceId}
-                      onChange={setSelectedSpaceId}
+                      onChange={handleChangeSpaceId}
                       color="primary"
-                      className="bg-transparent w-full">
-                      <option disabled selected>
+                      className="select select-primary bg-transparent w-full">
+                      <option value={""} disabled selected>
                         Select your Subsocial space
                       </option>
                       <>
@@ -337,7 +316,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                           </option>
                         ))}
                       </>
-                    </Select>
+                    </select>
                   ) : (
                     "No space to be selected"
                   )}
