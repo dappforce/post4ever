@@ -39,9 +39,9 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   }));
 
   const { initApi, loading, postTransaction } = useSubSocialApiHook();
-  const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
+  const [savedPosts, setSavedPosts] = useState<ExpandedTweetProps[]>([]);
 
-  const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps[] | null>(null);
+  const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps[]>([]);
   const [loadingTweets, setLoadingTweets] = useState(false);
 
   const IS_ABOVE_LIMIT = Boolean(savedPosts.length > 5);
@@ -117,10 +117,12 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
       </div>
     );
 
+  if (!session) return null;
+
   return (
     <>
       <Head>
-        <title>Perma-Tweeter - Home</title>
+        <title>SubTweet - Home</title>
         <meta name="description" content="Store your Tweet, permanently" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
