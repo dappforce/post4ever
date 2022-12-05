@@ -27,6 +27,9 @@ const Layout = dynamic(() => import("src/components/Layout"), {
 
 const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { data: session, status } = useSession();
+  const { user: authenticatedUser } = useTwitterUserStore(state => ({
+    user: state.user,
+  }));
   const router = useRouter();
   const {
     initApi,
@@ -41,19 +44,6 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
-
-  const { user: authenticatedUser, setNewUser } = useTwitterUserStore(state => ({
-    user: state.user,
-    setNewUser: state.setNewUser,
-  }));
-
-  useEffect(() => {
-    if (user) {
-      setNewUser({
-        ...user,
-      });
-    }
-  }, [user]);
 
   useEffect(() => {
     if (session) {
@@ -92,50 +82,38 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   if (status === "loading") return <FullScreenLoading />;
 
-  if (status === "unauthenticated")
-    return (
-      <div>
-        <p>Access unauthorized, please login first</p>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => router.push("/")}>
-          Go back to login
-        </button>
-      </div>
-    );
-
-  if (!session) return null;
-
   const handleFetchTweet = async () => {
     setLoadingTweet(true);
     setFetchedTweet(null);
 
     try {
-      const { token } = session;
-      const tweetId = tweetUrl.split("/")[5];
+      if (session) {
+        const { token } = session;
+        const tweetId = tweetUrl.split("/")[5];
 
-      const response = await fetch("/api/crosspost", {
-        method: "POST",
-        body: JSON.stringify({ tweetId, token }),
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
+        const response = await fetch("/api/crosspost", {
+          method: "POST",
+          body: JSON.stringify({ tweetId, token }),
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
 
-      const { data, includes } = await response.json();
+        const { data, includes } = await response.json();
 
-      const { author_id, edit_history_tweet_ids, id, text } = data;
-      const { users } = includes;
+        const { author_id, edit_history_tweet_ids, id, text } = data;
+        const { users } = includes;
 
-      const payload = {
-        author_id,
-        edit_history_tweet_ids,
-        id,
-        text,
-        users,
-      };
+        const payload = {
+          author_id,
+          edit_history_tweet_ids,
+          id,
+          text,
+          users,
+        };
 
-      setFetchedTweet(payload);
+        setFetchedTweet(payload);
+      }
     } catch (error) {
       console.warn({ error });
     } finally {
@@ -183,6 +161,8 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     }
   };
 
+  const formDisabled = !Boolean(session && status === "authenticated");
+
   return (
     <>
       <Head>
@@ -196,7 +176,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <Toaster position="bottom-right" />
           <div></div>
           <div className="flex flex-col mt-4 gap-4">
-            <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
+            <TwitterUserProfileCard authenticatedUser={user} />
 
             <Card
               id="fetch-tweet-container"
@@ -212,6 +192,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                         name="tweet-url"
                         id="tweet-url"
                         placeholder="Tweet URL"
+                        disabled={formDisabled}
                         value={tweetUrl}
                         onChange={handleChange}
                         required
@@ -349,10 +330,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   if (!session) {
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      props: {},
     };
   }
 
