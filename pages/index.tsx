@@ -20,13 +20,13 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Perma-Tweeter - Login</title>
+        <title>SubTweet - Login</title>
         <meta name="description" content="Store your Tweet, permanently" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to Perma-Tweeter!</h1>
+        <h1 className={styles.title}>Welcome to SubTweet!</h1>
         <AuthButton text={"Login with Twitter"} isSignIn={true} />
       </main>
 

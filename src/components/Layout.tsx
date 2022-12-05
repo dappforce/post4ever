@@ -32,7 +32,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(account);
 
   const getAccounts = async () => {
-    const extensions = await web3Enable("Perma-Tweeter dapp");
+    const extensions = await web3Enable("SubTweet dapp");
     if (extensions.length === 0) {
       return;
     }
