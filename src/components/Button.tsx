@@ -13,7 +13,7 @@ const AuthButton = ({ text, isSignIn }: AuthButtonProps) => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={() =>
           signIn("twitter", {
-            callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/tweets`,
+            callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/crosspost`,
           })
         }>
         {text}
