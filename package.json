@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.13",
+    "@material-tailwind/react": "^1.2.4",
     "@polkadot/api": "latest",
     "@polkadot/extension-dapp": "latest",
     "@polkadot/util-crypto": "^10.1.10",
