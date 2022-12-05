@@ -16,11 +16,20 @@ import { Button } from "react-daisyui";
 import { useTwitterUserStore } from "src/store";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 
+import SkeletonCard from "src/components/SkeletonCard";
+
+type TwitterUserProps = {
+  id: string;
+  name: string;
+  profile_image_url: string;
+  username: string;
+};
+
 const Layout = dynamic(() => import("components/Layout"), {
   ssr: false,
 });
 
-const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
+const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -29,14 +38,11 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
     setNewUser: state.setNewUser,
   }));
 
-  useEffect(() => {
-    setNewUser({
-      ...user,
-    });
-  }, [user]);
-
   const { initApi, loading, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
+
+  const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps | null>(null);
+  const [loadingTweets, setLoadingTweets] = useState(false);
 
   const IS_ABOVE_LIMIT = Boolean(savedPosts.length > 5);
 
@@ -45,6 +51,59 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
       initApi({ mnemonic: session.mnemonic });
     }
   }, [savedPosts.length, session]);
+
+  const handleFetchTweets = async (user: TwitterUserProps) => {
+    setLoadingTweets(true);
+
+    try {
+      if (session) {
+        const response = await fetch(`/api/tweets/?id=${user?.id}`, {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
+
+        const { tweets } = await response.json();
+
+        setFetchedTweets(tweets);
+      }
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setLoadingTweets(false);
+    }
+  };
+
+  useEffect(() => {
+    setNewUser({
+      ...user,
+    });
+
+    handleFetchTweets(user);
+  }, [user]);
+
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      let selectedTweet =
+        fetchedTweets &&
+        fetchedTweets.filter((tweet: TweetProps) => tweet.id === e.target.value)[0];
+
+      setSavedPosts(oldArray => [...oldArray, selectedTweet]);
+    } else {
+      setSavedPosts(savedPosts.filter(savedPost => savedPost.id !== e.target.value));
+    }
+  };
+
+  const handlePostTransaction = () => {
+    if (!session) return null;
+    const { mnemonic } = session;
+
+    postTransaction({
+      savedPosts,
+      mnemonic,
+    });
+  };
 
   if (status === "loading") return <FullScreenLoading />;
 
@@ -57,27 +116,6 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
         </Button>
       </div>
     );
-
-  if (!session) return null;
-
-  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      let selectedTweet = tweets.filter((tweet: TweetProps) => tweet.id === e.target.value)[0];
-
-      setSavedPosts(oldArray => [...oldArray, selectedTweet]);
-    } else {
-      setSavedPosts(savedPosts.filter(savedPost => savedPost.id !== e.target.value));
-    }
-  };
-
-  const handlePostTransaction = () => {
-    const { mnemonic } = session;
-
-    postTransaction({
-      savedPosts,
-      mnemonic,
-    });
-  };
 
   return (
     <>
@@ -92,36 +130,38 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ tweets, user }) => {
           <TwitterUserProfileCard authenticatedUser={authenticatedUser} />
           <div className="flex flex-row max-h-screen p-4">
             <div className="flex flex-col overflow-y-auto overflow-x-hidden">
-              {tweets.map(tweet => (
-                <div
-                  key={tweet.id}
-                  className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
+              {loadingTweets && <SkeletonCard />}
+              {fetchedTweets &&
+                fetchedTweets.map(tweet => (
+                  <div
+                    key={tweet.id}
+                    className="p-6 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-500 dark:hover:bg-blue-500
                 flex flex-col items-center mb-4">
-                  <div className="flex flex-row items-center self-start justify-center gap-2">
-                    <Image
-                      src={session.user?.image ?? ""}
-                      alt="user-avatar"
-                      className="rounded-full"
-                      width="32"
-                      height="32"
-                    />
-                    <div>{session?.user?.name ?? "Twitter user"}</div>
+                    <div className="flex flex-row items-center self-start justify-center gap-2">
+                      <Image
+                        src={session.user?.image ?? ""}
+                        alt="user-avatar"
+                        className="rounded-full"
+                        width="32"
+                        height="32"
+                      />
+                      <div>{session?.user?.name ?? "Twitter user"}</div>
+                    </div>
+                    <div className="flex flex-col items-start py-2 px-4">{tweet.text}</div>
+                    <div className="flex items-center">
+                      <input
+                        id="select-check-box"
+                        type="checkbox"
+                        value={tweet.id}
+                        onChange={handleSelect}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Select this tweet!
+                      </label>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-start py-2 px-4">{tweet.text}</div>
-                  <div className="flex items-center">
-                    <input
-                      id="select-check-box"
-                      type="checkbox"
-                      value={tweet.id}
-                      onChange={handleSelect}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Select this tweet!
-                    </label>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           <div className="flex flex-col self-start items-center justify-center mt-4 p-4 gap-2 max-w-[500px]">
@@ -165,39 +205,13 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   // get TweetUserTimelineV2Paginator
   const { id } = session?.user;
-  const myTimeline = await readOnlyClient.v2.userTimeline(id, {
-    exclude: "replies",
-    expansions: ["attachments.media_keys"],
-    "media.fields": ["url"],
-  });
 
   const { data: user } = await readOnlyClient.v2.user(id, {
     "user.fields": ["id", "name", "profile_image_url"],
   });
 
-  let tweets = [];
-
-  for await (const tweet of myTimeline) {
-    const medias = myTimeline.includes.medias(tweet);
-
-    let tweetObj: ExpandedTweetProps = {
-      ...tweet,
-      url: `https://twitter.com/${user.username}/status/${tweet.id}`,
-    };
-
-    if (medias.length) {
-      tweetObj = {
-        ...tweet,
-        medias,
-        url: `https://twitter.com/${user.username}/status/${tweet.id}`,
-      };
-    }
-
-    tweets.push(tweetObj);
-  }
-
   return {
-    props: { tweets, user },
+    props: { user },
   };
 }
 
