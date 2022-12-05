@@ -19,4 +19,15 @@ module.exports = withMT({
     },
   },
   plugins: [require("daisyui"), require("@tailwindcss/forms")],
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
+          primary: "hsla(224, 90%, 62%, 1)",
+          secondary: "hsla(165, 58%, 51%, 1)",
+        },
+      },
+    ],
+  },
 });
