@@ -16,13 +16,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const twitterClient = new TwitterApi(body.token);
     const readOnlyClient = twitterClient.readOnly;
-    const { data, includes } = await readOnlyClient.v2.get(
-      `tweets/${body.tweetId}`,
-      {
-        expansions: ["author_id"],
-        "user.fields": ["id", "name", "profile_image_url"],
-      }
-    );
+    const { data, includes } = await readOnlyClient.v2.get(`tweets/${body.tweetId}`, {
+      expansions: ["author_id"],
+      "user.fields": ["id", "name", "profile_image_url"],
+    });
 
     // Send a HTTP success code
     res.status(200).json({ data, includes });
