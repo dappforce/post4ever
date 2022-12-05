@@ -19,6 +19,7 @@ import SkeletonCard from "src/components/SkeletonCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import toast, { Toaster } from "react-hot-toast";
+import { Select, Option } from "@material-tailwind/react";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -87,9 +88,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const [tweetUrl, setTweetUrl] = useState("");
   const [loadingTweet, setLoadingTweet] = useState(false);
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
-  const [selectedSpaceId, setSelectedSpaceId] = useState(
-    spaces && spaces.length ? spaces[0].id : "",
-  );
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
 
   if (status === "loading") return <FullScreenLoading />;
 
@@ -161,10 +160,6 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     };
   };
 
-  const handleFetchSpaces = () => {
-    checkSpaceOwnedBy(account!);
-  };
-
   const handleCreateSpaceWithTweet = () => {
     if (!spaces && account && fetchedTweet) {
       createSpaceWithTweet({ account, content: fetchedTweet });
@@ -181,9 +176,11 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     }
   };
 
-  const handleChangeSpaceId = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const spaceId = event.currentTarget.value;
-    setSelectedSpaceId(spaceId);
+  const handleChangeSpaceId = (value?: React.ReactNode) => {
+    const spaceId = value as string;
+    if (spaceId) {
+      setSelectedSpaceId(spaceId);
+    }
   };
 
   return (
@@ -303,22 +300,13 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                   {loadingSpaces ? (
                     <Skeleton />
                   ) : spaces ? (
-                    <select
-                      value={selectedSpaceId}
-                      onChange={handleChangeSpaceId}
-                      color="primary"
-                      className="select select-primary bg-transparent w-full">
-                      <option value={""} disabled selected>
-                        Select your Subsocial space
-                      </option>
-                      <>
-                        {spaces.map(space => (
-                          <option key={space.id} value={space.id}>
-                            Space ID: {space.id}
-                          </option>
-                        ))}
-                      </>
-                    </select>
+                    <Select label="Space" onChange={value => handleChangeSpaceId(value)}>
+                      {spaces.map(space => (
+                        <Option key={space.id} value={`${space.id}`}>
+                          Space ID: {space.id}
+                        </Option>
+                      ))}
+                    </Select>
                   ) : (
                     "No space to be selected"
                   )}
