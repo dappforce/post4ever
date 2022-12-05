@@ -1,5 +1,8 @@
-.github
-.next/
-node_modules/
-*.tsbuildinfo
-*.json
+.next
+.cache
+package-lock.json
+public
+node_modules
+next-env.d.ts
+next.config.ts
+yarn.lock
