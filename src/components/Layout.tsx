@@ -71,7 +71,9 @@ const Layout = ({ children }: LayoutProps) => {
     <>
       <header className="sticky top-0 z-30 shadow-xl px-4 py-2 backdrop-filter backdrop-blur-xl bg-white text-grey-600">
         <div className="flex justify-between items-center h-16 md:justify-center">
-          <div className="text-primary text-2xl font-normal">Perma-Tweeter</div>
+          <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
+            Sub<span className="text-[#2E54BE]">Tweet</span>
+          </div>
           <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
             <li className="flex">
               <Link
@@ -104,7 +106,7 @@ const Layout = ({ children }: LayoutProps) => {
           {accounts && accounts.length && selectedAccount ? (
             <div className="group inline-block relative">
               <Button
-                className="normal-case"
+                className="normal-case bg-gradient-to-r from-primary to-secondary"
                 variant="outline"
                 color="primary"
                 id="connect-button-with-address">
@@ -135,8 +137,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Button
               id="connect-button"
               onClick={handleConnect}
-              className="normal-case"
-              color="primary">
+              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
               Connect Polkadot.js
             </Button>
           )}
