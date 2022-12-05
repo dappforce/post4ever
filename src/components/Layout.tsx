@@ -14,15 +14,20 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const { account, setAccount, readyAccounts } = useWalletStore(state => ({
+  const {
+    account,
+    setAccount,
+    readyAccounts,
+    setAccounts: setReadyAccounts,
+  } = useWalletStore(state => ({
     account: state.account,
     setAccount: state.setAccount,
     readyAccounts: state.accounts,
+    setAccounts: state.setAccounts,
   }));
 
   const router = useRouter();
 
-  const [walletAuthorized, setWalletAuthorized] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>(readyAccounts);
   const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(account);
 
@@ -31,9 +36,10 @@ const Layout = ({ children }: LayoutProps) => {
     if (extensions.length === 0) {
       return;
     }
-    setWalletAuthorized(true);
     const allAccounts = await web3Accounts();
     setAccounts(allAccounts);
+    setReadyAccounts(allAccounts);
+
     setSelectedAccount(allAccounts[0]);
     setAccount(allAccounts[0]);
   };
@@ -95,7 +101,7 @@ const Layout = ({ children }: LayoutProps) => {
               </Link>
             </li>
           </ul>
-          {walletAuthorized && accounts && accounts.length && selectedAccount ? (
+          {accounts && accounts.length && selectedAccount ? (
             <div className="group inline-block relative">
               <Button
                 className="normal-case"

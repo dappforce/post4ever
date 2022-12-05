@@ -41,7 +41,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   const { initApi, loading, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<PostProps[]>([]);
 
-  const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps | null>(null);
+  const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps[] | null>(null);
   const [loadingTweets, setLoadingTweets] = useState(false);
 
   const IS_ABOVE_LIMIT = Boolean(savedPosts.length > 5);
