@@ -25,22 +25,10 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const { initApi, checkSpaceOwnedBy, createPostWithSpaceId, successTx } = useSubSocialApiHook();
+  const { successTx } = useSubSocialApiHook();
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
-
-  useEffect(() => {
-    if (session) {
-      initApi({ mnemonic: session.mnemonic });
-    }
-  }, [session]);
-
-  useEffect(() => {
-    if (account) {
-      checkSpaceOwnedBy(account);
-    }
-  }, [account]);
 
   useEffect(() => {
     if (successTx) {
@@ -65,7 +53,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   if (status === "loading") return <FullScreenLoading />;
 
-  const handleSetFetchedTweet = (fetchedTweet: TweetWithAuthorProps) => {
+  const handleSetFetchedTweet = (fetchedTweet: TweetWithAuthorProps | null) => {
     setFetchedTweet(fetchedTweet);
   };
 
@@ -82,15 +70,15 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <Toaster position="bottom-right" />
           <div></div>
           <div className="flex flex-col mt-4 gap-4">
-            <TwitterUserProfileCard disabled={Boolean(!account)} authenticatedUser={user} />
+            <TwitterUserProfileCard disabled={!Boolean(account)} authenticatedUser={user} />
 
             <FetchTweetForm
-              disabled={Boolean(!account) && !Boolean(user)}
+              disabled={!Boolean(account) || !Boolean(user)}
               onFetchTweet={handleSetFetchedTweet}
             />
 
             <SendTweetCard
-              disabled={Boolean(!account) && !Boolean(fetchedTweet)}
+              disabled={(!Boolean(account) && !Boolean(user)) || !Boolean(fetchedTweet)}
               fetchedTweet={fetchedTweet}
             />
           </div>
