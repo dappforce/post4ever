@@ -1,5 +1,5 @@
 import { Card, Avatar, Button } from "react-daisyui";
-import { useTwitterUserStore } from "src/store";
+import { useTwitterUserStore, useWalletStore } from "src/store";
 import { useEffect } from "react";
 import { TweetUserProps } from "src/types/common";
 
@@ -9,10 +9,11 @@ import { ArrowRightOnRectangleIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 
 type TwitterUserProfileCardProps = {
+  disabled: boolean;
   authenticatedUser?: TweetUserProps;
 };
 
-const TwitterUserProfileCard = ({ authenticatedUser }: TwitterUserProfileCardProps) => {
+const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProfileCardProps) => {
   const { data: session, status } = useSession();
 
   const { user, setNewUser } = useTwitterUserStore(state => ({
@@ -31,7 +32,9 @@ const TwitterUserProfileCard = ({ authenticatedUser }: TwitterUserProfileCardPro
   return (
     <Card className="shadow-2xl bg-white flex flex-col h-fit" bordered={false}>
       <Card.Body className="gap-6">
-        <h2 className="text-lg font-bold text-base-100">1. Connect your Twitter account</h2>
+        <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
+          1. Connect your Twitter account
+        </h2>
         <div
           className={`flex flex-row ${
             session && status === "authenticated" && authenticatedUser
@@ -64,7 +67,9 @@ const TwitterUserProfileCard = ({ authenticatedUser }: TwitterUserProfileCardPro
             </>
           ) : (
             <Button
-              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
+              className={`normal-case border-0 ${
+                !disabled ? "btn bg-gradient-to-r from-primary to-secondary" : "btn btn-disabled"
+              }`}
               size="md"
               onClick={() =>
                 signIn("twitter", {

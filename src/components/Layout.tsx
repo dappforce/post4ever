@@ -106,7 +106,7 @@ const Layout = ({ children }: LayoutProps) => {
           {accounts && accounts.length && selectedAccount ? (
             <div className="group inline-block relative">
               <Button
-                className="normal-case bg-gradient-to-r from-primary to-secondary"
+                className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
                 variant="outline"
                 color="primary"
                 id="connect-button-with-address">
