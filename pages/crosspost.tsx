@@ -45,7 +45,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   useEffect(() => {
     if (successTx) {
       toast.custom(
-        <div className="flex justify-center items-center gap-2 bg-white color-[#363636] text-black min-w-[300px] leading-normal will-change-transform shadow-lg pointer-events-auto py-[8px] px-[10px] rounded-lg">
+        <div className="flex justify-center items-center gap-2 bg-white color-[#363636] text-black min-w-[300px] leading-normal will-change-transform shadow pointer-events-auto py-[8px] px-[10px] rounded-lg">
           ✅{" "}
           <div className="m-auto">
             <a

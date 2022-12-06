@@ -82,7 +82,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
     <Card
       id="fetch-tweet-container"
       bordered={false}
-      className="shadow-2xl bg-white flex flex-col h-fit">
+      className="shadow-md bg-white flex flex-col h-fit">
       <Card.Body className="gap-6">
         <h2 className="text-lg font-bold text-neutral">2. Find tweet using URL</h2>
         <div className="flex flex-row gap-4">
@@ -138,10 +138,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
         {loadingTweet ? <SkeletonCard /> : <></>}
 
         {fetchedTweet ? (
-          <Card
-            key={fetchedTweet.id}
-            bordered={false}
-            className="drop-shadow-xl bg-white py-2 h-fit">
+          <Card key={fetchedTweet.id} bordered={false} className="shadow-md bg-white py-2 h-fit">
             <Card.Body className="px-6 gap-6">
               <div className="flex flex-row items-center self-start justify-center gap-2">
                 <Avatar

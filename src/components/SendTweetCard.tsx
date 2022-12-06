@@ -47,7 +47,7 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
   return (
     <Card
       bordered={false}
-      className="shadow-2xl bg-white flex flex-col self-center items-center justify-center">
+      className="shadow-md bg-white flex flex-col self-center items-center justify-center">
       <Card.Body className="gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-grey-600" : "text-neutral"}`}>
           3. Connect wallet and select a SS space

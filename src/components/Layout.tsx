@@ -69,7 +69,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 shadow-xl px-4 py-2 backdrop-filter backdrop-blur-xl bg-white text-grey-600">
+      <header className="sticky top-0 z-30 shadow px-4 py-2 backdrop-filter bg-white text-grey-600">
         <div className="flex justify-between items-center h-16 md:justify-center">
           <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
             Sub<span className="text-[#2E54BE]">Tweet</span>
