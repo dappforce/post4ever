@@ -26,6 +26,7 @@ module.exports = withMT({
           ...require("daisyui/src/colors/themes")["[data-theme=light]"],
           primary: "hsla(224, 90%, 62%, 1)",
           secondary: "hsla(165, 58%, 51%, 1)",
+          neutral: "hsla(202, 13%, 16%, 1)",
         },
       },
     ],
