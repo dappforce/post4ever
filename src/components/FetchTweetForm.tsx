@@ -8,7 +8,7 @@ import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 
 type FetchTweetFormProps = {
   disabled: boolean;
-  onFetchTweet: (fetchedTweet: TweetWithAuthorProps) => void;
+  onFetchTweet: (fetchedTweet: TweetWithAuthorProps | null) => void;
 };
 
 const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
@@ -66,6 +66,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
   const handleClearUrl = () => {
     setTweetUrl("");
     setFetchedTweet(null);
+    onFetchTweet(null);
   };
 
   const getAuthor = (tweet: TweetWithAuthorProps) => {
@@ -84,7 +85,9 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
       bordered={false}
       className="shadow-md bg-white flex flex-col h-fit">
       <Card.Body className="gap-6">
-        <h2 className="text-lg font-bold text-neutral">2. Find tweet using URL</h2>
+        <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
+          2. Find tweet using URL
+        </h2>
         <div className="flex flex-row gap-4">
           <fieldset className="w-full space-y-1 text-neutral">
             <div className="relative">
