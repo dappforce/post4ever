@@ -66,9 +66,7 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
   };
 
   return (
-    <Card
-      bordered={false}
-      className="shadow-md bg-white flex flex-col self-center items-center justify-center">
+    <Card bordered={false} className="shadow-md bg-white flex flex-col justify-center">
       <Card.Body className="gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           3. Connect wallet and select a SS space
@@ -93,24 +91,23 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
 
         {!account ? (
           <Tooltip message="Please connect Polkadot.js first">
-            <Button fullWidth className="normal-case disabled:text-white" disabled>
-              Send tweet to Subsocial
+            <Button fullWidth className="normal-case" disabled>
+              Publish
             </Button>
           </Tooltip>
         ) : !fetchedTweet ? (
           <Tooltip message="Please find a tweet first">
-            <Button fullWidth className="normal-case disabled:text-white" disabled>
-              Send tweet to Subsocial
+            <Button fullWidth className="normal-case" disabled>
+              Publish
             </Button>
           </Tooltip>
         ) : (
           <Button
             fullWidth
-            color="primary"
+            className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
             disabled={!fetchedTweet || loadingCreatePost}
-            onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}
-            className="normal-case disabled:text-white">
-            {loadingCreatePost ? "Sign and open console" : "Send tweet to Subsocial"}
+            onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
+            {loadingCreatePost ? "Sign and open console" : "Publish"}
           </Button>
         )}
       </Card.Body>

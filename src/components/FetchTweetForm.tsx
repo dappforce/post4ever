@@ -120,7 +120,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
             <Tooltip message="Please enter tweet URL">
               <Button
                 color="primary"
-                className="normal-case whitespace-nowrap disabled:text-white"
+                className="normal-case whitespace-nowrap"
                 disabled
                 onClick={handleFetchTweet}>
                 Find tweet
