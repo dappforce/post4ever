@@ -35,6 +35,7 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
   }, [session]);
 
   useEffect(() => {
+    console.log({ account });
     if (account) {
       checkSpaceOwnedBy(account);
     }

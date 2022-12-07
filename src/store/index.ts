@@ -4,7 +4,7 @@ import produce from "immer";
 
 interface WalletState {
   account: InjectedAccountWithMeta | null;
-  setAccount: (newAccount: InjectedAccountWithMeta) => void;
+  setAccount: (newAccount: InjectedAccountWithMeta | null) => void;
   accounts: InjectedAccountWithMeta[];
   setAccounts: (newAccounts: InjectedAccountWithMeta[]) => void;
 }

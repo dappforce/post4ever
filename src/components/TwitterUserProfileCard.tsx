@@ -46,7 +46,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
               <div className="flex flex-row justify-center items-center gap-2">
                 <Avatar src={authenticatedUser.profile_image_url} size="xs" shape="circle" />
                 <a
-                  className="font-semibold text-base-100"
+                  className="font-semibold"
                   target="_blank"
                   rel="noopener noreferrer"
                   href={`https://twitter.com/${authenticatedUser.username}`}>{`@${authenticatedUser.username}`}</a>

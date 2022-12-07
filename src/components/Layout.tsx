@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useWalletStore } from "src/store";
 
@@ -6,6 +6,9 @@ import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 import { Button } from "react-daisyui";
+import PolkadotIcon from "./PolkadotIcon";
+import Identicon from "./Identicon";
+import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
 
@@ -30,6 +33,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>(readyAccounts);
   const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(account);
+  const [isOpen, setIsOpen] = useState(false);
 
   const getAccounts = async () => {
     const extensions = await web3Enable("SubTweet dapp");
@@ -48,14 +52,11 @@ const Layout = ({ children }: LayoutProps) => {
     getAccounts();
   };
 
-  const handleChangeAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const target = event.target as HTMLButtonElement;
-    const address = target.value;
+  const handleChangeAccount = (account: InjectedAccountWithMeta | null) => {
+    setSelectedAccount(account);
+    setAccount(account);
 
-    const found = accounts.find(account => account.address === address);
-
-    setSelectedAccount(found!);
-    setAccount(found!);
+    setIsOpen(false);
   };
 
   const trimMiddleString = (text?: string, numberStringsKept = 5) => {
@@ -69,81 +70,65 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 shadow px-4 py-2 backdrop-filter bg-white text-grey-600">
-        <div className="flex justify-between items-center h-16 md:justify-center">
-          <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
-            Sub<span className="text-[#2E54BE]">Tweet</span>
-          </div>
-          <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
-            <li className="flex">
-              <Link
-                href="/tweets"
-                legacyBehavior
-                className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
-                    router.pathname === "/tweets" ? "text-primary border-primary" : ""
-                  }`}>
-                  Feeds
-                </a>
-              </Link>
-            </li>
-            <li className="flex hover:text-grey-500">
-              <Link href="/crosspost" legacyBehavior>
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className={`flex items-center px-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
-                    router.pathname === "/crosspost" ? "text-primary border-primary" : ""
-                  }`}>
-                  Cross-post a tweet
-                </a>
-              </Link>
-            </li>
-          </ul>
-          {accounts && accounts.length && selectedAccount ? (
-            <div className="group inline-block relative">
-              <Button
-                className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
-                variant="outline"
-                color="primary"
-                id="connect-button-with-address">
-                <span className="mr-1">{trimMiddleString(selectedAccount.address)}</span>
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />{" "}
-                </svg>
-              </Button>
-              <ul className="absolute hidden text-white pt-1 group-hover:block">
-                {accounts.map(({ address }) => (
-                  <li
-                    key={address}
-                    className="first:rounded-t last:rounded-b bg-white hover:bg-gray-100 text-black">
-                    <button
-                      className="py-2 px-4 block whitespace-no-wrap text-black"
-                      value={address}
-                      onClick={handleChangeAccount}>
-                      {trimMiddleString(address)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+      <Sidebar
+        checked={isOpen}
+        onCheck={() => setIsOpen(false)}
+        accounts={accounts ?? []}
+        onChangeAccount={handleChangeAccount}>
+        <header className="sticky top-0 z-30 shadow px-4 py-2 backdrop-filter bg-white text-grey-600">
+          <div className="flex justify-between items-center h-16 md:justify-center">
+            <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
+              Sub<span className="text-[#2E54BE]">Tweet</span>
             </div>
-          ) : (
-            <Button
-              id="connect-button"
-              onClick={handleConnect}
-              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
-              Connect Polkadot.js
-            </Button>
-          )}
-        </div>
-      </header>
-      <main className="bg-gray-100">{children}</main>
+            <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
+              <li className="flex">
+                <Link
+                  href="/tweets"
+                  legacyBehavior
+                  className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
+                  <a
+                    rel="noopener noreferrer"
+                    href="#"
+                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
+                      router.pathname === "/tweets" ? "text-primary border-primary" : ""
+                    }`}>
+                    Feeds
+                  </a>
+                </Link>
+              </li>
+              <li className="flex hover:text-grey-500">
+                <Link href="/crosspost" legacyBehavior>
+                  <a
+                    rel="noopener noreferrer"
+                    href="#"
+                    className={`flex items-center px-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
+                      router.pathname === "/crosspost" ? "text-primary border-primary" : ""
+                    }`}>
+                    Cross-post a tweet
+                  </a>
+                </Link>
+              </li>
+            </ul>
+            {accounts && accounts.length && selectedAccount ? (
+              <Button
+                className="gap-2 normal-case font-normal text-base btn btn-ghost"
+                onClick={() => setIsOpen(!isOpen)}>
+                <Identicon />
+                <div>{account?.meta.name}</div>
+              </Button>
+            ) : (
+              <Button
+                id="connect-button"
+                onClick={handleConnect}
+                className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
+                <PolkadotIcon />
+                Connect wallet
+              </Button>
+            )}
+          </div>
+        </header>
+        <main className="bg-gray-100">{children}</main>
+      </Sidebar>
     </>
   );
 };
