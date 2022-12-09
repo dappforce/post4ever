@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useWalletStore } from "src/store";
+import SubTweet from "public/SubTweet.svg";
 
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
@@ -75,10 +76,10 @@ const Layout = ({ children }: LayoutProps) => {
         onCheck={() => setIsOpen(false)}
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
-        <header className="sticky top-0 z-30 shadow px-4 py-2 backdrop-filter bg-white text-grey-600">
+        <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
           <div className="flex justify-between items-center h-16 md:justify-center">
             <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
-              Sub<span className="text-[#2E54BE]">Tweet</span>
+              <SubTweet />
             </div>
             <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
               <li className="flex">
@@ -89,20 +90,23 @@ const Layout = ({ children }: LayoutProps) => {
                   <a
                     rel="noopener noreferrer"
                     href="#"
-                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
-                      router.pathname === "/tweets" ? "text-primary border-primary" : ""
+                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
+                      router.pathname === "/tweets" ? "text-accent border-[#5C1EDC]" : ""
                     }`}>
                     Feeds
                   </a>
                 </Link>
               </li>
               <li className="flex hover:text-grey-500">
-                <Link href="/crosspost" legacyBehavior>
+                <Link
+                  href="/crosspost"
+                  legacyBehavior
+                  className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
                   <a
                     rel="noopener noreferrer"
                     href="#"
-                    className={`flex items-center px-4 -mb-1 border-b-2 border-transparent hover:text-primary ${
-                      router.pathname === "/crosspost" ? "text-primary border-primary" : ""
+                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
+                      router.pathname === "/crosspost" ? "text-accent border-[#5C1EDC]" : ""
                     }`}>
                     Cross-post a tweet
                   </a>
