@@ -96,7 +96,6 @@ export const useSubSocialApiHook = () => {
             toast.success("Tx successful!", { id: toastId });
             setSuccessTx(blockHash.toString());
           } else if (result.isError) {
-            console.log({ result });
             console.log(JSON.stringify(result));
           } else {
             console.log(`⏱ Current tx status: ${status.type}`);
