@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@material-tailwind/react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 type SidebarProps = {
@@ -21,9 +22,11 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
       <div className="drawer-side">
         <label htmlFor="my-drawer-4" className="drawer-overlay h-screen" onClick={onCheck}></label>
 
-        <ul className="menu p-4 w-80 bg-base-100 text-base-content">
-          <span className="text-normal text-gray-700 bg-gray-100">Change your accounts</span>
-          <li className="mb-4 border border-gray-500 overflow-y-auto w-full h-[25vh] block">
+        <ul className="menu w-80 bg-base-100 text-base-content">
+          <span className="text-normal font-bold text-gray-700 bg-gray-100 py-[2px] pl-4">
+            Select an account
+          </span>
+          <li className="mb-4 overflow-y-auto w-full h-[25vh] block border-b-2 border-gray-100">
             {accounts.map(account => (
               <button
                 key={account.address}
@@ -33,12 +36,16 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
               </button>
             ))}
           </li>
-          <li className="border rounded-lg border-gray-500 hover:border-red-500">
-            <button
+          <li className="w-full flex items-center">
+            <Button
               onClick={() => handleChangeAccount(null)}
-              className="justify-center hover:text-red-500 hover:font-normal hover:bg-transparent">
-              Disconnect
-            </button>
+              variant="text"
+              size="sm"
+              className="group text-sm text-gray-500 hover:text-red-500 hover:bg-transparent normal-case transition-all duration-300 ease-in-out">
+              <span className="bg-left-bottom bg-gradient-to-r from-red-500 to-red-500 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                Disconnect
+              </span>
+            </Button>
           </li>
         </ul>
       </div>
