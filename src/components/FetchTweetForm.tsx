@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { XCircleIcon } from "@heroicons/react/20/solid";
 import SkeletonCard from "src/components/SkeletonCard";
 import { TweetWithAuthorProps } from "src/types/common";
 
@@ -101,36 +100,24 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
                 onChange={handleChange}
                 required
                 size="md"
-                className="py-2 text-sm text-base-100 border rounded-lg border-[#d9d9d9] sm:w-full focus:outline-none focus:border-primary bg-white"
+                className="py-2 text-sm text-base-100 border rounded-lg border-[#d9d9d9] sm:w-full focus:border-accent bg-white"
               />
-              <span className="absolute inset-y-0 right-0 flex items-center">
-                <Button
-                  onClick={handleClearUrl}
-                  shape="circle"
-                  className="btn btn-ghost hover:bg-transparent disabled:bg-transparent"
-                  disabled={!tweetUrl}>
-                  <XCircleIcon
-                    className={`${tweetUrl ? "text-red-700" : "text-gray-500"} h-6 w-6`}
-                  />
-                </Button>
-              </span>
             </div>
           </fieldset>
           {!tweetUrl ? (
             <Tooltip message="Please enter tweet URL">
-              <Button
-                color="primary"
-                className="normal-case whitespace-nowrap"
-                disabled
-                onClick={handleFetchTweet}>
+              <Button className="normal-case whitespace-nowrap" disabled onClick={handleFetchTweet}>
                 Find tweet
               </Button>
             </Tooltip>
           ) : (
             <Button
-              color="primary"
-              variant={fetchedTweet ? "outline" : undefined}
-              className="normal-case whitespace-nowrap"
+              color="accent"
+              className={`${
+                fetchedTweet || loadingTweet
+                  ? "border-1 border-accent text-accent bg-white hover:bg-accent hover:text-white"
+                  : "border-none bg-gradient-to-r from-primary to-secondary text-white"
+              } rounded-lg normal-case whitespace-nowrap`}
               disabled={loadingTweet}
               onClick={handleFetchTweet}>
               {loadingTweet ? "Fetching..." : "Find tweet"}
@@ -159,7 +146,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-start py-2 px-4 font-normal text-neutral">
+              <div className="flex flex-col items-start py-2 font-normal text-neutral">
                 {fetchedTweet.text}
               </div>
             </Card.Body>
