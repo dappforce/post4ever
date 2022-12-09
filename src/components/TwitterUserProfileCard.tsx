@@ -30,7 +30,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
   }, [authenticatedUser]);
 
   return (
-    <Card className="shadow-md bg-white flex flex-col h-fit" bordered={false}>
+    <Card className="rounded-[14px] shadow-md bg-white flex flex-col h-fit" bordered={false}>
       <Card.Body className="gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           1. Connect your Twitter account

@@ -83,7 +83,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
     <Card
       id="fetch-tweet-container"
       bordered={false}
-      className="shadow-md bg-white flex flex-col h-fit">
+      className="rounded-[14px] shadow-md bg-white flex flex-col h-fit">
       <Card.Body className="gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           2. Find tweet using URL
@@ -101,7 +101,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
                 onChange={handleChange}
                 required
                 size="md"
-                className="py-2 text-sm text-base-100 rounded-md sm:w-full focus:outline-none focus:border-primary bg-white"
+                className="py-2 text-sm text-base-100 border rounded-lg border-[#d9d9d9] sm:w-full focus:outline-none focus:border-primary bg-white"
               />
               <span className="absolute inset-y-0 right-0 flex items-center">
                 <Button
@@ -141,7 +141,10 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
         {loadingTweet ? <SkeletonCard /> : <></>}
 
         {fetchedTweet ? (
-          <Card key={fetchedTweet.id} bordered={false} className="shadow-md bg-white py-2 h-fit">
+          <Card
+            key={fetchedTweet.id}
+            bordered={false}
+            className="border rounded-lg border-[#d9d9d9] bg-white py-2 h-fit">
             <Card.Body className="px-6 gap-6">
               <div className="flex flex-row items-center self-start justify-center gap-2">
                 <Avatar
