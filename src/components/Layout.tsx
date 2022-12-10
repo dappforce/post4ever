@@ -12,6 +12,7 @@ import Identicon from "./Identicon";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -76,61 +77,77 @@ const Layout = ({ children }: LayoutProps) => {
         onCheck={() => setIsOpen(false)}
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
-        <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
-          <div className="flex justify-between items-center h-16 md:justify-center">
-            <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
-              <SubTweet />
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: "-50%",
+            scale: 0.5,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          transition={{
+            duration: 0.75,
+            ease: "easeInOut",
+          }}>
+          <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
+            <div className="flex justify-between items-center h-16 md:justify-center">
+              <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
+                <SubTweet />
+              </div>
+              <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
+                <li className="flex">
+                  <Link
+                    href="/tweets"
+                    legacyBehavior
+                    className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
+                    <a
+                      rel="noopener noreferrer"
+                      href="#"
+                      className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
+                        router.pathname === "/tweets" ? "text-accent border-[#5C1EDC]" : ""
+                      }`}>
+                      Feeds
+                    </a>
+                  </Link>
+                </li>
+                <li className="flex hover:text-grey-500">
+                  <Link
+                    href="/crosspost"
+                    legacyBehavior
+                    className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
+                    <a
+                      rel="noopener noreferrer"
+                      href="#"
+                      className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
+                        router.pathname === "/crosspost" ? "text-accent border-[#5C1EDC]" : ""
+                      }`}>
+                      Cross-post a tweet
+                    </a>
+                  </Link>
+                </li>
+              </ul>
+              {accounts && accounts.length && selectedAccount ? (
+                <Button
+                  className="gap-2 normal-case font-normal text-base btn btn-ghost"
+                  onClick={() => setIsOpen(!isOpen)}>
+                  <Identicon />
+                  <div>{account?.meta.name}</div>
+                </Button>
+              ) : (
+                <Button
+                  id="connect-button"
+                  onClick={handleConnect}
+                  className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
+                  <PolkadotIcon />
+                  Connect wallet
+                </Button>
+              )}
             </div>
-            <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
-              <li className="flex">
-                <Link
-                  href="/tweets"
-                  legacyBehavior
-                  className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
-                      router.pathname === "/tweets" ? "text-accent border-[#5C1EDC]" : ""
-                    }`}>
-                    Feeds
-                  </a>
-                </Link>
-              </li>
-              <li className="flex hover:text-grey-500">
-                <Link
-                  href="/crosspost"
-                  legacyBehavior
-                  className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
-                      router.pathname === "/crosspost" ? "text-accent border-[#5C1EDC]" : ""
-                    }`}>
-                    Cross-post a tweet
-                  </a>
-                </Link>
-              </li>
-            </ul>
-            {accounts && accounts.length && selectedAccount ? (
-              <Button
-                className="gap-2 normal-case font-normal text-base btn btn-ghost"
-                onClick={() => setIsOpen(!isOpen)}>
-                <Identicon />
-                <div>{account?.meta.name}</div>
-              </Button>
-            ) : (
-              <Button
-                id="connect-button"
-                onClick={handleConnect}
-                className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
-                <PolkadotIcon />
-                Connect wallet
-              </Button>
-            )}
-          </div>
-        </header>
+          </header>
+        </motion.div>
         <main className="bg-gray-100">{children}</main>
       </Sidebar>
     </>
