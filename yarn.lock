@@ -2010,32 +2010,32 @@
     escape-string-regexp "^2.0.0"
     lodash.deburr "^4.1.0"
 
-"@subsocial/api@latest":
-  version "0.7.8-dev.0"
-  resolved "https://registry.yarnpkg.com/@subsocial/api/-/api-0.7.8-dev.0.tgz#f3b2e2d5a732f6ef9c6659ee02f6d1047eff2dec"
-  integrity sha512-KHMdS+RiR9u5erGegARp0yRvw+jgJB8NVyA0pcpAQy4uL7K+T1PQubBwyZ51FyIN3RUoPa8nJt/7oVuIohzSsA==
+"@subsocial/api@^0.7.9":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@subsocial/api/-/api-0.7.9.tgz#96082337d67698ae95741c62392793333df9d6ce"
+  integrity sha512-/gABxlARl2yuvmncriWOkDeVr5/Idty4W1Lsm7lW1ag/+vwytS6q7jQ9pc1SxnLn2iseqXN2gkjLFF8HIeL0AQ==
   dependencies:
     "@polkadot/api" latest
     "@polkadot/types" latest
     "@polkadot/types-known" latest
     "@polkadot/types-support" latest
-    "@subsocial/definitions" "0.7.8-dev.0"
-    "@subsocial/utils" "0.7.8-dev.0"
+    "@subsocial/definitions" latest
+    "@subsocial/utils" latest
     axios "^0.24.0"
     ipfs-http-client "56.0.3"
 
-"@subsocial/definitions@0.7.8-dev.0":
-  version "0.7.8-dev.0"
-  resolved "https://registry.yarnpkg.com/@subsocial/definitions/-/definitions-0.7.8-dev.0.tgz#cc87fb03beeb089261c9cd0a711fb31dfe5fdc78"
-  integrity sha512-gWzNm9wLixvWdYhdHVgS2xEznzgK/WNt0c2ghF1d9MJNGj38BtYZIeyoTnXL1Rq31pOo8I2iVvYDh5/AHcm3mA==
+"@subsocial/definitions@latest":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@subsocial/definitions/-/definitions-0.7.9.tgz#5bc0d94c9ad269d00d10f9b47fdf4abc447bb183"
+  integrity sha512-HBYvftT+ixPgPttCRUIpcpKJ9UlvFHWhhUgaLTxfFNQ4qaVMCPT7ZdoEkWYeErefnUVag1j5NzS9TfjTyx9gLg==
   dependencies:
     "@polkadot/api" latest
     lodash.camelcase "^4.3.0"
 
-"@subsocial/utils@0.7.8-dev.0":
-  version "0.7.8-dev.0"
-  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.7.8-dev.0.tgz#51b87167f815d7e24825e1910715e88af903feef"
-  integrity sha512-ps7igm+EV8WMlH+8tvo85Zpr4sE8RXFMKly+Qaiz2pRYX+MQny/+7vQmmYXnDQ+2xZ0OBKxivnjzTqEbIqoyLA==
+"@subsocial/utils@latest":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.7.9.tgz#7391812df03b8a324bde43776438611ee4116afb"
+  integrity sha512-uu8HtclBOEB8llt1Fxu4cnKFCDovYPQh/NOegnx2aZU8M/vbMRbRgzrVaSPHuQSbiZff3QcjmH0WltIdyWy7RQ==
   dependencies:
     "@polkadot/util-crypto" latest
     "@sindresorhus/slugify" "^1.1.0"
