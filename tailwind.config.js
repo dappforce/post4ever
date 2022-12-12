@@ -23,6 +23,9 @@ module.exports = withMT({
       colors: {
         "light-gray": withOpacityValue("--light-gray"),
       },
+      backdropBlur: {
+        sm: "1px",
+      },
     },
   },
   variants: {
