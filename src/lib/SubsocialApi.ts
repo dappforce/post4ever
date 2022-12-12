@@ -1,17 +1,20 @@
 import { SubsocialApi, generateCrustAuthToken } from "@subsocial/api";
 
-import { cryptoWaitReady } from "@polkadot/util-crypto";
-
 const initializeApi = async (mnemonic: string) => {
-  const authHeader = generateCrustAuthToken(mnemonic);
+  //const authHeader = generateCrustAuthToken(mnemonic);
+  const authHeader = process.env.NEXT_PUBLIC_AUTH_HEADER;
 
-  await cryptoWaitReady();
+  const mainnetConfig = {
+    substrateNodeUrl: "wss://para.f3joule.space",
+    ipfsNodeUrl: "https://gw.crustfiles.app",
+  };
 
-  const api = await SubsocialApi.create({
+  const testnetConfig = {
     substrateNodeUrl: "wss://rco-para.subsocial.network",
     ipfsNodeUrl: "https://crustwebsites.net",
-    offchainUrl: "http://127.0.0.1:3001",
-  });
+  };
+
+  const api = await SubsocialApi.create(mainnetConfig);
 
   api.ipfs.setWriteHeaders({
     authorization: "Basic " + authHeader,
