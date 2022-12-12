@@ -91,6 +91,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
               disabled={(!Boolean(account) && !Boolean(user)) || !Boolean(fetchedTweet)}
               fetchedTweet={fetchedTweet}
             />
+
             <Button onClick={handleOpen}>Open Dialog</Button>
           </div>
           <div></div>
@@ -103,10 +104,23 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.5, y: 50 },
           }}
-          className="lg:min-w-[520px] p-8 rounded-2xl">
+          className="w-auto min-w-min max-w-[520px] p-8 rounded-2xl backdrop-blur-[1px]">
           <DialogHeader className="flex flex-col justify-center items-center gap-2 p-0">
-            <div className="font-bold text-2xl leading-7 text-[#222222] px-0 pb-4 max-w-fit">
-              🎉 Tweet published
+            <div className="font-bold text-2xl leading-7 text-[#222222] px-0 flex flex-row w-full justify-end items-center">
+              <div className="ml-auto">🎉 Tweet published</div>
+              <button onClick={() => setOpen(false)} className="ml-auto">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+                    fill="#888888"
+                  />
+                </svg>
+              </button>
             </div>
             <div className="font-normal text-base leading-[140%] text-[#888888]">
               Tweet successfully saved to the blockchain!
