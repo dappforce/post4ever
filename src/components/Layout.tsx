@@ -12,7 +12,6 @@ import Identicon from "./Identicon";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -68,21 +67,7 @@ const Layout = ({ children }: LayoutProps) => {
         onCheck={() => setIsOpen(false)}
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: "-50%",
-            scale: 0.5,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-          }}
-          transition={{
-            duration: 0.75,
-            ease: "easeInOut",
-          }}>
+        <div>
           <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
             <div className="flex justify-between items-center h-16 md:justify-center">
               <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
@@ -138,8 +123,8 @@ const Layout = ({ children }: LayoutProps) => {
               )}
             </div>
           </header>
-        </motion.div>
-        <main className="bg-gray-100">{children}</main>
+        </div>
+        <main>{children}</main>
       </Sidebar>
     </>
   );

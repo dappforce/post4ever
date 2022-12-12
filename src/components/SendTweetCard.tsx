@@ -8,8 +8,6 @@ import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { useWalletStore } from "src/store";
 import { TweetWithAuthorProps } from "src/types/common";
 
-import EaseInCardAnimation from "src/animations/EaseInCard";
-
 type SendTweetCardProps = {
   disabled: boolean;
   fetchedTweet: TweetWithAuthorProps | null;
@@ -68,56 +66,56 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
   };
 
   return (
-    <EaseInCardAnimation>
-      <Card
-        bordered={false}
-        className="rounded-[14px] shadow-md bg-white flex flex-col justify-center">
-        <Card.Body className="gap-6">
-          <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
-            3. Connect wallet and select a SS space
-          </h2>
+    <Card
+      bordered={false}
+      className="rounded-[14px] shadow-md bg-white flex flex-col justify-center">
+      <Card.Body className="gap-6">
+        <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
+          3. Connect wallet and select a SS space
+        </h2>
 
-          <p>Select your Subsocial space:</p>
-          <div>
-            {loadingSpaces ? (
-              <Skeleton />
-            ) : spaces ? (
-              <Select label="Space" onChange={value => handleChangeSpaceId(value)}>
-                {spaces.map(space => (
-                  <Option key={space.id} value={`${space.id}`}>
-                    Space ID: {space.id}
-                  </Option>
-                ))}
-              </Select>
-            ) : (
-              "No space to be selected"
-            )}
-          </div>
-
-          {!account ? (
-            <Tooltip message="Please connect Polkadot.js first">
-              <Button fullWidth className="normal-case" disabled>
-                Publish
-              </Button>
-            </Tooltip>
-          ) : !fetchedTweet ? (
-            <Tooltip message="Please find a tweet first">
-              <Button fullWidth className="normal-case" disabled>
-                Publish
-              </Button>
-            </Tooltip>
+        <p>Select your Subsocial space:</p>
+        <div>
+          {loadingSpaces ? (
+            <Skeleton />
+          ) : spaces ? (
+            <Select label="Space" onChange={value => handleChangeSpaceId(value)}>
+              {spaces.map(space => (
+                <Option key={space.id} value={`${space.id}`}>
+                  Space ID: {space.id}
+                </Option>
+              ))}
+            </Select>
           ) : (
-            <Button
-              fullWidth
-              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
-              disabled={!fetchedTweet || loadingCreatePost}
-              onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
-              {loadingCreatePost ? "Sign and open console" : "Publish"}
-            </Button>
+            <Select label="Space" value="Select" className="bg-[#FAFBFB]">
+              <Option>Empty</Option>
+            </Select>
           )}
-        </Card.Body>
-      </Card>
-    </EaseInCardAnimation>
+        </div>
+
+        {!account ? (
+          <Tooltip message="Please connect Polkadot.js first">
+            <Button fullWidth className="normal-case" disabled>
+              Publish
+            </Button>
+          </Tooltip>
+        ) : !fetchedTweet ? (
+          <Tooltip message="Please find a tweet first">
+            <Button fullWidth className="normal-case" disabled>
+              Publish
+            </Button>
+          </Tooltip>
+        ) : (
+          <Button
+            fullWidth
+            className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
+            disabled={!fetchedTweet || loadingCreatePost}
+            onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
+            {loadingCreatePost ? "Sign and open console" : "Publish"}
+          </Button>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 
