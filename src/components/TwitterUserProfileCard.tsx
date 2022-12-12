@@ -70,34 +70,22 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
                         callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/crosspost`,
                       })
                     }
-                    className="btn btn-outline border border-gray-500 hover:border-red-500 hover:bg-white hover:bg-opacity-0 hover:text-red-500 disabled:bg-transparent ml-auto">
-                    <motion.svg
+                    className="group btn btn-outline border border-gray-500 hover:border-red-500 hover:bg-white disabled:bg-transparent ml-auto">
+                    <svg
                       width="14"
                       height="12"
                       viewBox="0 0 14 12"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg">
-                      <motion.path
+                      <path
+                        className="group-hover:fill-red-500 group-hover:opacity-100"
                         id="Vector"
                         fill="black"
                         fill-opacity="0.54"
                         strokeWidth={0.5}
                         d="M10.332 2.66667L9.39203 3.60667L11.112 5.33333H4.33203V6.66667H11.112L9.39203 8.38667L10.332 9.33333L13.6654 6L10.332 2.66667ZM1.66536 1.33333H6.9987V0H1.66536C0.932031 0 0.332031 0.6 0.332031 1.33333V10.6667C0.332031 11.4 0.932031 12 1.66536 12H6.9987V10.6667H1.66536V1.33333Z"
-                        initial={{
-                          opacity: 0,
-                          pathLength: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          rotate: 0,
-                          pathLength: 1,
-                        }}
-                        transition={{
-                          duration: 2,
-                          ease: "easeInOut",
-                        }}
                       />
-                    </motion.svg>
+                    </svg>
                   </Button>
                 </div>
               </>
