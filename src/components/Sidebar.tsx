@@ -18,7 +18,7 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
   return (
     <div className="drawer drawer-end h-screen">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checked} />
-      <div className="drawer-content">{children}</div>
+      <div className="drawer-content bg-light-gray">{children}</div>
       <div className="drawer-side">
         <label htmlFor="my-drawer-4" className="drawer-overlay h-screen" onClick={onCheck}></label>
 
