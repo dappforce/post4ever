@@ -2,6 +2,7 @@ import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
+import Identicon from "src/components/Identicon";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TweetWithAuthorProps } from "src/types/common";
 import FullScreenLoading from "src/components/FullScreenLoading";
@@ -16,6 +17,11 @@ import { AuthenticatedPageProps } from "src/types/common";
 import FetchTweetForm from "src/components/FetchTweetForm";
 import SendTweetCard from "src/components/SendTweetCard";
 import toast, { Toaster } from "react-hot-toast";
+import { Button, Card } from "react-daisyui";
+
+import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
+
+import { trimMiddleString } from "src/utils/string";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -51,11 +57,15 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
   const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
 
-  if (status === "loading") return <FullScreenLoading />;
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
 
   const handleSetFetchedTweet = (fetchedTweet: TweetWithAuthorProps | null) => {
     setFetchedTweet(fetchedTweet);
   };
+
+  if (status === "loading") return <FullScreenLoading />;
 
   return (
     <>
@@ -81,9 +91,80 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
               disabled={(!Boolean(account) && !Boolean(user)) || !Boolean(fetchedTweet)}
               fetchedTweet={fetchedTweet}
             />
+            <Button onClick={handleOpen}>Open Dialog</Button>
           </div>
           <div></div>
         </div>
+
+        <Dialog
+          open={open}
+          handler={handleOpen}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.5, y: 50 },
+          }}
+          className="lg:min-w-[520px] p-8 rounded-2xl">
+          <DialogHeader className="flex flex-col justify-center items-center gap-2 p-0">
+            <div className="font-bold text-2xl leading-7 text-[#222222] px-0 pb-4 max-w-fit">
+              🎉 Tweet published
+            </div>
+            <div className="font-normal text-base leading-[140%] text-[#888888]">
+              Tweet successfully saved to the blockchain!
+            </div>
+          </DialogHeader>
+          <DialogBody className="px-0">
+            <Card bordered={false} className="border rounded-lg border-[#d9d9d9] bg-white">
+              <Card.Body className="py-6 px-6 gap-6 max-w-full">
+                <div className="flex flex-row items-center self-start justify-center gap-2">
+                  <Identicon />
+                  <div>
+                    <div className="font-bold text-neutral">{account?.meta.name}</div>
+                    <div className="font-normal text-gray-500">
+                      {trimMiddleString(account?.address)}
+                    </div>
+                  </div>
+                </div>
+                <p className="font-normal text-neutral">
+                  I just cross-posted this tweet to the{" "}
+                  <a
+                    className="link link-hover text-[#316CF4] whitespace-nowrap"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://twitter.com/SubsocialChain">
+                    @SubsocialChain
+                  </a>{" "}
+                  network to make it censorship resistant!{" "}
+                  <a
+                    className="link link-hover text-[#316CF4]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://polkaverse.com/link/to-saved-tweet">
+                    https://polkaverse.com/link/to-saved-tweet{" "}
+                  </a>
+                  <br />
+                  <br />
+                  <a className="link text-[#316CF4] no-underline whitespace-nowrap" href="#">
+                    #Subsocial
+                  </a>
+                </p>
+              </Card.Body>
+            </Card>
+          </DialogBody>
+          <DialogFooter className="p-0 flex flex-col gap-4">
+            <Button
+              fullWidth
+              onClick={handleOpen}
+              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
+              <span>Tweet about it!</span>
+            </Button>
+            <Button
+              fullWidth
+              onClick={handleOpen}
+              className="border-1 border-accent text-accent bg-white hover:bg-accent hover:text-white rounded-lg normal-case whitespace-nowrap">
+              <span>Cross-post another tweet</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
       </Layout>
     </>
   );
