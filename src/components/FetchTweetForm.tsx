@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import SkeletonCard from "src/components/SkeletonCard";
 import { TweetWithAuthorProps } from "src/types/common";
-import EaseInCardAnimation from "src/animations/EaseInCard";
 
 import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 
