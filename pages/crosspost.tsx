@@ -80,10 +80,13 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <Toaster position="bottom-right" />
           <div></div>
           <div className="flex flex-col mt-4 gap-4">
-            <TwitterUserProfileCard disabled={!Boolean(account)} authenticatedUser={user} />
+            <TwitterUserProfileCard
+              disabled={!Boolean(account) || Boolean(user)}
+              authenticatedUser={user}
+            />
 
             <FetchTweetForm
-              disabled={!Boolean(account) || !Boolean(user)}
+              disabled={!Boolean(user) || Boolean(fetchedTweet)}
               onFetchTweet={handleSetFetchedTweet}
             />
 
