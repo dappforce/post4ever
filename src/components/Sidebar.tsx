@@ -15,6 +15,10 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
     onChangeAccount(account);
   };
 
+  const handleDisconnect = () => {
+    handleChangeAccount(null);
+  };
+
   return (
     <div className="drawer drawer-end h-screen">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checked} />
@@ -38,7 +42,7 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
           </li>
           <li className="w-full flex items-center">
             <Button
-              onClick={() => handleChangeAccount(null)}
+              onClick={handleDisconnect}
               variant="text"
               size="sm"
               className="group text-sm text-gray-500 hover:text-red-500 hover:bg-transparent normal-case transition-all duration-300 ease-in-out">
