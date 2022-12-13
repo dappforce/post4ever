@@ -1,6 +1,7 @@
 import create from "zustand";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import produce from "immer";
+import { persist } from "zustand/middleware";
 
 interface WalletState {
   account: InjectedAccountWithMeta | null;
@@ -21,12 +22,19 @@ type TwitterUserProps = {
   username: string;
 };
 
-export const useWalletStore = create<WalletState>()(set => ({
-  account: null,
-  setAccount: newAccount => set(state => ({ account: newAccount })),
-  accounts: [],
-  setAccounts: newAccounts => set(state => ({ accounts: newAccounts })),
-}));
+export const useWalletStore = create<WalletState>()(
+  persist(
+    set => ({
+      account: null,
+      setAccount: newAccount => set(state => ({ account: newAccount })),
+      accounts: [],
+      setAccounts: newAccounts => set(state => ({ accounts: newAccounts })),
+    }),
+    {
+      name: "wallet-storage", // name of item in the storage (must be unique)
+    },
+  ),
+);
 
 export const useTwitterUserStore = create<TwitterUserState>()(set => ({
   user: {
