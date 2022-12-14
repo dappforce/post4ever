@@ -1,16 +1,16 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import Head from "next/head";
 import Identicon from "src/components/Identicon";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TweetWithAuthorProps } from "src/types/common";
 import FullScreenLoading from "src/components/FullScreenLoading";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useWalletStore } from "src/store";
 import { unstable_getServerSession } from "next-auth/next";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
+import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
@@ -28,8 +28,7 @@ const Layout = dynamic(() => import("src/components/Layout"), {
 });
 
 const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { status } = useSession();
 
   const { successTx } = useSubSocialApiHook();
   const { account } = useWalletStore(state => ({
@@ -55,15 +54,19 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   }, [successTx]);
 
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(!open);
 
   const handleSetFetchedTweet = (fetchedTweet: TweetWithAuthorProps | null) => {
     setFetchedTweet(fetchedTweet);
   };
+
+  const [contentId, setContentId] = useState<SuccessPayloadProps | undefined>();
+
+  const handleSuccessSendTweet = useCallback(({ spaceId, postId }: SuccessPayloadProps) => {
+    setContentId({
+      postId,
+      spaceId,
+    });
+  }, []);
 
   if (status === "loading") return <FullScreenLoading />;
 
@@ -93,16 +96,15 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             <SendTweetCard
               disabled={(!Boolean(account) && !Boolean(user)) || !Boolean(fetchedTweet)}
               fetchedTweet={fetchedTweet}
+              onSuccess={handleSuccessSendTweet}
             />
-
-            <Button onClick={handleOpen}>Open Dialog</Button>
           </div>
           <div></div>
         </div>
 
         <Dialog
-          open={open}
-          handler={handleOpen}
+          open={Boolean(contentId)}
+          handler={() => setContentId(undefined)}
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.5, y: 50 },
@@ -111,7 +113,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <DialogHeader className="flex flex-col justify-center items-center gap-2 p-0">
             <div className="font-bold text-2xl leading-7 text-[#222222] px-0 flex flex-row w-full justify-end items-center">
               <div className="ml-auto">🎉 Tweet published</div>
-              <button onClick={() => setOpen(false)} className="ml-auto">
+              <button onClick={() => setContentId(undefined)} className="ml-auto">
                 <svg
                   width="14"
                   height="14"
@@ -155,8 +157,8 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                     className="link link-hover text-[#316CF4]"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="https://polkaverse.com/link/to-saved-tweet">
-                    https://polkaverse.com/link/to-saved-tweet{" "}
+                    href={`https://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}`}>
+                    {`https://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}`}
                   </a>
                   <br />
                   <br />
@@ -170,13 +172,13 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           <DialogFooter className="p-0 flex flex-col gap-4">
             <Button
               fullWidth
-              onClick={handleOpen}
+              //onClick={handleOpen}
               className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
               <span>Tweet about it!</span>
             </Button>
             <Button
               fullWidth
-              onClick={handleOpen}
+              onClick={() => setContentId(undefined)}
               className="border-1 border-accent text-accent bg-white hover:bg-accent hover:text-white rounded-lg normal-case whitespace-nowrap">
               <span>Cross-post another tweet</span>
             </Button>

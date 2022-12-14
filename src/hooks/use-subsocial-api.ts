@@ -3,33 +3,20 @@ import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
 import { bnsToIds } from "@subsocial/utils";
 import type { SpaceData } from "@subsocial/api/types";
+import { getNewIdsFromEvent } from "@subsocial/api/utils";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { PostProps, TweetWithAuthorProps } from "src/types/common";
 import toast from "react-hot-toast";
 
-type PostTransactionProps = {
-  savedPosts: PostProps[];
-  mnemonic: string;
-};
-
-type InitApiProps = {
-  mnemonic?: string;
-};
-
-type CreateSpaceProps = {
-  account: InjectedAccountWithMeta;
-  content: TweetWithAuthorProps;
-};
-
-type CreatePostWithSpaceIdProps = {
-  spaceId: string;
-  account: InjectedAccountWithMeta;
-  content: TweetWithAuthorProps;
-};
+import {
+  PostTransactionProps,
+  InitApiProps,
+  CreateSpaceProps,
+  CreatePostWithSpaceIdProps,
+} from "./subsocial-api.types";
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
@@ -58,7 +45,11 @@ export const useSubSocialApiHook = () => {
     });
 
     try {
-      const { web3FromSource } = await import("@polkadot/extension-dapp");
+      const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
+
+      const extensions = await web3Enable("SubTweet dapp");
+
+      if (!extensions) return null;
 
       const injector = await web3FromSource(account.meta.source);
 
@@ -140,6 +131,7 @@ export const useSubSocialApiHook = () => {
     content,
     spaceId,
     account,
+    successCallback,
   }: CreatePostWithSpaceIdProps) => {
     setLoadingCreatePost(true);
 
@@ -150,9 +142,11 @@ export const useSubSocialApiHook = () => {
     });
 
     try {
-      await cryptoWaitReady();
+      const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      const { web3FromSource } = await import("@polkadot/extension-dapp");
+      const extensions = await web3Enable("SubTweet dapp");
+
+      if (!extensions) return null;
 
       const injector = await web3FromSource(account.meta.source);
 
@@ -190,6 +184,14 @@ export const useSubSocialApiHook = () => {
             console.log(`✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`);
             setLoadingCreatePost(false);
             setSuccessTx(blockHash.toString());
+            const ids = getNewIdsFromEvent(result);
+            const postId = bnsToIds(ids)[0];
+
+            successCallback &&
+              successCallback({
+                postId,
+                spaceId,
+              });
           } else if (result.isError) {
             console.log(JSON.stringify(result));
           } else {

@@ -5,15 +5,17 @@ import Skeleton from "react-loading-skeleton";
 import { useSession } from "next-auth/react";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
+import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
 import { useWalletStore } from "src/store";
 import { TweetWithAuthorProps } from "src/types/common";
 
 type SendTweetCardProps = {
   disabled: boolean;
   fetchedTweet: TweetWithAuthorProps | null;
+  onSuccess: (props: SuccessPayloadProps) => void;
 };
 
-const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
+const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps) => {
   const { data: session, status } = useSession();
   const {
     initApi,
@@ -61,6 +63,7 @@ const SendTweetCard = ({ disabled, fetchedTweet }: SendTweetCardProps) => {
         account,
         content: fetchedTweet,
         spaceId: selectedSpaceId,
+        successCallback: onSuccess,
       });
     }
   };
