@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
-import { AuthenticatedPageProps, TweetProps, PostProps } from "src/types/common";
+import { AuthenticatedPageProps, TweetProps } from "src/types/common";
 import { Button } from "react-daisyui";
 import { useTwitterUserStore } from "src/store";
 import TwitterUserProfileCard from "components/TwitterUserProfileCard";
@@ -48,7 +48,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
 
   useEffect(() => {
     if (savedPosts.length > 0 && session) {
-      initApi({ mnemonic: session.mnemonic });
+      initApi(session.mnemonic);
     }
   }, [savedPosts.length, session]);
 
