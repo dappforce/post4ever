@@ -1,6 +1,6 @@
 import { SubsocialApi, generateCrustAuthToken } from "@subsocial/api";
 
-const initializeApi = async (mnemonic: string) => {
+const initializeApi = async (mnemonic?: string) => {
   //const authHeader = generateCrustAuthToken(mnemonic);
   const authHeader = process.env.NEXT_PUBLIC_AUTH_HEADER;
 

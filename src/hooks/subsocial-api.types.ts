@@ -6,10 +6,6 @@ export type PostTransactionProps = {
   mnemonic: string;
 };
 
-export type InitApiProps = {
-  mnemonic?: string;
-};
-
 export type CreateSpaceProps = {
   account: InjectedAccountWithMeta;
   content: TweetWithAuthorProps;

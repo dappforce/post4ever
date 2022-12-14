@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button, Card, Tooltip } from "react-daisyui";
 import { Select, Option } from "@material-tailwind/react";
 import Skeleton from "react-loading-skeleton";
-import { useSession } from "next-auth/react";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
@@ -16,9 +15,7 @@ type SendTweetCardProps = {
 };
 
 const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps) => {
-  const { data: session, status } = useSession();
   const {
-    initApi,
     loadingSpaces,
     loadingCreatePost,
     spaces,
@@ -29,12 +26,6 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
-
-  useEffect(() => {
-    if (session) {
-      initApi({ mnemonic: session.mnemonic });
-    }
-  }, [session]);
 
   useEffect(() => {
     if (account) {

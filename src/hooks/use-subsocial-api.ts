@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 
 import {
   PostTransactionProps,
-  InitApiProps,
   CreateSpaceProps,
   CreatePostWithSpaceIdProps,
 } from "./subsocial-api.types";
@@ -26,12 +25,13 @@ export const useSubSocialApiHook = () => {
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
   const [successTx, setSuccessTx] = useState<string | null>(null);
 
-  const initApi = async ({ mnemonic }: InitApiProps): Promise<void> => {
+  const initApi = async (mnemonic?: string): Promise<void> => {
     if (mnemonic) {
       const api = await initializeApi(mnemonic);
       setSubsocialApi(api);
     } else {
-      //TODO: initApi using wallet
+      const api = await initializeApi();
+      setSubsocialApi(api);
     }
   };
 
@@ -107,18 +107,21 @@ export const useSubSocialApiHook = () => {
     setLoadingSpaces(true);
 
     try {
-      await cryptoWaitReady();
-      const spaceIds = await subsocialApi?.blockchain.spaceIdsByOwner(account.address);
+      const subsocialApi = await initializeApi();
 
-      if (spaceIds) {
-        const spaces = await subsocialApi?.findPublicSpaces(bnsToIds(spaceIds));
-        if (spaces) {
-          setSpaces(spaces);
-        }
+      if (!subsocialApi) return null;
 
-        if (spaces && !spaces.length) {
-          setSpaces(null);
-        }
+      const spaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
+
+      if (!spaceIds) return null;
+
+      const spaces = await subsocialApi.findPublicSpaces(bnsToIds(spaceIds));
+      if (spaces) {
+        setSpaces(spaces);
+      }
+
+      if (spaces && !spaces.length) {
+        setSpaces(null);
       }
     } catch (error) {
       console.warn({ error });
