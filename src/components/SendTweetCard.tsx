@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Tooltip } from "react-daisyui";
 import { Select, Option } from "@material-tailwind/react";
+import Identicon from "./Identicon";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
@@ -59,6 +60,9 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     }
   };
 
+  // Need to show avatar stored in subsocial ipfs node
+  const SUB_IPFS_NODE_URL = "https://ipfs.subsocial.network/ipfs";
+
   return (
     <Card
       bordered={false}
@@ -73,10 +77,28 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           {loadingSpaces ? (
             <Skeleton />
           ) : spaces ? (
-            <Select label="Space" onChange={value => handleChangeSpaceId(value)}>
+            <Select
+              label="Space"
+              onChange={value => handleChangeSpaceId(value)}
+              className="bg-[#FAFBFB]">
               {spaces.map(space => (
-                <Option key={space.id} value={`${space.id}`}>
-                  Space ID: {space.id}
+                <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="avatar">
+                      <div className="w-6 rounded-full">
+                        {space.content?.image ? (
+                          <img
+                            src={`${SUB_IPFS_NODE_URL}/${space.content.image}`}
+                            alt="space-avatar"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <Identicon size={24} />
+                        )}
+                      </div>
+                    </div>
+                    <div>{space.content?.name ?? "Unnamed space"}</div>
+                  </div>
                 </Option>
               ))}
             </Select>
