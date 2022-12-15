@@ -38,7 +38,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   useEffect(() => {
     if (successTx) {
       toast.custom(
-        <div className="flex justify-center items-center gap-2 bg-white color-[#363636] text-black min-w-[300px] leading-normal will-change-transform shadow pointer-events-auto py-[8px] px-[10px] rounded-lg">
+        <div className="color-[#363636] pointer-events-auto flex min-w-[300px] items-center justify-center gap-2 rounded-lg bg-white py-[8px] px-[10px] leading-normal text-black shadow will-change-transform">
           ✅{" "}
           <div className="m-auto">
             <a
@@ -79,10 +79,10 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="grid grid-cols-[0.5fr_1fr_0.5fr] px-4 max-w-full h-screen">
+        <div className="grid h-screen max-w-full grid-cols-[0.5fr_1fr_0.5fr] px-4">
           <Toaster position="bottom-right" />
           <div></div>
-          <div className="flex flex-col mt-4 gap-4">
+          <div className="mt-4 flex flex-col gap-4">
             <TwitterUserProfileCard
               disabled={!Boolean(account) || Boolean(user)}
               authenticatedUser={user}
@@ -109,9 +109,9 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.5, y: 50 },
           }}
-          className="w-auto min-w-min max-w-[520px] p-8 rounded-2xl backdrop-blur-[1px]">
-          <DialogHeader className="flex flex-col justify-center items-center gap-2 p-0">
-            <div className="font-bold text-2xl leading-7 text-[#222222] px-0 flex flex-row w-full justify-end items-center">
+          className="w-auto min-w-min max-w-[520px] rounded-2xl p-8 backdrop-blur-[1px]">
+          <DialogHeader className="flex flex-col items-center justify-center gap-2 p-0">
+            <div className="flex w-full flex-row items-center justify-end px-0 text-2xl font-bold leading-7 text-[#222222]">
               <div className="ml-auto">🎉 Tweet published</div>
               <button onClick={() => setContentId(undefined)} className="ml-auto">
                 <svg
@@ -127,14 +127,14 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                 </svg>
               </button>
             </div>
-            <div className="font-normal text-base leading-[140%] text-[#888888]">
+            <div className="text-base font-normal leading-[140%] text-[#888888]">
               Tweet successfully saved to the blockchain!
             </div>
           </DialogHeader>
           <DialogBody className="px-0">
-            <Card bordered={false} className="border rounded-lg border-[#d9d9d9] bg-white">
-              <Card.Body className="py-6 px-6 gap-6 max-w-full">
-                <div className="flex flex-row items-center self-start justify-center gap-2">
+            <Card bordered={false} className="rounded-lg border border-[#d9d9d9] bg-white">
+              <Card.Body className="max-w-full gap-6 py-6 px-6">
+                <div className="flex flex-row items-center justify-center gap-2 self-start">
                   <Identicon />
                   <div>
                     <div className="font-bold text-neutral">{account?.meta.name}</div>
@@ -146,7 +146,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                 <p className="font-normal text-neutral">
                   I just cross-posted this tweet to the{" "}
                   <a
-                    className="link link-hover text-[#316CF4] whitespace-nowrap"
+                    className="link link-hover whitespace-nowrap text-[#316CF4]"
                     target="_blank"
                     rel="noopener noreferrer"
                     href="https://twitter.com/SubsocialChain">
@@ -162,24 +162,24 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                   </a>
                   <br />
                   <br />
-                  <a className="link text-[#316CF4] no-underline whitespace-nowrap" href="#">
+                  <a className="link whitespace-nowrap text-[#316CF4] no-underline" href="#">
                     #Subsocial
                   </a>
                 </p>
               </Card.Body>
             </Card>
           </DialogBody>
-          <DialogFooter className="p-0 flex flex-col gap-4">
+          <DialogFooter className="flex flex-col gap-4 p-0">
             <Button
               fullWidth
               //onClick={handleOpen}
-              className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
+              className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
               <span>Tweet about it!</span>
             </Button>
             <Button
               fullWidth
               onClick={() => setContentId(undefined)}
-              className="border-1 border-accent text-accent bg-white hover:bg-accent hover:text-white rounded-lg normal-case whitespace-nowrap">
+              className="border-1 whitespace-nowrap rounded-lg border-accent bg-white normal-case text-accent hover:bg-accent hover:text-white">
               <span>Cross-post another tweet</span>
             </Button>
           </DialogFooter>
