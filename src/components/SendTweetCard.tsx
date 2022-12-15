@@ -124,10 +124,15 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
         ) : (
           <Button
             fullWidth
-            className="normal-case border-0 bg-gradient-to-r from-primary to-secondary"
+            className={`normal-case border-0 ${
+              loadingCreatePost
+                ? "loading btn-disabled"
+                : "bg-gradient-to-r from-primary to-secondary"
+            }`}
             disabled={!fetchedTweet || loadingCreatePost}
+            loading={loadingCreatePost}
             onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
-            {loadingCreatePost ? "Sign and open console" : "Publish"}
+            <span>{loadingCreatePost ? "Sign and open console" : "Publish"}</span>
           </Button>
         )}
       </Card.Body>
