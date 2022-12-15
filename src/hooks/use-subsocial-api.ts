@@ -149,20 +149,24 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("SubTweet dapp");
 
+      const subsocialApi = await initializeApi();
+
+      if (!subsocialApi) return null;
+
       if (!extensions) return null;
 
       const injector = await web3FromSource(account.meta.source);
 
       const temp = content.users?.find(user => user.id === content.author_id);
 
-      const cid = await subsocialApi?.ipfs.saveContent({
+      const cid = await subsocialApi.ipfs.saveContent({
         title: `Tweet by ${temp?.name}`,
         tags: [temp?.name, temp?.username, temp?.profile_image_url],
         body: content.text,
         canonical: `https://twitter.com/${temp?.username}/status/${content.id}`,
       });
 
-      const substrateApi = await subsocialApi?.blockchain.api;
+      const substrateApi = await subsocialApi.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
