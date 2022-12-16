@@ -23,6 +23,8 @@ import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwi
 
 import { trimMiddleString } from "src/utils/string";
 
+import { TwitterShareButton } from "react-share";
+
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
@@ -79,7 +81,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="grid h-screen max-w-full grid-cols-[0.5fr_1fr_0.5fr] px-4">
+        <div className="lg:grid h-screen max-w-full lg:grid-cols-[0.5fr_1fr_0.5fr] px-4">
           <Toaster position="bottom-right" />
           <div></div>
           <div className="mt-4 flex flex-col gap-4">
@@ -170,12 +172,18 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             </Card>
           </DialogBody>
           <DialogFooter className="flex flex-col gap-4 p-0">
-            <Button
-              fullWidth
-              //onClick={handleOpen}
-              className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
-              <span>Tweet about it!</span>
-            </Button>
+            <TwitterShareButton
+              className="w-full"
+              url={`https://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}\n`}
+              hashtags={["Subsocial"]}
+              title={`I just cross-posted this tweet to the @SubsocialChain network to make it censorship resistant!\n\n`}>
+              <Button
+                fullWidth
+                onClick={() => console.log("this is it")}
+                className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
+                <span>Tweet about it!</span>
+              </Button>
+            </TwitterShareButton>
             <Button
               fullWidth
               onClick={() => setContentId(undefined)}
