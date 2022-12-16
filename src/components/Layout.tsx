@@ -70,9 +70,11 @@ const Layout = ({ children }: LayoutProps) => {
         <div>
           <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
             <div className="flex justify-between items-center h-16 md:justify-center">
-              <div className="text-primary text-2xl font-medium text-[#6A8CEC]">
-                <SubTweet />
-              </div>
+              <button onClick={() => router.push("/crosspost")}>
+                <span className="text-primary text-2xl font-medium text-[#6A8CEC]">
+                  <SubTweet />
+                </span>
+              </button>
               <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
                 <li className="flex">
                   <Link
