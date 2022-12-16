@@ -69,72 +69,73 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
       className="rounded-[14px] shadow-md bg-white flex flex-col justify-center">
       <Card.Body className="gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
-          3. Connect wallet and select a SS space
+          3. Select a Subsocial Space
         </h2>
 
-        <p>Select your Subsocial space:</p>
-        <div>
-          {loadingSpaces ? (
-            <Skeleton />
-          ) : spaces ? (
-            <Select
-              label="Space"
-              onChange={value => handleChangeSpaceId(value)}
-              className="bg-[#FAFBFB]">
-              {spaces.map(space => (
-                <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className="avatar">
-                      <div className="w-6 rounded-full">
-                        {space.content?.image ? (
-                          <img
-                            src={`${SUB_IPFS_NODE_URL}/${space.content.image}`}
-                            alt="space-avatar"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <Identicon size={24} />
-                        )}
+        <div className="flex flex-col gap-6">
+          <div>
+            {loadingSpaces ? (
+              <Skeleton />
+            ) : spaces ? (
+              <Select
+                label="Space"
+                onChange={value => handleChangeSpaceId(value)}
+                className="bg-[#FAFBFB]">
+                {spaces.map(space => (
+                  <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="avatar">
+                        <div className="w-6 rounded-full">
+                          {space.content?.image ? (
+                            <img
+                              src={`${SUB_IPFS_NODE_URL}/${space.content.image}`}
+                              alt="space-avatar"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Identicon size={24} />
+                          )}
+                        </div>
                       </div>
+                      <div>{space.content?.name ?? "Unnamed space"}</div>
                     </div>
-                    <div>{space.content?.name ?? "Unnamed space"}</div>
-                  </div>
-                </Option>
-              ))}
-            </Select>
+                  </Option>
+                ))}
+              </Select>
+            ) : (
+              <Select label="Space" value="Select" className="bg-[#FAFBFB]">
+                <Option>Empty</Option>
+              </Select>
+            )}
+          </div>
+
+          {!account ? (
+            <Tooltip className="h-10" message="Please connect Polkadot.js first">
+              <Button fullWidth className="normal-case" disabled>
+                Publish
+              </Button>
+            </Tooltip>
+          ) : !fetchedTweet ? (
+            <Tooltip message="Please find a tweet first">
+              <Button fullWidth className="normal-case" disabled>
+                Publish
+              </Button>
+            </Tooltip>
           ) : (
-            <Select label="Space" value="Select" className="bg-[#FAFBFB]">
-              <Option>Empty</Option>
-            </Select>
+            <Button
+              fullWidth
+              className={`normal-case border-0 ${
+                loadingCreatePost
+                  ? "loading btn-disabled"
+                  : "bg-gradient-to-r from-primary to-secondary"
+              }`}
+              disabled={!fetchedTweet || loadingCreatePost}
+              loading={loadingCreatePost}
+              onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
+              <span>{loadingCreatePost ? "Sign and open console" : "Publish"}</span>
+            </Button>
           )}
         </div>
-
-        {!account ? (
-          <Tooltip message="Please connect Polkadot.js first">
-            <Button fullWidth className="normal-case" disabled>
-              Publish
-            </Button>
-          </Tooltip>
-        ) : !fetchedTweet ? (
-          <Tooltip message="Please find a tweet first">
-            <Button fullWidth className="normal-case" disabled>
-              Publish
-            </Button>
-          </Tooltip>
-        ) : (
-          <Button
-            fullWidth
-            className={`normal-case border-0 ${
-              loadingCreatePost
-                ? "loading btn-disabled"
-                : "bg-gradient-to-r from-primary to-secondary"
-            }`}
-            disabled={!fetchedTweet || loadingCreatePost}
-            loading={loadingCreatePost}
-            onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
-            <span>{loadingCreatePost ? "Sign and open console" : "Publish"}</span>
-          </Button>
-        )}
       </Card.Body>
     </Card>
   );

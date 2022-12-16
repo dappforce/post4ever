@@ -81,26 +81,25 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           2. Find tweet using URL
         </h2>
-        <div className="flex flex-row gap-4">
-          <fieldset className="w-full space-y-1 text-neutral">
-            <div className="relative">
-              <Input
-                type="url"
-                name="tweet-url"
-                id="tweet-url"
-                placeholder="Tweet URL"
-                disabled={formDisabled}
-                value={tweetUrl}
-                onChange={handleChange}
-                required
-                size="md"
-                className="py-2 text-sm border rounded-lg border-[#d9d9d9] sm:w-full focus:border-accent bg-[#FAFBFB] focus:bg-[#FAFBFB]"
-              />
-            </div>
-          </fieldset>
+        <div className="flex flex-col gap-6">
+          <Input
+            type="url"
+            name="tweet-url"
+            id="tweet-url"
+            placeholder="Tweet URL"
+            disabled={formDisabled}
+            value={tweetUrl}
+            onChange={handleChange}
+            required
+            size="md"
+            className="py-2 text-sm border rounded-lg border-[#d9d9d9] w-full focus:border-accent bg-[#FAFBFB] focus:bg-[#FAFBFB]"
+          />
           {!tweetUrl ? (
-            <Tooltip message="Please enter tweet URL">
-              <Button className="normal-case whitespace-nowrap" disabled onClick={handleFetchTweet}>
+            <Tooltip className="w-full" message="Please enter tweet URL">
+              <Button
+                className="w-full normal-case whitespace-nowrap"
+                disabled
+                onClick={handleFetchTweet}>
                 Find tweet
               </Button>
             </Tooltip>
@@ -108,16 +107,15 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
             <Button
               className={`${
                 fetchedTweet || loadingTweet
-                  ? "border-1 border-accent text-accent bg-white hover:bg-accent hover:text-white"
+                  ? "btn btn-accent btn-outline"
                   : "border-none bg-gradient-to-r from-primary to-secondary text-white hover:brightness-90"
-              } rounded-lg normal-case whitespace-nowrap`}
+              } w-full rounded-lg normal-case whitespace-nowrap`}
               disabled={loadingTweet}
               onClick={handleFetchTweet}>
               {loadingTweet ? "Fetching..." : "Find tweet"}
             </Button>
           )}
         </div>
-
         {loadingTweet ? <SkeletonCard /> : <></>}
 
         {fetchedTweet ? (

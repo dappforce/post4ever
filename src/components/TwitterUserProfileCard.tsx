@@ -57,7 +57,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
                     href="#">{`@${authenticatedUser.username}`}</a>
                 </div>
               </div>
-              <div className="ml-auto">
+              <div className="flex justify-center items-center ml-auto">
                 <Button
                   shape="square"
                   size="md"

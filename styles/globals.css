@@ -43,6 +43,15 @@ select:-webkit-autofill:focus {
   transition: white 5000s ease-in-out 0s;
 }
 
+.input-md {
+  height: 2.5rem;
+}
+
+.btn {
+  height: 2.5rem;
+  min-height: 2.5rem;
+}
+
 .btn.loading > span {
   color: white;
 }
@@ -51,4 +60,10 @@ select:-webkit-autofill:focus {
   border-bottom-color: white;
   border-right-color: white;
   animation: spin 2s linear infinite;
+}
+
+.btn-outline.btn-accent:hover {
+  background-color: white;
+  color: hsla(260, 76%, 69%, 1);
+  border-color: hsla(260, 76%, 69%, 1);
 }
