@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --light-gray: 200deg 13% 95%;
+    --light-blue: 224deg 95% 48%;
   }
 }
 
@@ -48,8 +49,14 @@ select:-webkit-autofill:focus {
 }
 
 .btn {
+  text-transform: none;
   height: 2.5rem;
   min-height: 2.5rem;
+  border-radius: 0.5rem;
+}
+
+.btn:focus-visible {
+  outline-color: hsl(var(--light-blue));
 }
 
 .btn.loading > span {
@@ -62,8 +69,13 @@ select:-webkit-autofill:focus {
   animation: spin 2s linear infinite;
 }
 
+.btn-gradient {
+  @apply border-0 bg-gradient-to-r from-primary to-secondary hover:brightness-110;
+}
+
 .btn-outline.btn-accent:hover {
   background-color: white;
-  color: hsla(260, 76%, 69%, 1);
-  border-color: hsla(260, 76%, 69%, 1);
+  color: hsl(var(--light-blue));
+  border-color: hsl(var(--light-blue));
+  box-shadow: 0 0 0.075em 0 currentColor;
 }
