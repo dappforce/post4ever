@@ -76,12 +76,12 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
     <Card
       id="fetch-tweet-container"
       bordered={false}
-      className="rounded-[14px] shadow-md bg-white flex flex-col h-fit">
-      <Card.Body className="gap-6">
+      className="flex h-fit flex-col rounded-[14px] bg-white shadow-md">
+      <Card.Body className="gap-4 p-4 md:gap-6 md:p-8">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           2. Find tweet using URL
         </h2>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <Input
             type="url"
             name="tweet-url"
@@ -92,12 +92,12 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
             onChange={handleChange}
             required
             size="md"
-            className="py-2 text-sm border rounded-lg border-[#d9d9d9] w-full focus:border-accent bg-[#FAFBFB] focus:bg-[#FAFBFB]"
+            className="w-full rounded-lg border border-[#d9d9d9] bg-[#FAFBFB] py-2 text-sm focus:border-accent focus:bg-[#FAFBFB]"
           />
           {!tweetUrl ? (
             <Tooltip className="w-full" message="Please enter tweet URL">
               <Button
-                className="w-full normal-case whitespace-nowrap"
+                className="w-full whitespace-nowrap normal-case"
                 disabled
                 onClick={handleFetchTweet}>
                 Find tweet
@@ -106,10 +106,8 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
           ) : (
             <Button
               className={`${
-                fetchedTweet || loadingTweet
-                  ? "btn btn-accent btn-outline"
-                  : "border-none bg-gradient-to-r from-primary to-secondary text-white hover:brightness-90"
-              } w-full rounded-lg normal-case whitespace-nowrap`}
+                fetchedTweet || loadingTweet ? "btn btn-outline btn-accent" : "btn-gradient"
+              } w-full whitespace-nowrap rounded-lg`}
               disabled={loadingTweet}
               onClick={handleFetchTweet}>
               {loadingTweet ? "Fetching..." : "Find tweet"}
@@ -122,9 +120,9 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
           <Card
             key={fetchedTweet.id}
             bordered={false}
-            className="border rounded-lg border-[#d9d9d9] shadow-[0px_4px_+13px_#E1E6E8] bg-white h-fit">
-            <Card.Body className="card-body px-4 py-5 gap-[14px]">
-              <div className="flex flex-row items-center self-start justify-center gap-2">
+            className="h-fit rounded-lg border border-[#d9d9d9] bg-white shadow-[0px_4px_+13px_#E1E6E8]">
+            <Card.Body className="card-body gap-[14px] px-4 py-5">
+              <div className="flex flex-row items-center justify-center gap-2 self-start">
                 <Avatar
                   src={getAuthor(fetchedTweet).temp?.profile_image_url ?? ""}
                   shape="circle"
