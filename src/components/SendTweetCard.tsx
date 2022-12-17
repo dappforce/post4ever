@@ -66,13 +66,13 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
   return (
     <Card
       bordered={false}
-      className="rounded-[14px] shadow-md bg-white flex flex-col justify-center">
-      <Card.Body className="gap-6">
+      className="flex flex-col justify-center rounded-[14px] bg-white shadow-md">
+      <Card.Body className="gap-4 p-4 md:gap-6 md:p-8">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           3. Select a Subsocial Space
         </h2>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div>
             {loadingSpaces ? (
               <Skeleton />
@@ -124,11 +124,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           ) : (
             <Button
               fullWidth
-              className={`normal-case border-0 ${
-                loadingCreatePost
-                  ? "loading btn-disabled"
-                  : "bg-gradient-to-r from-primary to-secondary"
-              }`}
+              className={`w-full ${loadingCreatePost ? "btn-disabled loading" : "btn-gradient"}`}
               disabled={!fetchedTweet || loadingCreatePost}
               loading={loadingCreatePost}
               onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>

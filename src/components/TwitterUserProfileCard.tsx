@@ -1,5 +1,5 @@
 import { Card, Avatar, Button } from "react-daisyui";
-import { useTwitterUserStore, useWalletStore } from "src/store";
+import { useTwitterUserStore } from "src/store";
 import { useEffect } from "react";
 import { TweetUserProps } from "src/types/common";
 
@@ -42,8 +42,8 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
   }, [authenticatedUser]);
 
   return (
-    <Card className="rounded-[14px] shadow-md bg-white flex flex-col h-fit" bordered={false}>
-      <Card.Body className="gap-6">
+    <Card className="flex h-fit flex-col rounded-[14px] bg-white shadow-md" bordered={false}>
+      <Card.Body className="gap-4 md:gap-6">
         <h2 className={`text-lg font-bold ${disabled ? "text-[#A0ADB4]" : "text-neutral"}`}>
           1. Connect your Twitter account
         </h2>
@@ -55,7 +55,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
           } gap-4`}>
           {session && status === "authenticated" && authenticatedUser ? (
             <>
-              <div className="flex flex-row justify-center items-center gap-2">
+              <div className="flex flex-row items-center justify-center gap-2">
                 <Avatar src={authenticatedUser.profile_image_url} size="xs" shape="circle" />
                 <div className="flex flex-col">
                   <a
@@ -70,11 +70,11 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
                     href="#">{`@${authenticatedUser.username}`}</a>
                 </div>
               </div>
-              <div className="flex justify-center items-center ml-auto">
+              <div className="ml-auto flex items-center justify-center">
                 <Button
                   startIcon={logoutIcon}
                   shape="square"
-                  className="w-fit group btn btn-outline border border-gray-500/[0.54] px-4 normal-case text-gray-500 hover:border-red-500/[0.54] hover:bg-white hover:text-red-500/[0.54] disabled:bg-transparent ml-auto"
+                  className="group btn btn-outline ml-auto w-fit border border-gray-500/[0.54] px-4 normal-case text-gray-500 hover:border-red-500/[0.54] hover:bg-white hover:text-red-500/[0.54] disabled:bg-transparent"
                   onClick={() =>
                     signOut({
                       callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/crosspost`,
@@ -86,7 +86,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
             </>
           ) : (
             <Button
-              className={`normal-case border-0 ${
+              className={`border-0 normal-case ${
                 !disabled
                   ? "btn bg-gradient-to-r from-primary to-secondary hover:brightness-90"
                   : "btn btn-disabled"
