@@ -9,6 +9,7 @@ import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { Button } from "react-daisyui";
 import PolkadotIcon from "./PolkadotIcon";
 import Identicon from "./Identicon";
+import ST from "public/ST.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
@@ -68,48 +69,102 @@ const Layout = ({ children }: LayoutProps) => {
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
         <div>
-          <header className="sticky top-0 z-30 shadow px-4 backdrop-filter bg-white text-grey-600">
-            <div className="flex justify-between items-center h-16 md:justify-center">
+          <div className="navbar bg-base-100">
+            <div className="navbar-start">
+              <div className="dropdown">
+                <label tabIndex={0} className="btn btn-ghost lg:hidden">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h8m-8 6h16"
+                    />
+                  </svg>
+                </label>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
+                  <li>
+                    <Link
+                      href="/tweets"
+                      legacyBehavior
+                      className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
+                      <a rel="noopener noreferrer" href="#">
+                        Tweets
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/crosspost"
+                      legacyBehavior
+                      className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
+                      <a rel="noopener noreferrer" href="#">
+                        Crosst-post
+                      </a>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
               <button onClick={() => router.push("/crosspost")}>
-                <span className="text-primary text-2xl font-medium text-[#6A8CEC]">
-                  <SubTweet />
+                <span className="text-2xl font-medium text-primary text-[#6A8CEC]">
+                  <div className="hidden md:inline">
+                    <SubTweet />
+                  </div>
+                  <div className="md:hidden">
+                    <ST />
+                  </div>
                 </span>
               </button>
-              <ul className="items-stretch hidden space-x-3 mx-auto md:flex">
-                <li className="flex">
+            </div>
+            <div className="navbar-center hidden lg:flex">
+              <ul className="mx-auto hidden items-stretch space-x-3 md:flex">
+                <li className="hover:text-grey-500 flex">
                   <Link
                     href="/tweets"
                     legacyBehavior
-                    className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
+                    className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
                     <a
                       rel="noopener noreferrer"
                       href="#"
-                      className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
-                        router.pathname === "/tweets" ? "text-accent border-[#5C1EDC]" : ""
+                      className={`-mb-1 flex items-center border-b-2 px-4 py-4 hover:text-accent ${
+                        router.pathname === "/tweets"
+                          ? "border-accent text-accent"
+                          : "border-transparent"
                       }`}>
                       Feeds
                     </a>
                   </Link>
                 </li>
-                <li className="flex hover:text-grey-500">
+                <li className="hover:text-grey-500 flex">
                   <Link
                     href="/crosspost"
                     legacyBehavior
-                    className="flex items-center px-4 py-4 -mb-1 border-b-2 dark:border-transparent">
+                    className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
                     <a
                       rel="noopener noreferrer"
                       href="#"
-                      className={`flex items-center px-4 py-4 -mb-1 border-b-2 border-transparent hover:text-accent ${
-                        router.pathname === "/crosspost" ? "text-accent border-[#5C1EDC]" : ""
+                      className={`-mb-1 flex items-center border-b-2 px-4 py-4 hover:text-accent ${
+                        router.pathname === "/crosspost"
+                          ? "border-accent text-accent"
+                          : "border-transparent"
                       }`}>
                       Cross-post a tweet
                     </a>
                   </Link>
                 </li>
               </ul>
+            </div>
+            <div className="navbar-end">
               {accounts && accounts.length && selectedAccount ? (
                 <Button
-                  className="gap-2 normal-case font-normal text-base btn btn-ghost"
+                  className="btn btn-ghost gap-2 text-base font-normal normal-case"
                   onClick={() => setIsOpen(!isOpen)}>
                   <Identicon />
                   <div>{account?.meta.name}</div>
@@ -118,13 +173,13 @@ const Layout = ({ children }: LayoutProps) => {
                 <Button
                   id="connect-button"
                   onClick={handleConnect}
-                  className="normal-case border-0 bg-gradient-to-r from-primary to-secondary">
+                  className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
                   <PolkadotIcon />
                   Connect wallet
                 </Button>
               )}
             </div>
-          </header>
+          </div>
         </div>
         <main>{children}</main>
       </Sidebar>
