@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import Identicon from "src/components/Identicon";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -81,7 +81,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="lg:grid h-screen max-w-full lg:grid-cols-[0.5fr_1fr_0.5fr] px-4">
+        <div className="h-screen max-w-full px-4 lg:grid lg:grid-cols-[0.5fr_1fr_0.5fr]">
           <Toaster position="bottom-right" />
           <div></div>
           <div className="mt-4 flex flex-col gap-4">
@@ -111,11 +111,11 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.5, y: 50 },
           }}
-          className="w-auto min-w-min max-w-[520px] rounded-2xl p-8 backdrop-blur-[1px]">
+          className="min-w-fit max-w-fit rounded-2xl px-5 py-5 backdrop-blur-[1px] md:min-w-[520px] md:max-w-[520px] md:p-6 lg:min-w-[30%] lg:p-8">
           <DialogHeader className="flex flex-col items-center justify-center gap-2 p-0">
-            <div className="flex w-full flex-row items-center justify-end px-0 text-2xl font-bold leading-7 text-[#222222]">
+            <div className="flex w-full flex-row items-center justify-end px-0 text-xl font-bold leading-7 text-[#222222] md:text-2xl">
               <div className="ml-auto">🎉 Tweet published</div>
-              <button onClick={() => setContentId(undefined)} className="ml-auto">
+              <div onClick={() => setContentId(undefined)} className="ml-auto cursor-pointer">
                 <svg
                   width="14"
                   height="14"
@@ -127,15 +127,15 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                     fill="#888888"
                   />
                 </svg>
-              </button>
+              </div>
             </div>
-            <div className="text-base font-normal leading-[140%] text-[#888888]">
+            <div className="text-base font-normal leading-[140%] text-[#585858]">
               Tweet successfully saved to the blockchain!
             </div>
           </DialogHeader>
-          <DialogBody className="px-0">
+          <DialogBody className="px-0 md:pt-6 md:pb-4">
             <Card bordered={false} className="rounded-lg border border-[#d9d9d9] bg-white">
-              <Card.Body className="max-w-full gap-6 py-6 px-6">
+              <Card.Body className="max-w-full gap-4 p-4 md:gap-6 md:p-6">
                 <div className="flex flex-row items-center justify-center gap-2 self-start">
                   <Identicon />
                   <div>
@@ -145,7 +145,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
                     </div>
                   </div>
                 </div>
-                <p className="font-normal text-neutral">
+                <p className="text-base font-normal text-neutral">
                   I just cross-posted this tweet to the{" "}
                   <a
                     className="link link-hover whitespace-nowrap text-[#316CF4]"
@@ -173,21 +173,15 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
           </DialogBody>
           <DialogFooter className="flex flex-col gap-4 p-0">
             <TwitterShareButton
-              className="w-full"
+              className="btn-gradient btn w-full"
               url={`https://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}\n`}
               hashtags={["Subsocial"]}
               title={`I just cross-posted this tweet to the @SubsocialChain network to make it censorship resistant!\n\n`}>
-              <Button
-                fullWidth
-                onClick={() => console.log("this is it")}
-                className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
-                <span>Tweet about it!</span>
-              </Button>
+              <span className="text-base font-medium text-white">Tweet about it!</span>
             </TwitterShareButton>
             <Button
-              fullWidth
               onClick={() => setContentId(undefined)}
-              className="border-1 whitespace-nowrap rounded-lg border-accent bg-white normal-case text-accent hover:bg-accent hover:text-white">
+              className="btn btn-outline btn-accent w-full whitespace-nowrap rounded-lg normal-case">
               <span>Cross-post another tweet</span>
             </Button>
           </DialogFooter>
