@@ -62,12 +62,12 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
                     className="font-semibold"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={`https://twitter.com/${authenticatedUser.name}`}>{`${authenticatedUser.name}`}</a>
+                    href="#">{`${authenticatedUser.name}`}</a>
                   <a
                     className="font-normal text-gray-500"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="#">{`@${authenticatedUser.username}`}</a>
+                    href={`https://twitter.com/${authenticatedUser.username}`}>{`@${authenticatedUser.username}`}</a>
                 </div>
               </div>
               <div className="ml-auto flex items-center justify-center">
