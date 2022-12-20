@@ -88,7 +88,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
             <Button
               className={`border-0 normal-case ${
                 !disabled
-                  ? "btn bg-gradient-to-r from-primary to-secondary hover:brightness-90"
+                  ? "btn bg-gradient-to-r from-primary to-secondary hover:brightness-110"
                   : "btn btn-disabled"
               }`}
               onClick={() =>
