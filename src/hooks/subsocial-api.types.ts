@@ -3,7 +3,7 @@ import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 export type PostTransactionProps = {
   savedPosts: PostProps[];
-  mnemonic: string;
+  account: InjectedAccountWithMeta;
 };
 
 export type CreateSpaceProps = {

@@ -3,19 +3,42 @@ import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
 import { bnsToIds } from "@subsocial/utils";
 import type { SpaceData } from "@subsocial/api/types";
+import type { Signer } from "@polkadot/api/types";
+import { SubmittableExtrinsic } from "@polkadot/api/promise/types";
 import { getNewIdsFromEvent } from "@subsocial/api/utils";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
-import { Keyring } from "@polkadot/keyring";
-import { cryptoWaitReady } from "@polkadot/util-crypto";
 import toast from "react-hot-toast";
 
 import {
   PostTransactionProps,
   CreateSpaceProps,
   CreatePostWithSpaceIdProps,
+  SuccessPayloadProps,
 } from "./subsocial-api.types";
+
+import { TweetUserProps, TweetWithAuthorProps } from "src/types/common";
+import { SubmittableResult } from "@polkadot/api";
+import { textToMarkdownParser } from "src/utils/string";
+import { TWITTER_URL } from "src/configs/urls";
+
+type SavePostContentProps = {
+  author: TweetUserProps;
+  content: TweetWithAuthorProps;
+  subsocialApi: SubsocialApi;
+};
+
+type SuccessCallback = (props: SuccessPayloadProps) => void;
+
+type SendSignedTxProps = {
+  extrinsic: SubmittableExtrinsic;
+  address: string;
+  signer: Signer | undefined;
+  toastId: string;
+  spaceId?: string;
+  successCallback?: SuccessCallback;
+};
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
@@ -23,15 +46,84 @@ export const useSubSocialApiHook = () => {
   const [loading, setLoading] = useState(false);
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
+
+  // Needed for confirmation after tx submitted
   const [successTx, setSuccessTx] = useState<string | null>(null);
 
-  const initApi = async (mnemonic?: string): Promise<void> => {
-    if (mnemonic) {
-      const api = await initializeApi(mnemonic);
-      setSubsocialApi(api);
+  const initApi = async (): Promise<void> => {
+    const api = await initializeApi();
+    setSubsocialApi(api);
+  };
+
+  const savePostContent = async ({ author, content, subsocialApi }: SavePostContentProps) => {
+    try {
+      const mdContent = textToMarkdownParser(content.text);
+
+      const cid = await subsocialApi.ipfs.saveContent({
+        body: mdContent,
+        image: content.media && content.media[0].url,
+        tweet: `${TWITTER_URL}/${author.username}/status/${content.id}`,
+      });
+
+      return cid;
+    } catch (error) {
+      console.warn({ error });
+    }
+  };
+
+  const onSuccessCallback = async (
+    result: SubmittableResult,
+    toastId: string,
+    successCallback?: any,
+    spaceId?: string,
+  ) => {
+    const { status } = result;
+
+    if (!result || !status) {
+      return;
+    }
+
+    if (status.isFinalized || status.isInBlock) {
+      const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
+
+      setLoadingCreatePost(false);
+      setSuccessTx(blockHash.toString());
+      const ids = getNewIdsFromEvent(result);
+      const postId = bnsToIds(ids)[0];
+
+      spaceId &&
+        successCallback &&
+        successCallback({
+          postId,
+          spaceId,
+        });
+    } else if (result.isError) {
+      console.log(JSON.stringify(result));
     } else {
-      const api = await initializeApi();
-      setSubsocialApi(api);
+      console.log(`⏱ Current tx status: ${status.type}`);
+      toast(`⏱ Current tx status: ${status.type}`, {
+        id: toastId,
+      });
+    }
+  };
+
+  const sendSignedTx = async ({
+    extrinsic,
+    address,
+    signer,
+    toastId,
+    spaceId,
+    successCallback,
+  }: SendSignedTxProps) => {
+    if (!signer) throw new Error("No signer provided");
+
+    try {
+      const tx = await extrinsic.signAsync(address, { signer });
+      const unsub = await tx.send(result =>
+        onSuccessCallback(result, toastId, successCallback, spaceId),
+      );
+    } catch (error) {
+      console.warn({ error });
     }
   };
 
@@ -49,53 +141,26 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("SubTweet dapp");
 
-      if (!extensions) return null;
-
       const injector = await web3FromSource(account.meta.source);
 
-      const temp = content.users?.find(user => user.id === content.author_id);
+      const author = content.users?.find(user => user.id === content.author_id);
 
-      const cid = await subsocialApi?.ipfs.saveContent({
-        title: `Tweet by ${temp?.name}`,
-        body: content.text,
-        tags: [temp?.name, temp?.username, temp?.profile_image_url],
-        canonical: `https://twitter.com/${temp?.username}/status/${content.id}`,
-      });
+      if (!extensions || !subsocialApi || !author) return null;
 
-      const substrateApi = await subsocialApi?.blockchain.api;
+      const cid = await savePostContent({ author, content, subsocialApi });
+
+      const substrateApi = await subsocialApi.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
-      const tx = substrateApi.tx.spaces.createSpace(IpfsContent(cid), null);
+      const extrinsic = substrateApi.tx.spaces.createSpace(IpfsContent(cid), null);
 
-      tx.signAndSend(
-        account.address,
-        {
-          signer: injector.signer,
-        },
-        async result => {
-          const { status } = result;
-
-          if (!result || !status) {
-            return;
-          }
-
-          if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
-
-            console.log(`✅ createSpaceWithTweet finalized. Block hash: ${blockHash.toString()}`);
-            toast.success("Tx successful!", { id: toastId });
-            setSuccessTx(blockHash.toString());
-          } else if (result.isError) {
-            console.log(JSON.stringify(result));
-          } else {
-            console.log(`⏱ Current tx status: ${status.type}`);
-            toast(`⏱ Current tx status: ${status.type}`, {
-              id: toastId,
-            });
-          }
-        },
-      );
+      sendSignedTx({
+        extrinsic,
+        address: account.address,
+        signer: injector.signer,
+        toastId,
+      });
     } catch (error) {
       console.warn({ error });
     } finally {
@@ -136,13 +201,13 @@ export const useSubSocialApiHook = () => {
     account,
     successCallback,
   }: CreatePostWithSpaceIdProps) => {
-    setLoadingCreatePost(true);
-
     const toastId = toast.loading("Loading...", {
       style: {
         minWidth: "300px",
       },
     });
+
+    setLoadingCreatePost(true);
 
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
@@ -151,134 +216,88 @@ export const useSubSocialApiHook = () => {
 
       const subsocialApi = await initializeApi();
 
-      if (!subsocialApi) return null;
-
-      if (!extensions) return null;
-
       const injector = await web3FromSource(account.meta.source);
 
-      const temp = content.users?.find(user => user.id === content.author_id);
+      const author = content.users?.find(user => user.id === content.author_id);
 
-      const cid = await subsocialApi.ipfs.saveContent({
-        title: `Tweet by ${temp?.name}`,
-        tags: [temp?.name, temp?.username, temp?.profile_image_url],
-        body: content.text,
-        canonical: `https://twitter.com/${temp?.username}/status/${content.id}`,
-      });
+      if (!extensions || !subsocialApi || !author) return null;
+
+      const cid = await savePostContent({ author, content, subsocialApi });
 
       const substrateApi = await subsocialApi.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
-      const tx = substrateApi.tx.posts.createPost(spaceId, { RegularPost: null }, IpfsContent(cid));
-
-      tx.signAndSend(
-        account.address,
-        {
-          signer: injector.signer,
-        },
-        async result => {
-          const { status } = result;
-
-          if (!result || !status) {
-            setLoadingCreatePost(false);
-            return;
-          }
-
-          if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
-
-            console.log(`✅ createPostWithSpaceId finalized. Block hash: ${blockHash.toString()}`);
-            setLoadingCreatePost(false);
-            setSuccessTx(blockHash.toString());
-            const ids = getNewIdsFromEvent(result);
-            const postId = bnsToIds(ids)[0];
-
-            successCallback &&
-              successCallback({
-                postId,
-                spaceId,
-              });
-          } else if (result.isError) {
-            console.log(JSON.stringify(result));
-          } else {
-            console.log(`⏱ Current tx status: ${status.type}`);
-            toast(`⏱ Current tx status: ${status.type}`, {
-              id: toastId,
-            });
-          }
-        },
+      const extrinsic = substrateApi.tx.posts.createPost(
+        spaceId,
+        { RegularPost: null },
+        IpfsContent(cid),
       );
+
+      sendSignedTx({
+        extrinsic,
+        address: account.address,
+        signer: injector.signer,
+        spaceId,
+        toastId,
+        successCallback,
+      });
     } catch (error) {
       console.warn({ error });
     }
   };
 
-  const postTransaction = async ({ savedPosts, mnemonic }: PostTransactionProps) => {
+  const postTransaction = async ({ savedPosts, account }: PostTransactionProps) => {
     setLoadingCreatePost(true);
-    try {
-      await cryptoWaitReady();
 
-      const keyring = new Keyring({ type: "sr25519" });
-      const pair = keyring.addFromMnemonic(mnemonic);
+    const toastId = toast.loading("Loading...", {
+      style: {
+        minWidth: "300px",
+      },
+    });
+    try {
+      const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
+
+      const extensions = await web3Enable("SubTweet dapp");
+
+      const injector = await web3FromSource(account.meta.source);
 
       //Use already made space by current pair
       const spaceId = "1018";
 
-      const substrateApi = await subsocialApi?.blockchain.api;
+      // only one author because of own tweets
+      const savedPost = savedPosts[0];
+      const author = savedPost.users?.find(user => user.id === savedPost.author_id);
+
+      if (!extensions || !subsocialApi || !author) return null;
+
+      const substrateApi = await subsocialApi.blockchain.api;
 
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
       if (savedPosts.length === 1) {
-        //Init creating single post tx
-        const singlePostCid = await subsocialApi?.ipfs.saveContent({
-          title: "My exported tweet",
-          image: null,
-          tags: ["exported tweet", "perma-tweet"],
-          body: savedPosts[0].text,
-          canonical: savedPosts[0].url,
-        });
+        // Send only one post
+        const singlePostCid = await savePostContent({ author, content: savedPost, subsocialApi });
 
-        const postTx = substrateApi.tx.posts.createPost(
+        const extrinsic = substrateApi.tx.posts.createPost(
           spaceId,
           { RegularPost: null },
           IpfsContent(singlePostCid),
         );
 
-        postTx.signAndSend(pair, async result => {
-          const { status } = result;
-
-          if (!result || !status) {
-            setLoadingCreatePost(false);
-            return;
-          }
-
-          if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
-
-            console.log(`✅ singleCreatePostTx finalized. Block hash: ${blockHash.toString()}`);
-            setLoadingCreatePost(false);
-          } else if (result.isError) {
-            console.log(JSON.stringify(result));
-          } else {
-            console.log(`⏱ Current tx status: ${status.type}`);
-            setLoadingCreatePost(true);
-          }
+        sendSignedTx({
+          extrinsic,
+          address: account.address,
+          signer: injector.signer,
+          toastId,
         });
       } else {
         //Init creating batchTx for posts
         let result: any[] = [];
 
         for (const savedPost of savedPosts) {
-          const cid = await subsocialApi?.ipfs.saveContent({
-            title: "My exported tweets",
-            //TODO: able to add image
-            image: null,
-            tags: ["exported tweet", "perma-tweet"],
-            body: savedPost.text,
-            canonical: savedPost.url,
-          });
-          result.push([spaceId, { RegularPost: null }, IpfsContent(cid)]);
+          const batchCid = await savePostContent({ author, content: savedPost, subsocialApi });
+          result.push([spaceId, { RegularPost: null }, IpfsContent(batchCid)]);
         }
 
         const submittablePosts: any[] = [];
@@ -289,33 +308,19 @@ export const useSubSocialApiHook = () => {
           submittablePosts.push(tx);
         }
 
-        const batchTx = substrateApi.tx.utility.batch(submittablePosts);
+        const extrinsic = substrateApi.tx.utility.batch(submittablePosts);
 
-        if (!batchTx) throw new Error("batchTx creation error!");
+        if (!extrinsic) throw new Error("batchTx creation error!");
 
-        batchTx.signAndSend(pair, async result => {
-          const { status } = result;
-
-          if (!result || !status) {
-            setLoadingCreatePost(false);
-            return;
-          }
-
-          if (status.isFinalized || status.isInBlock) {
-            const blockHash = status.isFinalized ? status.asFinalized : status.asInBlock;
-
-            console.log(`✅ batchCreatePostTx finalized. Block hash: ${blockHash.toString()}`);
-            setLoadingCreatePost(false);
-          } else if (result.isError) {
-            console.log(JSON.stringify(result));
-          } else {
-            setLoadingCreatePost(true);
-            console.log(`⏱ Current tx status: ${status.type}`);
-          }
+        sendSignedTx({
+          extrinsic,
+          address: account.address,
+          signer: injector.signer,
+          toastId,
         });
       }
     } catch (err) {
-      console.log({ err });
+      console.warn({ err });
     }
   };
 

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import Link from "next/link";
 import { useWalletStore } from "src/store";
-import SubTweet from "public/SubTweet.svg";
 
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
-import { Button } from "react-daisyui";
-import PolkadotIcon from "./PolkadotIcon";
-import Identicon from "./Identicon";
-import ST from "public/ST.svg";
+import ReactIdenticon from "src/components/ReactIdenticon";
+import SubTweet from "src/assets/SubTweet.svg";
+import NewLogoPolkadot from "src/assets/NewLogoPolkadot.svg";
+import ST from "src/assets/ST.svg";
+import ThreeHorizontalLines from "src/assets/ThreeHorizontalLines.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
@@ -61,6 +62,28 @@ const Layout = ({ children }: LayoutProps) => {
     setIsOpen(false);
   };
 
+  const navOptions = [
+    {
+      text: "Feeds",
+      url: "/tweets",
+    },
+    {
+      text: "Cross-post a tweet",
+      url: "/crosspost",
+    },
+  ];
+
+  const isOnActivePage = (path: string) => (router.pathname === path ? true : false);
+
+  const anchorTagClassNames = (path: string) =>
+    clsx("-mb-1 flex items-center border-transparent px-4 py-4 hover:text-light-blue", {
+      "border-accent border-b-2 text-accent": isOnActivePage(path),
+    });
+
+  const linkDropdownClassnames = clsx(
+    "-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent",
+  );
+
   return (
     <>
       <Sidebar
@@ -72,48 +95,25 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="navbar bg-base-100">
             <div className="navbar-start">
               <div className="dropdown">
-                <label tabIndex={0} className="btn btn-ghost lg:hidden">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h8m-8 6h16"
-                    />
-                  </svg>
+                <label tabIndex={0} className="btn btn-ghost hover:bg-transparent lg:hidden">
+                  <ThreeHorizontalLines />
                 </label>
                 <ul
                   tabIndex={0}
                   className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-                  <li>
-                    <Link
-                      href="/tweets"
-                      legacyBehavior
-                      className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
-                      <a rel="noopener noreferrer" href="#">
-                        Tweets
-                      </a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/crosspost"
-                      legacyBehavior
-                      className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
-                      <a rel="noopener noreferrer" href="#">
-                        Crosst-post
-                      </a>
-                    </Link>
-                  </li>
+                  {navOptions.map(option => (
+                    <li key={option.url}>
+                      <Link href={option.url} legacyBehavior className={linkDropdownClassnames}>
+                        <a rel="noopener noreferrer" href="#">
+                          {option.text}
+                        </a>
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <button onClick={() => router.push("/crosspost")}>
-                <span className="text-2xl font-medium text-primary text-[#6A8CEC]">
+                <span className="text-2xl font-medium text-primary">
                   <div className="hidden md:inline">
                     <SubTweet />
                   </div>
@@ -125,58 +125,38 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
             <div className="navbar-center hidden lg:flex">
               <ul className="mx-auto hidden items-stretch space-x-3 md:flex">
-                <li className="hover:text-grey-500 flex">
-                  <Link
-                    href="/tweets"
-                    legacyBehavior
-                    className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className={`-mb-1 flex items-center border-b-2 px-4 py-4 hover:text-accent ${
-                        router.pathname === "/tweets"
-                          ? "border-accent text-accent"
-                          : "border-transparent"
-                      }`}>
-                      Feeds
-                    </a>
-                  </Link>
-                </li>
-                <li className="hover:text-grey-500 flex">
-                  <Link
-                    href="/crosspost"
-                    legacyBehavior
-                    className="-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent">
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className={`-mb-1 flex items-center border-b-2 px-4 py-4 hover:text-accent ${
-                        router.pathname === "/crosspost"
-                          ? "border-accent text-accent"
-                          : "border-transparent"
-                      }`}>
-                      Cross-post a tweet
-                    </a>
-                  </Link>
-                </li>
+                {navOptions.map(option => (
+                  <li key={option.url} className="hover:text-grey-500 flex">
+                    <Link href={option.url} legacyBehavior>
+                      <a
+                        rel="noopener noreferrer"
+                        href="#"
+                        className={anchorTagClassNames(option.url)}>
+                        {option.text}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="navbar-end">
               {accounts && accounts.length && selectedAccount ? (
-                <Button
-                  className="btn btn-ghost gap-2 text-base font-normal normal-case"
+                <button
+                  className="btn btn-ghost text-base font-normal normal-case hover:bg-[#f1f3f4]"
                   onClick={() => setIsOpen(!isOpen)}>
-                  <Identicon />
-                  <div>{account?.meta.name}</div>
-                </Button>
+                  <div className="flex items-center justify-center gap-2">
+                    <ReactIdenticon address={selectedAccount.address} />
+                    <div className="hidden md:inline">{account?.meta.name}</div>
+                  </div>
+                </button>
               ) : (
-                <Button
+                <button
                   id="connect-button"
                   onClick={handleConnect}
-                  className="border-0 bg-gradient-to-r from-primary to-secondary normal-case">
-                  <PolkadotIcon />
+                  className="btn gap-2 border-0 bg-gradient-to-r from-primary to-secondary normal-case">
+                  <NewLogoPolkadot />
                   Connect wallet
-                </Button>
+                </button>
               )}
             </div>
           </div>

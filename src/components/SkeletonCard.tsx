@@ -8,8 +8,8 @@ const SkeletonCard = () => {
     <Card
       key="skeleton-card"
       bordered={false}
-      className="border rounded-lg border-[#d9d9d9] shadow-[0px_4px_+13px_#E1E6E8] bg-white h-fit">
-      <Card.Body className="card-body px-4 py-5 gap-[14px]">
+      className="h-fit rounded-lg border border-dark-gray bg-white shadow-[0px_4px_+13px_#E1E6E8]">
+      <Card.Body className="card-body gap-[14px] px-4 py-5">
         <div className="flex">
           <Skeleton inline circle width={40} height={40} containerClassName="w-50 mr-4" />
           <div className="flex-1">

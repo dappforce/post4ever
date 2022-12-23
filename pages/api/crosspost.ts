@@ -17,7 +17,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const twitterClient = new TwitterApi(body.token);
     const readOnlyClient = twitterClient.readOnly;
     const { data, includes } = await readOnlyClient.v2.get(`tweets/${body.tweetId}`, {
-      expansions: ["author_id"],
+      expansions: ["author_id", "attachments.media_keys"],
+      "media.fields": [
+        "height",
+        "media_key",
+        "preview_image_url",
+        "type",
+        "url",
+        "width",
+        "alt_text",
+      ],
       "user.fields": ["id", "name", "profile_image_url"],
     });
 

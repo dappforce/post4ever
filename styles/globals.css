@@ -6,6 +6,9 @@
   :root {
     --light-gray: 200deg 13% 95%;
     --light-blue: 224deg 95% 48%;
+    --dark-gray: 0deg 0% 85%;
+    --disabled-gray: 201deg 12% 67%;
+    --link-blue: 222deg 90% 57%;
   }
 }
 
@@ -78,4 +81,29 @@ select:-webkit-autofill:focus {
   color: hsl(var(--light-blue));
   border-color: hsl(var(--light-blue));
   box-shadow: 0 0 0.075em 0 currentColor;
+}
+
+.twitter-image-container {
+  border-radius: 0.5rem;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+}
+
+.twitter-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.twitter-image-container:before {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  border: 0.5px solid hsl(0, 3%, 43%);
+  inset: 0px;
+}
+
+img {
+  display: block;
 }

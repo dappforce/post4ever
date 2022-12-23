@@ -20,8 +20,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const myTimeline = await readOnlyClient.v2.userTimeline(idString, {
       exclude: "replies",
-      expansions: ["attachments.media_keys"],
+      expansions: ["author_id", "attachments.media_keys"],
       "media.fields": ["url"],
+      "user.fields": ["id", "name", "profile_image_url"],
     });
 
     const { data: user } = await readOnlyClient.v2.user(idString, {
@@ -35,12 +36,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       let tweetObj: ExpandedTweetProps = {
         ...tweet,
+        author_id: user.id,
         url: `https://twitter.com/${user.username}/status/${tweet.id}`,
       };
 
       if (medias.length) {
         tweetObj = {
           ...tweet,
+          author_id: user.id,
           medias,
           url: `https://twitter.com/${user.username}/status/${tweet.id}`,
         };
