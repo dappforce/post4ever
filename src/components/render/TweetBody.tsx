@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { textToMarkdownParser } from "src/utils/string";
+import { parseTextToMarkdown } from "src/utils/string";
 
 type TweetBodyProps = {
   text: string;
@@ -10,7 +10,7 @@ type TweetBodyProps = {
 
 const TweetBody = ({ text }: TweetBodyProps) => {
   const parsedMD = useMemo(() => {
-    const result = textToMarkdownParser(text);
+    const result = parseTextToMarkdown(text);
     return result;
   }, [text]);
 

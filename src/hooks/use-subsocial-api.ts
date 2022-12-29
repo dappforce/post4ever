@@ -20,7 +20,7 @@ import {
 
 import { TweetUserProps, TweetWithAuthorProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
-import { textToMarkdownParser } from "src/utils/string";
+import { parseTextToMarkdown } from "src/utils/string";
 import { TWITTER_URL } from "src/configs/urls";
 
 type SavePostContentProps = {
@@ -57,7 +57,7 @@ export const useSubSocialApiHook = () => {
 
   const savePostContent = async ({ author, content, subsocialApi }: SavePostContentProps) => {
     try {
-      const mdContent = textToMarkdownParser(content.text);
+      const mdContent = parseTextToMarkdown(content.text);
 
       const cid = await subsocialApi.ipfs.saveContent({
         body: mdContent,
