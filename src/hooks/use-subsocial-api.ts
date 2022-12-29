@@ -43,7 +43,6 @@ type SendSignedTxProps = {
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
-  const [loading, setLoading] = useState(false);
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
 
@@ -59,11 +58,13 @@ export const useSubSocialApiHook = () => {
     try {
       const mdContent = parseTextToMarkdown(content.text);
 
-      const cid = await subsocialApi.ipfs.saveContent({
+      const contentPayload = {
         body: mdContent,
-        image: content.media && content.media[0].url,
         tweet: `${TWITTER_URL}/${author.username}/status/${content.id}`,
-      });
+        ...(content.media && { image: content.media[0].url }),
+      };
+
+      const cid = await subsocialApi.ipfs.saveContent(contentPayload);
 
       return cid;
     } catch (error) {
@@ -123,18 +124,20 @@ export const useSubSocialApiHook = () => {
         onSuccessCallback(result, toastId, successCallback, spaceId),
       );
     } catch (error) {
+      if (error instanceof Error && error.message === "Cancelled") {
+        toast("Cancelled!", {
+          id: toastId,
+        });
+        setLoadingCreatePost(false);
+      }
       console.warn({ error });
     }
   };
 
   const createSpaceWithTweet = async ({ account, content }: CreateSpaceProps) => {
-    setLoading(true);
+    setLoadingCreatePost(true);
 
-    const toastId = toast.loading("Loading...", {
-      style: {
-        minWidth: "300px",
-      },
-    });
+    const toastId = toast("Loading...");
 
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
@@ -163,8 +166,6 @@ export const useSubSocialApiHook = () => {
       });
     } catch (error) {
       console.warn({ error });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -201,11 +202,7 @@ export const useSubSocialApiHook = () => {
     account,
     successCallback,
   }: CreatePostWithSpaceIdProps) => {
-    const toastId = toast.loading("Loading...", {
-      style: {
-        minWidth: "300px",
-      },
-    });
+    const toastId = toast("Loading...");
 
     setLoadingCreatePost(true);
 
@@ -250,11 +247,7 @@ export const useSubSocialApiHook = () => {
   const postTransaction = async ({ savedPosts, account }: PostTransactionProps) => {
     setLoadingCreatePost(true);
 
-    const toastId = toast.loading("Loading...", {
-      style: {
-        minWidth: "300px",
-      },
-    });
+    const toastId = toast("Loading...");
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
@@ -326,7 +319,6 @@ export const useSubSocialApiHook = () => {
 
   return {
     subsocialApi,
-    loading,
     initApi,
     createSpaceWithTweet,
     createPostWithSpaceId,

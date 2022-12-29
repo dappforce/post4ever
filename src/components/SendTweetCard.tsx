@@ -111,14 +111,15 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             )}
           </div>
 
-          {!account ? (
-            <Tooltip className="h-10" message="Please connect wallet first">
-              <Button fullWidth className="normal-case" disabled>
-                Publish
-              </Button>
-            </Tooltip>
-          ) : !fetchedTweet ? (
-            <Tooltip message="Please find a tweet first">
+          {!account || !fetchedTweet || !selectedSpaceId ? (
+            <Tooltip
+              message={
+                !account
+                  ? "Please connect wallet first"
+                  : !fetchedTweet
+                  ? "Please find a tweet first"
+                  : "Please select a space first"
+              }>
               <Button fullWidth className="normal-case" disabled>
                 Publish
               </Button>

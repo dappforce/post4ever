@@ -84,7 +84,7 @@ const FetchTweetForm = ({ disabled, onFetchTweet }: FetchTweetFormProps) => {
           className={clsx("text-lg font-bold text-neutral", {
             "text-disabled-gray": disabled,
           })}>
-          2. Find tweet using URL
+          2. Find a tweet using URL
         </h2>
         <div className="flex flex-col gap-4">
           <Input

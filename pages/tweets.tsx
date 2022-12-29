@@ -41,7 +41,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
     setNewUser: state.setNewUser,
   }));
 
-  const { initApi, loading, postTransaction } = useSubSocialApiHook();
+  const { initApi, loadingCreatePost, postTransaction } = useSubSocialApiHook();
   const [savedPosts, setSavedPosts] = useState<ExpandedTweetProps[]>([]);
 
   const [fetchedTweets, setFetchedTweets] = useState<ExpandedTweetProps[]>([]);
@@ -173,7 +173,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
               disabled={savedPosts.length === 0 || savedPosts.length > 2 ? true : false}>
               {`Send ${savedPosts.length === 0 ? "0" : savedPosts.length} post(s) to Subsocial!`}
             </button>
-            <a>{loading ? "Sending tx, open your console" : ""}</a>
+            <a>{loadingCreatePost ? "Sending tx, open your console" : ""}</a>
             <a>
               {savedPosts.length > 2 ? "Max 2 posts to be saved!" : "Select tweets to be saved"}
             </a>

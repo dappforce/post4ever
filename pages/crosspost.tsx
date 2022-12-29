@@ -80,9 +80,14 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
       <Layout>
         <div className="h-screen max-w-full px-4 lg:grid lg:grid-cols-[0.5fr_1fr_0.5fr]">
-          <Toaster position="bottom-right" />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              className: "min-w-[300px]",
+            }}
+          />
           <div></div>
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-6 mb-[92px] flex flex-col gap-6">
             <TwitterUserProfileCard
               disabled={!isAccountExist || isUserExist}
               authenticatedUser={user}

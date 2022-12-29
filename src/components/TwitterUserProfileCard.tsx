@@ -10,23 +10,12 @@ import { useSession } from "next-auth/react";
 
 import { TWITTER_URL } from "src/configs/urls";
 
+import LogoutIcon from "src/assets/LogoutIcon";
+
 type TwitterUserProfileCardProps = {
   disabled: boolean;
   authenticatedUser?: TweetUserProps;
 };
-
-const logoutIcon = (
-  <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      className="group-hover:fill-red-500 group-hover:opacity-100"
-      id="Vector"
-      fill="black"
-      fillOpacity="0.54"
-      strokeWidth={0.5}
-      d="M10.332 2.66667L9.39203 3.60667L11.112 5.33333H4.33203V6.66667H11.112L9.39203 8.38667L10.332 9.33333L13.6654 6L10.332 2.66667ZM1.66536 1.33333H6.9987V0H1.66536C0.932031 0 0.332031 0.6 0.332031 1.33333V10.6667C0.332031 11.4 0.932031 12 1.66536 12H6.9987V10.6667H1.66536V1.33333Z"
-    />
-  </svg>
-);
 
 const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProfileCardProps) => {
   const { data: session, status } = useSession();
@@ -76,7 +65,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
               </div>
               <div className="ml-auto flex items-center justify-center">
                 <Button
-                  startIcon={logoutIcon}
+                  startIcon={LogoutIcon}
                   shape="square"
                   className="group btn btn-outline ml-auto w-fit border border-gray-500/[0.54] px-4 normal-case text-gray-500 hover:border-red-500/[0.54] hover:bg-white hover:text-red-500/[0.54] disabled:bg-transparent"
                   onClick={() =>
