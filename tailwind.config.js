@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const withMT = require("@material-tailwind/react/utils/withMT");
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 // this function handles the opacity of color
 function withOpacityValue(variable) {
@@ -29,6 +30,9 @@ module.exports = withMT({
       },
       backdropBlur: {
         sm: "1px",
+      },
+      fontFamily: {
+        unbounded: ["var(--font-unbounded)", ...fontFamily.sans],
       },
     },
   },

@@ -9,7 +9,7 @@ import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import ReactIdenticon from "src/components/ReactIdenticon";
 import SubTweet from "src/assets/SubTweet.svg";
 import NewLogoPolkadot from "src/assets/NewLogoPolkadot.svg";
-import ST from "src/assets/ST.svg";
+import ST from "public/ST.svg";
 import ThreeHorizontalLines from "src/assets/ThreeHorizontalLines.svg";
 import Sidebar from "./Sidebar";
 
@@ -92,10 +92,10 @@ const Layout = ({ children }: LayoutProps) => {
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
         <div>
-          <div className="navbar bg-base-100">
+          <div className="navbar max-h-[70px] bg-base-100 px-2 !py-[14px] lg:px-8">
             <div className="navbar-start">
               <div className="dropdown">
-                <label tabIndex={0} className="btn btn-ghost hover:bg-transparent lg:hidden">
+                <label tabIndex={0} className="btn btn-ghost !p-2 hover:bg-transparent lg:hidden">
                   <ThreeHorizontalLines />
                 </label>
                 <ul
@@ -112,7 +112,7 @@ const Layout = ({ children }: LayoutProps) => {
                   ))}
                 </ul>
               </div>
-              <button onClick={() => router.push("/crosspost")}>
+              <button onClick={() => router.push("/")}>
                 <span className="text-2xl font-medium text-primary">
                   <div className="hidden md:inline">
                     <SubTweet />
@@ -142,18 +142,18 @@ const Layout = ({ children }: LayoutProps) => {
             <div className="navbar-end">
               {accounts && accounts.length && selectedAccount ? (
                 <button
-                  className="btn btn-ghost text-base font-normal normal-case hover:bg-[#f1f3f4]"
+                  className="btn-ghost rounded-lg py-[8px] px-[16px] text-base font-normal normal-case hover:bg-[#f1f3f4]"
                   onClick={() => setIsOpen(!isOpen)}>
                   <div className="flex items-center justify-center gap-2">
                     <ReactIdenticon address={selectedAccount.address} />
-                    <div className="hidden md:inline">{account?.meta.name}</div>
+                    <div className="hidden md:block">{account?.meta.name}</div>
                   </div>
                 </button>
               ) : (
                 <button
                   id="connect-button"
                   onClick={handleConnect}
-                  className="btn gap-2 border-0 bg-gradient-to-r from-primary to-secondary normal-case">
+                  className="btn-gradient btn gap-2 border-0 normal-case">
                   <NewLogoPolkadot />
                   Connect wallet
                 </button>

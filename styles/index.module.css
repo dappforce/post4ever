@@ -1,0 +1,16 @@
+/* Note: no straightforward implementation with tailwind */
+p.coloredDigit {
+  background: linear-gradient(153.79deg, #e93399 0%, #5a90e2 108.58%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+h2.coloredGradient {
+  background: linear-gradient(90.42deg, #e83298 34.8%, #5791e3 65.37%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}

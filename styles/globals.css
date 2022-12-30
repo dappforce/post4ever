@@ -9,6 +9,8 @@
     --dark-gray: 0deg 0% 85%;
     --disabled-gray: 201deg 12% 67%;
     --link-blue: 222deg 90% 57%;
+
+    --side-padding: 0 90px;
   }
 }
 
@@ -18,8 +20,8 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  font-family: Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: white;
 }
 
@@ -56,6 +58,8 @@ select:-webkit-autofill:focus {
   height: 2.5rem;
   min-height: 2.5rem;
   border-radius: 0.5rem;
+  padding: 8px 22px;
+  line-height: 0;
 }
 
 .btn:focus-visible {
@@ -73,7 +77,8 @@ select:-webkit-autofill:focus {
 }
 
 .btn-gradient {
-  @apply border-0 bg-gradient-to-r from-primary to-secondary hover:brightness-110;
+  background: linear-gradient(93.08deg, #eb2f96 5.1%, #4a99e9 100%);
+  @apply border-0 hover:brightness-110;
 }
 
 .btn-outline.btn-accent:hover {
