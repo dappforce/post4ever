@@ -122,7 +122,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   return (
     <>
       <Head>
-        <title>SubTweet - Home</title>
+        <title>EverPost - Your Tweets</title>
         <meta name="description" content="Store your Tweet, permanently" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

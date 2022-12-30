@@ -113,7 +113,7 @@ const Home: NextPage = () => {
                       deleting all of your tweets.
                       <br />
                       <br />
-                      With SubTweet, you can easily cross-post your tweets to Subsocial’s
+                      With EverPost, you can easily cross-post your tweets to Subsocial’s
                       decentralized network. This means your content is stored on a
                       censorship-resistant blockchain – your tweets will live forever.
                     </p>

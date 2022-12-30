@@ -14,7 +14,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <div style={{ position: "relative" }}>
       <Head>
-        <title>SaveTweet - Landing Page</title>
+        <title>EverPost - Landing Page</title>
         <meta
           name="description"
           content="Back up your tweets to Subsocial’s censorship resistant network"

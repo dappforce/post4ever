@@ -142,7 +142,7 @@ export const useSubSocialApiHook = () => {
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      const extensions = await web3Enable("SubTweet dapp");
+      const extensions = await web3Enable("EverPost dapp");
 
       const injector = await web3FromSource(account.meta.source);
 
@@ -209,7 +209,7 @@ export const useSubSocialApiHook = () => {
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      const extensions = await web3Enable("SubTweet dapp");
+      const extensions = await web3Enable("EverPost dapp");
 
       const subsocialApi = await initializeApi();
 
@@ -251,7 +251,7 @@ export const useSubSocialApiHook = () => {
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      const extensions = await web3Enable("SubTweet dapp");
+      const extensions = await web3Enable("EverPost dapp");
 
       const injector = await web3FromSource(account.meta.source);
 

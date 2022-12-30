@@ -73,7 +73,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   return (
     <>
       <Head>
-        <title>SubTweet - Cross-post Tweet</title>
+        <title>EverPost - Cross-post Tweet</title>
         <meta name="description" content="Store your Tweet, permanently" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

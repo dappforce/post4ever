@@ -39,7 +39,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getAccounts = async () => {
-    const extensions = await web3Enable("SubTweet dapp");
+    const extensions = await web3Enable("EverPost dapp");
     if (extensions.length === 0) {
       return;
     }
