@@ -1,4 +1,6 @@
-import type { NextPage } from "next";
+import type { NextPage, GetServerSidePropsContext } from "next";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import HomeLayout from "src/components/HomeLayout";
 import clsx from "clsx";
 import styles from "styles/index.module.css";
@@ -159,3 +161,20 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  let session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/crosspost",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
