@@ -14,6 +14,14 @@ const nextConfig = {
 
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: "/stat/:region",
+        destination: "https://:region.google-analytics.com/g/collect",
+      },
+    ];
+  },
 };
 
 const withTM = require("next-transpile-modules")(["react-daisyui"]);

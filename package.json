@@ -30,6 +30,7 @@
     "next": "13.0.5",
     "next-auth": "^4.4.0",
     "next-transpile-modules": "^10.0.0",
+    "nextjs-google-analytics": "^2.2.2",
     "postcss": "^8.4.17",
     "react": "18.2.0",
     "react-daisyui": "^2.4.6",

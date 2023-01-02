@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Unbounded } from "@next/font/google";
+import { GoogleAnalytics } from "nextjs-google-analytics";
 
 const unbounded = Unbounded({
   weight: "500",
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
     <ThemeProvider>
       <SessionProvider session={pageProps.session}>
         <main className={`${unbounded.variable} font-sans`}>
+          <GoogleAnalytics gtagUrl="/js/ga-stat.js" strategy="lazyOnload" trackPageViews />
           <Component {...pageProps} />
         </main>
       </SessionProvider>
