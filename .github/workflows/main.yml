@@ -46,6 +46,7 @@ jobs:
           file: docker/Dockerfile
           push: true
           build-args: |
+                  GH_NEXTAUTH_URL=https://${{ env.name }}-post4ever.subsocial.network                  
                   GH_SUBSOCIAL_NODE_URL=wss://para.f3joule.space
                   GH_IPFS_URL=https://gw.crustfiles.app
                   GH_NEXT_PUBLIC_AUTH_URL=http://localhost:3000 
