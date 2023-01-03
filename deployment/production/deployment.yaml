@@ -13,6 +13,8 @@ spec:
       labels:
         app: post-ever
     spec:
+      imagePullSecrets:
+        - name: dockerhub            
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
