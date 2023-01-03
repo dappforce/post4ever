@@ -6,7 +6,7 @@ export interface CustomNetworkConfig {
 export const networkConfig: CustomNetworkConfig = {
   substrateNodeUrl:
     process.env.NEXT_PUBLIC_SUBSOCIAL_NODE_URL ?? "wss://rco-para.subsocial.network",
-  ipfsNodeUrl: process.env.NEXT_PUBLIC_IPFS_URL ?? "https://crustwebsites.net",
+  ipfsNodeUrl: process.env.NEXT_PUBLIC_IPFS_URL ?? "https://gw.crustfiles.app",
 };
 
 // Additional: Subsocial IPFS node url
