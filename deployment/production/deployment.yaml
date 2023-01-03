@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-ever
+  namespace: post-ever
+  labels:
+    app: post-ever
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: post-ever
+      labels:
+        app: post-ever
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - post-ever
+            topologyKey: kubernetes.io/hostname                 
+      containers:
+        - name: post-ever
+          image: <IMAGE> 
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 35
+
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 20
+
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: post-ever
