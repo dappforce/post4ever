@@ -78,11 +78,13 @@ const Layout = ({ children }: LayoutProps) => {
   const anchorTagClassNames = (path: string) =>
     clsx("-mb-1 flex items-center border-transparent px-4 py-4 hover:text-light-blue", {
       "border-accent border-b-2 text-accent": isOnActivePage(path),
+      "pointer-events-none text-disabled-gray hover:light-grey": path === "/tweets",
     });
 
-  const linkDropdownClassnames = clsx(
-    "-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent",
-  );
+  const linkDropdownClassnames = (path: string) =>
+    clsx("-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent", {
+      "pointer-events-none text-disabled-gray hover:light-grey": path === "/tweets",
+    });
 
   return (
     <>
@@ -103,7 +105,10 @@ const Layout = ({ children }: LayoutProps) => {
                   className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
                   {navOptions.map(option => (
                     <li key={option.url}>
-                      <Link href={option.url} legacyBehavior className={linkDropdownClassnames}>
+                      <Link
+                        href={option.url}
+                        legacyBehavior
+                        className={linkDropdownClassnames(option.url)}>
                         <a rel="noopener noreferrer" href="#">
                           {option.text}
                         </a>
