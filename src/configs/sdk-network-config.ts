@@ -3,23 +3,17 @@ export interface CustomNetworkConfig {
   ipfsNodeUrl: string;
 }
 
-// for connecting to mainnet
-export const mainnetConfig: CustomNetworkConfig = {
-  substrateNodeUrl: "wss://para.f3joule.space",
-  ipfsNodeUrl: "https://gw.crustfiles.app",
-};
-
-// for connecting to testnet
-export const testnetConfig: CustomNetworkConfig = {
-  substrateNodeUrl: "wss://rco-para.subsocial.network",
-  ipfsNodeUrl: "https://crustwebsites.net",
+export const networkConfig: CustomNetworkConfig = {
+  substrateNodeUrl:
+    process.env.NEXT_PUBLIC_SUBSOCIAL_NODE_URL ?? "wss://rco-para.subsocial.network",
+  ipfsNodeUrl: process.env.NEXT_PUBLIC_IPFS_URL ?? "https://crustwebsites.net",
 };
 
 // Additional: Subsocial IPFS node url
 export const SUB_IPFS_NODE_URL = "https://ipfs.subsocial.network/ipfs";
 
 // for tx query on custom JS explorer (page on tx details)
-export const explorerUrl: string = `https://polkadot.js.org/apps/?${mainnetConfig.substrateNodeUrl}#/explorer/query/`;
+export const explorerUrl: string = `https://polkadot.js.org/apps/?${networkConfig.substrateNodeUrl}#/explorer/query/`;
 
 // for writing to Crust IPFS
 export const CRUST_TEST_AUTH_HEADER =
