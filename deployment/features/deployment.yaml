@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-ever-<BRANCH>
+  namespace: post-ever
+  labels:
+    app: post-ever-<BRANCH>
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: post-ever-<BRANCH>
+      labels:
+        app: post-ever-<BRANCH>
+    spec:
+      imagePullSecrets:
+        - name: dockerhub
+      containers:
+        - name: post-ever-<BRANCH>
+          image: <IMAGE> 
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: post-ever-<BRANCH>
+
