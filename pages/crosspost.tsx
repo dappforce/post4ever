@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TweetWithAuthorProps } from "src/types/common";
@@ -10,16 +10,18 @@ import { useWalletStore } from "src/store";
 import { unstable_getServerSession } from "next-auth/next";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
-import TwitterUserProfileCard from "components/TwitterUserProfileCard";
+import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
-import FetchTweetForm from "src/components/FetchTweetForm";
-import SendTweetCard from "src/components/SendTweetCard";
+import FetchTweetCard from "components/cards/FetchTweetCard";
+import SendTweetCard from "components/cards/SendTweetCard";
 import toast, { Toaster } from "react-hot-toast";
+import clsx from "clsx";
 
 import { explorerUrl } from "src/configs/sdk-network-config";
 
 import SuccessDialog from "components/SuccessDialog";
+import { sidePadding } from "styles/common";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -79,21 +81,20 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
       </Head>
 
       <Layout>
-        <div className="h-screen max-w-full px-4 lg:grid lg:grid-cols-[0.5fr_1fr_0.5fr]">
+        <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
           <Toaster
             position="bottom-right"
             toastOptions={{
               className: "min-w-[300px]",
             }}
           />
-          <div></div>
-          <div className="mt-6 mb-[92px] flex flex-col gap-6">
+          <div className="flex w-[700px] flex-col gap-6 py-6">
             <TwitterUserProfileCard
               disabled={!isAccountExist || isUserExist}
               authenticatedUser={user}
             />
 
-            <FetchTweetForm
+            <FetchTweetCard
               disabled={!isUserExist || isTweetExist}
               onFetchTweet={handleSetFetchedTweet}
             />
@@ -104,7 +105,6 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
               onSuccess={handleSuccessSendTweet}
             />
           </div>
-          <div></div>
         </div>
 
         <SuccessDialog

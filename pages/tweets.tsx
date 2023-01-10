@@ -14,9 +14,9 @@ import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { AuthenticatedPageProps, TweetProps } from "src/types/common";
 import { Button } from "react-daisyui";
 import { useWalletStore, useTwitterUserStore } from "src/store";
-import TwitterUserProfileCard from "components/TwitterUserProfileCard";
+import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
 
-import SkeletonCard from "src/components/SkeletonCard";
+import SkeletonCard from "components/cards/SkeletonCard";
 
 type TwitterUserProps = {
   id: string;
