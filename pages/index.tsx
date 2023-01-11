@@ -5,14 +5,14 @@ import styles from "styles/index.module.css";
 
 import AppButton from "components/AppButton";
 
-const twStyles = {
-  customBaseCard: "rounded-[57px] bg-white",
-  customBaseInnerCard: "rounded-[30px] border border-[#c6cdd0] p-6 md:p-8",
-  customCardPadding: "p-[3rem] lg:p-[3.75rem]",
-  customGlobeVertPad: "mt-8 gap-8",
-  customH2: "text-2xl lg:text-[2rem] lg:leading-[2.8rem] font-medium font-unbounded",
-  customMarginSubHeader: "mb-[24px] lg:mb-[40px]",
-  customP: "text-base lg:text-[1.25rem] lg:leading-[2rem] font-medium",
+const customTwStyles = {
+  baseCard: "rounded-[57px] bg-white",
+  baseInnerCard: "rounded-[30px] border border-[#c6cdd0] p-6 md:p-8",
+  cardPadding: "p-[3rem] lg:p-[3.75rem]",
+  globeVertPad: "mt-8 gap-8",
+  h2: "text-2xl lg:text-[2rem] lg:leading-[2.8rem] font-medium font-unbounded",
+  marginSubHeader: "mb-[24px] lg:mb-[40px]",
+  p: "text-base lg:text-[1.25rem] lg:leading-[2rem] font-medium",
 };
 
 type StepsCardProps = {
@@ -24,13 +24,13 @@ type StepsCardProps = {
 export const StepsCard = ({ id, text, imageUrl }: StepsCardProps) => {
   return (
     <div
-      className={clsx(twStyles.customBaseInnerCard, "flex flex-row items-center gap-4 lg:gap-6")}>
+      className={clsx(customTwStyles.baseInnerCard, "flex flex-row items-center gap-4 lg:gap-6")}>
       <div className="flex items-center justify-center">
         <p className={clsx(styles.coloredDigit, "text-[2rem] md:text-[3rem] lg:text-[4rem]")}>
           {id}
         </p>
       </div>
-      <p className={clsx(twStyles.customP)}>{text}</p>
+      <p className={clsx(customTwStyles.p)}>{text}</p>
       <div className="ml-auto hidden md:block">
         <img src={imageUrl} alt={`${imageUrl}-description`} className="h-auto w-[245px]" />
       </div>
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         <div className="mb-[61px]">
           <div
             className={clsx(
-              twStyles.customGlobeVertPad,
+              customTwStyles.globeVertPad,
               "mb-[121px] flex w-full flex-col-reverse items-center justify-between lg:my-[121px] lg:flex-row",
             )}>
             <div className="lg:max-w-[580px]">
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className="flex flex-col gap-[1.25rem]">
-            <div className={clsx(twStyles.customBaseCard, "relative p-[3rem] lg:p-0")}>
+            <div className={clsx(customTwStyles.baseCard, "relative p-[3rem] lg:p-0")}>
               <img
                 src="/SmallMeridianLines.svg"
                 className="absolute bottom-0 right-0 w-[30%] md:w-[20%] lg:right-auto lg:w-[382px]"
@@ -99,15 +99,15 @@ const Home: NextPage = () => {
                 <div className="pt-0 pb-0 lg:pt-[59px] lg:pb-[74px]">
                   <h2
                     className={clsx(
-                      twStyles.customH2,
+                      customTwStyles.h2,
                       styles.coloredGradient,
-                      twStyles.customMarginSubHeader,
+                      customTwStyles.marginSubHeader,
                       "text-center lg:text-left",
                     )}>
                     You don’t own your content on Twitter
                   </h2>
                   <div className="flex flex-col justify-center px-0 lg:px-8">
-                    <p className={clsx(twStyles.customP, "mb-[43px]")}>
+                    <p className={clsx(customTwStyles.p, "mb-[43px]")}>
                       In fact, Twitter can remove your content at will, or even ban you, permanently
                       deleting all of your tweets.
                       <br />
@@ -122,17 +122,17 @@ const Home: NextPage = () => {
               </div>
             </div>
 
-            <div className={clsx(twStyles.customBaseCard, twStyles.customCardPadding)}>
+            <div className={clsx(customTwStyles.baseCard, customTwStyles.cardPadding)}>
               <h2
                 className={clsx(
-                  twStyles.customH2,
+                  customTwStyles.h2,
                   styles.coloredGradient,
-                  twStyles.customMarginSubHeader,
+                  customTwStyles.marginSubHeader,
                   "text-center",
                 )}>
                 How it works
               </h2>
-              <div className={clsx(twStyles.customMarginSubHeader, "flex flex-col gap-4 lg:gap-6")}>
+              <div className={clsx(customTwStyles.marginSubHeader, "flex flex-col gap-4 lg:gap-6")}>
                 {stepsDetail.map(step => (
                   <StepsCard key={step.id} id={step.id} text={step.text} imageUrl={step.imageUrl} />
                 ))}
@@ -144,13 +144,13 @@ const Home: NextPage = () => {
 
             <div
               className={clsx(
-                twStyles.customBaseCard,
-                twStyles.customCardPadding,
+                customTwStyles.baseCard,
+                customTwStyles.cardPadding,
                 "flex flex-col",
               )}>
               <h2
                 className={clsx(
-                  twStyles.customH2,
+                  customTwStyles.h2,
                   styles.coloredGradient,
                   "mb-[24px] text-center",
                 )}>
@@ -158,7 +158,7 @@ const Home: NextPage = () => {
               </h2>
               <p
                 className={clsx(
-                  twStyles.customMarginSubHeader,
+                  customTwStyles.marginSubHeader,
                   "text-center text-xl font-medium lg:text-[1.5rem] lg:leading-[190%]",
                 )}>
                 If you have any feature ideas for the app, please let us know.
