@@ -27,26 +27,26 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
         <label htmlFor="my-drawer-4" className="drawer-overlay h-screen" onClick={onCheck}></label>
 
         <ul className="menu w-80 bg-base-100 text-base-content">
-          <span className="text-normal font-bold text-gray-700 bg-gray-100 py-[2px] pl-4">
+          <span className="text-normal bg-gray-100 py-[2px] pl-4 font-bold text-gray-700">
             Select an account
           </span>
-          <li className="mb-4 overflow-y-auto w-full h-[25vh] block border-b-2 border-gray-100">
+          <li className="mb-4 block max-h-[240px] w-full overflow-y-auto border-b-2 border-gray-100">
             {accounts.map(account => (
               <button
                 key={account.address}
-                className="block text-left w-full"
+                className="block w-full text-left"
                 onClick={() => handleChangeAccount(account)}>
                 {account.meta.name}
               </button>
             ))}
           </li>
-          <li className="w-full flex items-center">
+          <li className="flex w-full items-center">
             <Button
               onClick={handleDisconnect}
               variant="text"
               size="sm"
-              className="group text-sm text-gray-500 hover:text-red-500 hover:bg-transparent normal-case transition-all duration-300 ease-in-out">
-              <span className="bg-left-bottom bg-gradient-to-r from-red-500 to-red-500 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+              className="group text-sm normal-case text-gray-500 transition-all duration-300 ease-in-out hover:bg-transparent hover:text-red-500">
+              <span className="bg-gradient-to-r from-red-500 to-red-500 bg-[length:0%_2px] bg-left-bottom bg-no-repeat transition-all duration-500 ease-out group-hover:bg-[length:100%_2px]">
                 Disconnect
               </span>
             </Button>

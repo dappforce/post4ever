@@ -14,6 +14,7 @@ import ThreeHorizontalLines from "src/assets/ThreeHorizontalLines.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
+import { sidePadding } from "styles/common";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -94,29 +95,12 @@ const Layout = ({ children }: LayoutProps) => {
         accounts={accounts ?? []}
         onChangeAccount={handleChangeAccount}>
         <div>
-          <div className="navbar max-h-[70px] bg-base-100 px-2 !py-[14px] lg:px-8">
+          <div
+            className={clsx(
+              "navbar sticky top-0 z-10 max-h-[70px] bg-base-100 !py-[14px] lg:px-8",
+              sidePadding,
+            )}>
             <div className="navbar-start">
-              <div className="dropdown">
-                <label tabIndex={0} className="btn btn-ghost !p-2 hover:bg-transparent lg:hidden">
-                  <ThreeHorizontalLines />
-                </label>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-                  {navOptions.map(option => (
-                    <li key={option.url}>
-                      <Link
-                        href={option.url}
-                        legacyBehavior
-                        className={linkDropdownClassnames(option.url)}>
-                        <a rel="noopener noreferrer" href="#">
-                          {option.text}
-                        </a>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <button onClick={() => router.push("/")}>
                 <span className="text-2xl font-medium text-primary">
                   <div className="hidden md:inline">
@@ -147,7 +131,7 @@ const Layout = ({ children }: LayoutProps) => {
             <div className="navbar-end">
               {accounts && accounts.length && selectedAccount ? (
                 <button
-                  className="btn-ghost rounded-lg py-[8px] px-[16px] text-base font-normal normal-case hover:bg-[#f1f3f4]"
+                  className="btn-ghost rounded-lg p-0 text-base font-normal normal-case hover:bg-transparent"
                   onClick={() => setIsOpen(!isOpen)}>
                   <div className="flex items-center justify-center gap-2">
                     <ReactIdenticon address={selectedAccount.address} />
@@ -165,8 +149,8 @@ const Layout = ({ children }: LayoutProps) => {
               )}
             </div>
           </div>
+          <main className="relative">{children}</main>
         </div>
-        <main>{children}</main>
       </Sidebar>
     </>
   );

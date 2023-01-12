@@ -1,21 +1,19 @@
-import type { NextPage, GetServerSidePropsContext } from "next";
-import { unstable_getServerSession } from "next-auth/next";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import type { NextPage } from "next";
 import HomeLayout from "src/components/HomeLayout";
 import clsx from "clsx";
 import styles from "styles/index.module.css";
 
 import AppButton from "components/AppButton";
 
-const customH2 = "text-2xl lg:text-[2rem] lg:leading-[2.8rem] font-medium font-unbounded";
-const customP = "text-base lg:text-[1.25rem] lg:leading-[2rem] font-medium";
-
-const customGlobeVertPad = "mt-8 gap-8";
-
-const marginSubHeader = "mb-[24px] lg:mb-[40px]";
-const customBaseCard = "rounded-[57px] bg-white";
-const cardPadding = "p-[3rem] lg:p-[3.75rem]";
-const customBaseInnerCard = "rounded-[30px] border border-[#c6cdd0] p-6 md:p-8";
+const customTwStyles = {
+  baseCard: "rounded-[57px] bg-white",
+  baseInnerCard: "rounded-[30px] border border-[#c6cdd0] p-6 md:p-8",
+  cardPadding: "p-[3rem] lg:p-[3.75rem]",
+  globeVertPad: "mt-8 gap-8",
+  h2: "text-2xl lg:text-[2rem] lg:leading-[2.8rem] font-medium font-unbounded",
+  marginSubHeader: "mb-[24px] lg:mb-[40px]",
+  p: "text-base lg:text-[1.25rem] lg:leading-[2rem] font-medium",
+};
 
 type StepsCardProps = {
   id: string;
@@ -25,13 +23,14 @@ type StepsCardProps = {
 
 export const StepsCard = ({ id, text, imageUrl }: StepsCardProps) => {
   return (
-    <div className={clsx(customBaseInnerCard, "flex flex-row items-center gap-4 lg:gap-6")}>
+    <div
+      className={clsx(customTwStyles.baseInnerCard, "flex flex-row items-center gap-4 lg:gap-6")}>
       <div className="flex items-center justify-center">
         <p className={clsx(styles.coloredDigit, "text-[2rem] md:text-[3rem] lg:text-[4rem]")}>
           {id}
         </p>
       </div>
-      <p className={clsx(customP)}>{text}</p>
+      <p className={clsx(customTwStyles.p)}>{text}</p>
       <div className="ml-auto hidden md:block">
         <img src={imageUrl} alt={`${imageUrl}-description`} className="h-auto w-[245px]" />
       </div>
@@ -69,7 +68,7 @@ const Home: NextPage = () => {
         <div className="mb-[61px]">
           <div
             className={clsx(
-              customGlobeVertPad,
+              customTwStyles.globeVertPad,
               "mb-[121px] flex w-full flex-col-reverse items-center justify-between lg:my-[121px] lg:flex-row",
             )}>
             <div className="lg:max-w-[580px]">
@@ -89,7 +88,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className="flex flex-col gap-[1.25rem]">
-            <div className={clsx(customBaseCard, "relative p-[3rem] lg:p-0")}>
+            <div className={clsx(customTwStyles.baseCard, "relative p-[3rem] lg:p-0")}>
               <img
                 src="/SmallMeridianLines.svg"
                 className="absolute bottom-0 right-0 w-[30%] md:w-[20%] lg:right-auto lg:w-[382px]"
@@ -100,15 +99,15 @@ const Home: NextPage = () => {
                 <div className="pt-0 pb-0 lg:pt-[59px] lg:pb-[74px]">
                   <h2
                     className={clsx(
-                      customH2,
+                      customTwStyles.h2,
                       styles.coloredGradient,
-                      marginSubHeader,
+                      customTwStyles.marginSubHeader,
                       "text-center lg:text-left",
                     )}>
                     You don’t own your content on Twitter
                   </h2>
                   <div className="flex flex-col justify-center px-0 lg:px-8">
-                    <p className={clsx(customP, "mb-[43px]")}>
+                    <p className={clsx(customTwStyles.p, "mb-[43px]")}>
                       In fact, Twitter can remove your content at will, or even ban you, permanently
                       deleting all of your tweets.
                       <br />
@@ -123,12 +122,17 @@ const Home: NextPage = () => {
               </div>
             </div>
 
-            <div className={clsx(customBaseCard, cardPadding)}>
+            <div className={clsx(customTwStyles.baseCard, customTwStyles.cardPadding)}>
               <h2
-                className={clsx(customH2, styles.coloredGradient, marginSubHeader, "text-center")}>
+                className={clsx(
+                  customTwStyles.h2,
+                  styles.coloredGradient,
+                  customTwStyles.marginSubHeader,
+                  "text-center",
+                )}>
                 How it works
               </h2>
-              <div className={clsx(marginSubHeader, "flex flex-col gap-4 lg:gap-6")}>
+              <div className={clsx(customTwStyles.marginSubHeader, "flex flex-col gap-4 lg:gap-6")}>
                 {stepsDetail.map(step => (
                   <StepsCard key={step.id} id={step.id} text={step.text} imageUrl={step.imageUrl} />
                 ))}
@@ -138,13 +142,23 @@ const Home: NextPage = () => {
               </div>
             </div>
 
-            <div className={clsx(customBaseCard, cardPadding, "flex flex-col")}>
-              <h2 className={clsx(customH2, styles.coloredGradient, "mb-[24px] text-center")}>
+            <div
+              className={clsx(
+                customTwStyles.baseCard,
+                customTwStyles.cardPadding,
+                "flex flex-col",
+              )}>
+              <h2
+                className={clsx(
+                  customTwStyles.h2,
+                  styles.coloredGradient,
+                  "mb-[24px] text-center",
+                )}>
                 Feature suggestions
               </h2>
               <p
                 className={clsx(
-                  marginSubHeader,
+                  customTwStyles.marginSubHeader,
                   "text-center text-xl font-medium lg:text-[1.5rem] lg:leading-[190%]",
                 )}>
                 If you have any feature ideas for the app, please let us know.
@@ -161,20 +175,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  let session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/crosspost",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-}

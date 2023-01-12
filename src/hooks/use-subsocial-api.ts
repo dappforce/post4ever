@@ -1,7 +1,7 @@
 import initializeApi from "src/lib/SubsocialApi";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
-import { bnsToIds } from "@subsocial/utils";
+import { bnsToIds, idToBn } from "@subsocial/utils";
 import type { SpaceData } from "@subsocial/api/types";
 import type { Signer } from "@polkadot/api/types";
 import { SubmittableExtrinsic } from "@polkadot/api/promise/types";
@@ -39,6 +39,8 @@ type SendSignedTxProps = {
   spaceId?: string;
   successCallback?: SuccessCallback;
 };
+
+type SpaceId = string;
 
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
@@ -89,6 +91,8 @@ export const useSubSocialApiHook = () => {
 
       setLoadingCreatePost(false);
       setSuccessTx(blockHash.toString());
+      console.log(`✅ Tx finalized. Block hash: ${blockHash.toString()}`);
+
       const ids = getNewIdsFromEvent(result);
       const postId = bnsToIds(ids)[0];
 
@@ -169,19 +173,52 @@ export const useSubSocialApiHook = () => {
     }
   };
 
+  const checkSpacesWithMyPermissions = async (myAddress: string) => {
+    try {
+      const subsocialApi = await initializeApi();
+
+      if (!subsocialApi) return null;
+
+      const spaceIds: SpaceId[] =
+        (await subsocialApi.blockchain.getSpaceIdsWithRolesByAccount(myAddress)) || [];
+
+      const promises = spaceIds.map(async spaceId => {
+        const permissions =
+          (await subsocialApi.blockchain.getSpacePermissionsByAccount(
+            myAddress,
+            idToBn(spaceId),
+          )) || [];
+
+        return {
+          spaceId,
+          permissions,
+        };
+      });
+
+      return Promise.all(promises);
+    } catch (error) {
+      console.warn({ error });
+    }
+  };
+
   const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
     setLoadingSpaces(true);
 
     try {
       const subsocialApi = await initializeApi();
 
+      const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
+
       if (!subsocialApi) return null;
 
-      const spaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
+      const editableSpaceIds = spacesWithMyPermissions?.map(space => space.spaceId);
+      const myOwnSpaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
 
-      if (!spaceIds) return null;
+      if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
-      const spaces = await subsocialApi.findPublicSpaces(bnsToIds(spaceIds));
+      const convertedAllSpaceIds = [...bnsToIds(myOwnSpaceIds), ...(editableSpaceIds || [])];
+
+      const spaces = await subsocialApi.findPublicSpaces(convertedAllSpaceIds);
       if (spaces) {
         setSpaces(spaces);
       }
