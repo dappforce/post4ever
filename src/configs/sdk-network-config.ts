@@ -1,12 +1,14 @@
 export interface CustomNetworkConfig {
   substrateNodeUrl: string;
   ipfsNodeUrl: string;
+  offchainUrl: string;
 }
 
 export const networkConfig: CustomNetworkConfig = {
   substrateNodeUrl:
     process.env.NEXT_PUBLIC_SUBSOCIAL_NODE_URL ?? "wss://rco-para.subsocial.network",
   ipfsNodeUrl: process.env.NEXT_PUBLIC_IPFS_URL ?? "https://gw.crustfiles.app",
+  offchainUrl: process.env.NEXT_PUBLIC_OFFCHAIN_URL ?? "https://staging-api.subsocial.network",
 };
 
 // Additional: Subsocial IPFS node url
