@@ -18,7 +18,6 @@ Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
 Logging in using your own Twitter account and submitting tweets to be sent to Subsocial chain
 
-
 ![](create-post-success.gif)
 
 Tweets sent and submission successful
