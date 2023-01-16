@@ -66,7 +66,7 @@ export const useSubSocialApiHook = () => {
         ...(content.media && { image: content.media[0].url }),
       };
 
-      const cid = await subsocialApi.ipfs.saveContent(contentPayload);
+      const cid = await subsocialApi.ipfs.saveContentToOffchain(contentPayload);
 
       return cid;
     } catch (error) {
