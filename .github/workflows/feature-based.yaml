@@ -48,6 +48,7 @@ jobs:
           push: true
           build-args: |
                   GH_NEXTAUTH_URL=https://${{ env.name }}-post4ever.subsocial.network
+                  GH_NEXT_PUBLIC_OFFCHAIN_URL=https://staging-api.subsocial.network
                   GH_SUBSOCIAL_NODE_URL=wss://rco-para.subsocial.network
                   GH_IPFS_URL=https://gw.crustfiles.app
                   GH_NEXT_PUBLIC_AUTH_URL=https://${{ env.name }}-post4ever.subsocial.network
