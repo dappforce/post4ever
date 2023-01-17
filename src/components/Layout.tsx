@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import Link from "next/link";
 import { useWalletStore } from "src/store";
 
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
@@ -10,7 +9,6 @@ import ReactIdenticon from "src/components/ReactIdenticon";
 import SubTweet from "src/assets/SubTweet.svg";
 import NewLogoPolkadot from "src/assets/NewLogoPolkadot.svg";
 import ST from "public/ST.svg";
-import ThreeHorizontalLines from "src/assets/ThreeHorizontalLines.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
@@ -63,30 +61,6 @@ const Layout = ({ children }: LayoutProps) => {
     setIsOpen(false);
   };
 
-  const navOptions = [
-    {
-      text: "Feeds",
-      url: "/tweets",
-    },
-    {
-      text: "Cross-post a tweet",
-      url: "/crosspost",
-    },
-  ];
-
-  const isOnActivePage = (path: string) => (router.pathname === path ? true : false);
-
-  const anchorTagClassNames = (path: string) =>
-    clsx("-mb-1 flex items-center border-transparent px-4 py-4 hover:text-light-blue", {
-      "border-accent border-b-2 text-accent": isOnActivePage(path),
-      "pointer-events-none text-disabled-gray hover:light-grey": path === "/tweets",
-    });
-
-  const linkDropdownClassnames = (path: string) =>
-    clsx("-mb-1 flex items-center border-b-2 px-4 py-4 dark:border-transparent", {
-      "pointer-events-none text-disabled-gray hover:light-grey": path === "/tweets",
-    });
-
   return (
     <>
       <Sidebar
@@ -111,22 +85,6 @@ const Layout = ({ children }: LayoutProps) => {
                   </div>
                 </span>
               </button>
-            </div>
-            <div className="navbar-center hidden lg:flex">
-              <ul className="mx-auto hidden items-stretch space-x-3 md:flex">
-                {navOptions.map(option => (
-                  <li key={option.url} className="hover:text-grey-500 flex">
-                    <Link href={option.url} legacyBehavior>
-                      <a
-                        rel="noopener noreferrer"
-                        href="#"
-                        className={anchorTagClassNames(option.url)}>
-                        {option.text}
-                      </a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
             <div className="navbar-end">
               {accounts && accounts.length && selectedAccount ? (
