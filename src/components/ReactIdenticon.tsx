@@ -1,6 +1,5 @@
 import Identicon from "@polkadot/react-identicon";
 import { IconTheme } from "@polkadot/react-identicon/types";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import React from "react";
 
 type ReactIdenticonProps = {

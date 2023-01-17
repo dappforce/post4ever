@@ -6,9 +6,9 @@ import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 import ReactIdenticon from "src/components/ReactIdenticon";
-import SubTweet from "src/assets/SubTweet.svg";
-import NewLogoPolkadot from "src/assets/NewLogoPolkadot.svg";
-import ST from "public/ST.svg";
+import Post4Ever from "public/images/Post4Ever.svg";
+import P4 from "public/images/P4.svg";
+import NewLogoPolkadot from "public/images/NewLogoPolkadot.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
@@ -78,10 +78,10 @@ const Layout = ({ children }: LayoutProps) => {
               <button onClick={() => router.push("/")}>
                 <span className="text-2xl font-medium text-primary">
                   <div className="hidden md:inline">
-                    <SubTweet />
+                    <Post4Ever />
                   </div>
                   <div className="md:hidden">
-                    <ST />
+                    <P4 />
                   </div>
                 </span>
               </button>

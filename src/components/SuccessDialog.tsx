@@ -7,7 +7,7 @@ import { TwitterShareButton } from "react-share";
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
-import XIcon from "src/assets/XIcon.svg";
+import XIcon from "public/images/XIcon.svg";
 
 import dynamic from "next/dynamic";
 const ReactIdenticon = dynamic(() => import("src/components/ReactIdenticon"), {

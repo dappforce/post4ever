@@ -1,6 +1,5 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import { useWalletStore, useTwitterUserStore } from "src/store";
 import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
 
 import SkeletonCard from "components/cards/SkeletonCard";
+import CustomHead from "components/CustomHead";
 
 type TwitterUserProps = {
   id: string;
@@ -28,6 +28,11 @@ type TwitterUserProps = {
 const Layout = dynamic(() => import("components/Layout"), {
   ssr: false,
 });
+
+const meta = {
+  title: "Post4ever - Your Tweets",
+  desc: "Back up your tweets to Subsocial’s censorship resistant network",
+};
 
 const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   const { data: session, status } = useSession();
@@ -121,12 +126,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
 
   return (
     <>
-      <Head>
-        <title>EverPost - Your Tweets</title>
-        <meta name="description" content="Store your Tweet, permanently" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <CustomHead meta={meta} />
       <Layout>
         <div className="grid h-screen max-w-full grid-cols-[0.75fr_1.8fr_1.2fr] px-4">
           <TwitterUserProfileCard disabled={false} authenticatedUser={authenticatedUser} />

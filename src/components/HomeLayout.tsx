@@ -1,6 +1,5 @@
-import Head from "next/head";
-import SubTweet from "src/assets/SubTweet.svg";
-import ST from "public/ST.svg";
+import Post4Ever from "public/images/Post4Ever.svg";
+import P4 from "public/images/P4.svg";
 
 import React from "react";
 
@@ -13,20 +12,12 @@ type HomeLayoutProps = {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <div style={{ position: "relative" }}>
-      <Head>
-        <title>EverPost - Landing Page</title>
-        <meta
-          name="description"
-          content="Back up your tweets to Subsocial’s censorship resistant network"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <header className="sticky top-0 z-10 flex min-h-[70px] items-center justify-between bg-white px-[0.5rem] py-[0.875rem] lg:px-[2rem]">
         <div className="hidden sm:block">
-          <SubTweet />
+          <Post4Ever />
         </div>
         <div className="sm:hidden">
-          <ST />
+          <P4 />
         </div>
         <div>
           <AppButton size={"small"} text={"Enter App"} />
@@ -35,7 +26,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       <main className="flex flex-1 flex-col items-center justify-center bg-light-gray px-[8px] sm:px-[32px] lg:px-[90px]">
         <>{children}</>
         <footer className="z-10 flex min-h-[109px] w-full max-w-[1261px] items-center">
-          <SubTweet />
+          <Post4Ever />
         </footer>
       </main>
 

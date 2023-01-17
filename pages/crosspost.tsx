@@ -1,24 +1,21 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
-import React, { useCallback, useState, useEffect } from "react";
-import Head from "next/head";
+import React, { useCallback, useState } from "react";
+import CustomHead from "components/CustomHead";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TweetWithAuthorProps } from "src/types/common";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useSession } from "next-auth/react";
 import { useWalletStore } from "src/store";
 import { unstable_getServerSession } from "next-auth/next";
-import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
 import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
 import { TwitterApi } from "twitter-api-v2";
 import { AuthenticatedPageProps } from "src/types/common";
 import FetchTweetCard from "components/cards/FetchTweetCard";
 import SendTweetCard from "components/cards/SendTweetCard";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import clsx from "clsx";
-
-import { explorerUrl } from "src/configs/sdk-network-config";
 
 import SuccessDialog from "components/SuccessDialog";
 import { sidePadding } from "styles/common";
@@ -27,28 +24,17 @@ const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
 
+const meta = {
+  title: "Post4ever - Cross-post Tweet",
+  desc: "Back up your tweets to Subsocial’s censorship resistant network",
+};
+
 const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { status } = useSession();
 
-  const { successTx } = useSubSocialApiHook();
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
-
-  useEffect(() => {
-    if (successTx) {
-      toast.custom(
-        <div className="color-[#363636] pointer-events-auto flex min-w-[300px] items-center justify-center gap-2 rounded-lg bg-white py-[8px] px-[10px] leading-normal text-black shadow will-change-transform">
-          ✅{" "}
-          <div className="m-auto">
-            <a target="_blank" rel="noopener noreferrer" href={`${explorerUrl}/${successTx}`}>
-              Tx succesful!
-            </a>{" "}
-          </div>
-        </div>,
-      );
-    }
-  }, [successTx]);
 
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
 
@@ -74,12 +60,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   return (
     <>
-      <Head>
-        <title>EverPost - Cross-post Tweet</title>
-        <meta name="description" content="Store your Tweet, permanently" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <CustomHead meta={meta} />
       <Layout>
         <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
           <Toaster
