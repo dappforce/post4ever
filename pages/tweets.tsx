@@ -29,11 +29,6 @@ const Layout = dynamic(() => import("components/Layout"), {
   ssr: false,
 });
 
-const meta = {
-  title: "Post4ever - Your Tweets",
-  desc: "Back up your tweets to Subsocial’s censorship resistant network",
-};
-
 const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -126,7 +121,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
 
   return (
     <>
-      <CustomHead meta={meta} />
+      <CustomHead />
       <Layout>
         <div className="grid h-screen max-w-full grid-cols-[0.75fr_1.8fr_1.2fr] px-4">
           <TwitterUserProfileCard disabled={false} authenticatedUser={authenticatedUser} />

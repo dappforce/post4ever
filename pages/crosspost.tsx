@@ -24,11 +24,6 @@ const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
 });
 
-const meta = {
-  title: "Post4ever - Cross-post Tweet",
-  desc: "Back up your tweets to Subsocial’s censorship resistant network",
-};
-
 const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { status } = useSession();
 
@@ -60,7 +55,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   return (
     <>
-      <CustomHead meta={meta} />
+      <CustomHead />
       <Layout>
         <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
           <Toaster

@@ -22,11 +22,6 @@ type StepsCardProps = {
   imageUrl: string;
 };
 
-const meta = {
-  title: "Post4ever - Home Page",
-  desc: "Back up your tweets to Subsocial’s censorship resistant network",
-};
-
 export const StepsCard = ({ id, text, imageUrl }: StepsCardProps) => {
   return (
     <div
@@ -70,7 +65,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <CustomHead meta={meta} />
+      <CustomHead />
       <HomeLayout>
         <div className="w-full max-w-[1261px]">
           <div className="mb-[61px]">
