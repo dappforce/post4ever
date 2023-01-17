@@ -9,3 +9,5 @@ export const TWITTER_URL = "https://twitter.com";
 
 export const polkaverseContentURL = (contentId: SuccessPayloadProps | undefined) =>
   `\nhttps://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}`;
+
+export const appBaseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
