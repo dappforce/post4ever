@@ -2,7 +2,7 @@ import Head from "next/head";
 import urlJoin from "url-join";
 import { appBaseUrl } from "src/configs/urls";
 
-const META_IMAGE_PATH = "public/images/MetaImage.png";
+const META_IMAGE_PATH = "/images/MetaImage.png";
 
 const CustomHead = () => {
   const meta = {
