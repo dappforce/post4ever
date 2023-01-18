@@ -14,9 +14,7 @@ import { AuthenticatedPageProps, TweetProps } from "src/types/common";
 import { Button } from "react-daisyui";
 import { useWalletStore, useTwitterUserStore } from "src/store";
 import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
-
 import SkeletonCard from "components/cards/SkeletonCard";
-import CustomHead from "components/CustomHead";
 
 type TwitterUserProps = {
   id: string;
@@ -121,7 +119,6 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
 
   return (
     <>
-      <CustomHead />
       <Layout>
         <div className="grid h-screen max-w-full grid-cols-[0.75fr_1.8fr_1.2fr] px-4">
           <TwitterUserProfileCard disabled={false} authenticatedUser={authenticatedUser} />
