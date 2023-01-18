@@ -1,7 +1,6 @@
 import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import React, { useCallback, useState } from "react";
-import CustomHead from "components/CustomHead";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TweetWithAuthorProps } from "src/types/common";
 import FullScreenLoading from "src/components/FullScreenLoading";
@@ -16,7 +15,6 @@ import FetchTweetCard from "components/cards/FetchTweetCard";
 import SendTweetCard from "components/cards/SendTweetCard";
 import { Toaster } from "react-hot-toast";
 import clsx from "clsx";
-
 import SuccessDialog from "components/SuccessDialog";
 import { sidePadding } from "styles/common";
 
@@ -55,7 +53,6 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   return (
     <>
-      <CustomHead />
       <Layout>
         <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
           <Toaster

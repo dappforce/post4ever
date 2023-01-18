@@ -2,8 +2,6 @@ import type { NextPage } from "next";
 import HomeLayout from "src/components/HomeLayout";
 import clsx from "clsx";
 import styles from "styles/index.module.css";
-import CustomHead from "components/CustomHead";
-
 import AppButton from "components/AppButton";
 
 const customTwStyles = {
@@ -65,7 +63,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <CustomHead />
       <HomeLayout>
         <div className="w-full max-w-[1261px]">
           <div className="mb-[61px]">
