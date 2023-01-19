@@ -5,7 +5,7 @@ import { trimMiddleString } from "src/utils/string";
 import { TwitterShareButton } from "react-share";
 
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 import XIcon from "public/images/XIcon.svg";
 
@@ -24,7 +24,7 @@ type SuccessDialogProps = {
   open: boolean;
   onClose: () => void;
   contentId: SuccessPayloadProps | undefined;
-  account: InjectedAccountWithMeta | null;
+  account: WalletAccount | null;
 };
 
 const SuccessDialog = (props: SuccessDialogProps) => {
@@ -58,7 +58,7 @@ const SuccessDialog = (props: SuccessDialogProps) => {
             <div className="flex flex-row items-center justify-center gap-2 self-start">
               <ReactIdenticon address={account.address!} size={40} />
               <div>
-                <div className="font-bold text-neutral">{account?.meta.name}</div>
+                <div className="font-bold text-neutral">{account.name}</div>
                 <div className="font-normal text-gray-500">{trimMiddleString(account.address)}</div>
               </div>
             </div>
@@ -71,7 +71,8 @@ const SuccessDialog = (props: SuccessDialogProps) => {
                 href={SUBSOCIAL_TWITTER_URL}>
                 @SubsocialChain
               </a>{" "}
-              network to make it censorship resistant!{" "}
+              network to make it censorship resistant by using https://post4ever.app/ 🔥 View it in
+              Subsocial{" "}
               <a
                 className="link link-hover text-link-blue"
                 target="_blank"

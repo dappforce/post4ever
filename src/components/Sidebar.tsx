@@ -1,21 +1,27 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useWalletStore } from "src/store";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 type SidebarProps = {
   checked: boolean;
-  accounts: InjectedAccountWithMeta[];
+  accounts: WalletAccount[];
   onCheck: () => void;
-  onChangeAccount: (account: InjectedAccountWithMeta | null) => void;
+  onChangeAccount: (account: WalletAccount | null) => void;
   children?: React.ReactNode;
 };
 
 const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: SidebarProps) => {
-  const handleChangeAccount = (account: InjectedAccountWithMeta | null) => {
+  const { setAccounts } = useWalletStore(state => ({
+    setAccounts: state.setAccounts,
+  }));
+
+  const handleChangeAccount = (account: WalletAccount | null) => {
     onChangeAccount(account);
   };
 
   const handleDisconnect = () => {
+    setAccounts(undefined);
     handleChangeAccount(null);
   };
 
@@ -36,7 +42,7 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
                 key={account.address}
                 className="block w-full text-left"
                 onClick={() => handleChangeAccount(account)}>
-                {account.meta.name}
+                {account.name}
               </button>
             ))}
           </li>

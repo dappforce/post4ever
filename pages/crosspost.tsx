@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast";
 import clsx from "clsx";
 import SuccessDialog from "components/SuccessDialog";
 import { sidePadding } from "styles/common";
+import WalletSelectModal from "components/wallet-connect/WalletSelectModal";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -25,7 +26,8 @@ const Layout = dynamic(() => import("src/components/Layout"), {
 const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   const { status } = useSession();
 
-  const { account } = useWalletStore(state => ({
+  const { account, readyAccounts } = useWalletStore(state => ({
+    readyAccounts: state.accounts,
     account: state.account,
   }));
 
@@ -36,6 +38,11 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
   };
 
   const [contentId, setContentId] = useState<SuccessPayloadProps | undefined>();
+  const [isModalOpen, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
 
   const handleSuccessSendTweet = useCallback(({ spaceId, postId }: SuccessPayloadProps) => {
     setContentId({
@@ -53,7 +60,7 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
 
   return (
     <>
-      <Layout>
+      <Layout onConnect={handleOpenModal} account={account} accounts={readyAccounts}>
         <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
           <Toaster
             position="bottom-right"
@@ -79,6 +86,8 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
             />
           </div>
         </div>
+
+        <WalletSelectModal open={isModalOpen} onClose={() => setOpenModal(false)} />
 
         <SuccessDialog
           open={isContentExist}

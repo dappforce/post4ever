@@ -10,6 +10,9 @@
     --disabled-gray: 201deg 12% 67%;
     --link-blue: 222deg 90% 57%;
 
+    --base-blue: 210deg 78% 60%;
+    --base-pink: 327deg 82% 55%;
+
     --side-padding: 0 90px;
   }
 }
@@ -77,7 +80,7 @@ select:-webkit-autofill:focus {
 }
 
 .btn-gradient {
-  background: linear-gradient(93.08deg, #4a99e9 5.1%, #eb2f96 100%);
+  background: linear-gradient(93.08deg, hsl(var(--base-blue)) 5.1%, hsl(var(--base-pink)) 100%);
   @apply border-0 hover:brightness-110;
 }
 

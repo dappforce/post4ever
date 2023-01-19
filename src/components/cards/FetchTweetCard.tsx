@@ -70,6 +70,8 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     }
   };
 
+  console.log({ fetchedTweet });
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetUrl(event.target.value);
   };

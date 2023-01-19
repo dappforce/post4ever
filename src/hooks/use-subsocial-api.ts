@@ -9,6 +9,8 @@ import { getNewIdsFromEvent } from "@subsocial/api/utils";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
+import { web3FromSource } from "@talismn/connect-components";
+
 import toast from "react-hot-toast";
 
 import {
@@ -244,17 +246,18 @@ export const useSubSocialApiHook = () => {
     setLoadingCreatePost(true);
 
     try {
-      const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
+      // const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      const extensions = await web3Enable("EverPost dapp");
+      // const extensions = await web3Enable("EverPost dapp");
+
+      // const injector = await web3FromSource(account.meta.source);
+      const injector = web3FromSource();
 
       const subsocialApi = await initializeApi();
 
-      const injector = await web3FromSource(account.meta.source);
-
       const author = content.users?.find(user => user.id === content.author_id);
 
-      if (!extensions || !subsocialApi || !author) return null;
+      if (!subsocialApi || !author) return null;
 
       const cid = await savePostContent({ author, content, subsocialApi });
 
