@@ -1,5 +1,4 @@
 import initializeApi from "src/lib/SubsocialApi";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
 import { bnsToIds, idToBn } from "@subsocial/utils";
 import type { SpaceData } from "@subsocial/api/types";
@@ -9,7 +8,6 @@ import { getNewIdsFromEvent } from "@subsocial/api/utils";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
-import { web3FromSource } from "@talismn/connect-components";
 
 import toast from "react-hot-toast";
 
@@ -24,6 +22,7 @@ import { TweetUserProps, TweetWithAuthorProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
 import { parseTextToMarkdown } from "src/utils/string";
 import { TWITTER_URL } from "src/configs/urls";
+import { WalletAccount } from "@talismn/connect-wallets";
 
 type SavePostContentProps = {
   author: TweetUserProps;
@@ -150,7 +149,9 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("EverPost dapp");
 
-      const injector = await web3FromSource(account.meta.source);
+      const injector = await web3FromSource(account.source);
+
+      const subsocialApi = await initializeApi();
 
       const author = content.users?.find(user => user.id === content.author_id);
 
@@ -203,7 +204,7 @@ export const useSubSocialApiHook = () => {
     }
   };
 
-  const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
+  const checkSpaceOwnedBy = async (account: WalletAccount) => {
     setLoadingSpaces(true);
 
     try {
@@ -244,20 +245,18 @@ export const useSubSocialApiHook = () => {
     const toastId = toast("Loading...");
 
     setLoadingCreatePost(true);
-
     try {
-      // const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
+      const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
-      // const extensions = await web3Enable("EverPost dapp");
+      const extensions = await web3Enable("EverPost dapp");
 
-      // const injector = await web3FromSource(account.meta.source);
-      const injector = web3FromSource();
+      const injector = await web3FromSource(account.source);
 
       const subsocialApi = await initializeApi();
 
       const author = content.users?.find(user => user.id === content.author_id);
 
-      if (!subsocialApi || !author) return null;
+      if (!extensions || !subsocialApi || !author) return null;
 
       const cid = await savePostContent({ author, content, subsocialApi });
 
@@ -293,7 +292,7 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("EverPost dapp");
 
-      const injector = await web3FromSource(account.meta.source);
+      const injector = await web3FromSource(account.source);
 
       //Use already made space by current pair
       const spaceId = "1018";

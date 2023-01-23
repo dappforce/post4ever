@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { useWalletStore } from "src/store";
 
-// import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
-// import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { WalletAccount } from "@talismn/connect-wallets";
 
 import ReactIdenticon from "src/components/ReactIdenticon";
 import Post4Ever from "public/images/Post4Ever.svg";
 import P4 from "public/images/P4.svg";
-// import NewLogoPolkadot from "public/images/NewLogoPolkadot.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
@@ -17,9 +14,9 @@ import { sidePadding } from "styles/common";
 import ConnectButton from "./wallet-connect/ConnectButton";
 
 type LayoutProps = {
-  onConnect: () => void;
-  account: WalletAccount | null;
-  accounts: WalletAccount[];
+  account?: WalletAccount | null;
+  accounts?: WalletAccount[] | null;
+  onConnect?: () => void;
   children?: React.ReactNode;
 };
 
@@ -30,23 +27,6 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
-
-  // const getAccounts = async () => {
-  //   const extensions = await web3Enable("EverPost dapp");
-  //   if (extensions.length === 0) {
-  //     return;
-  //   }
-  //   const allAccounts = await web3Accounts();
-  //   setAccounts(allAccounts);
-  //   setReadyAccounts(allAccounts);
-
-  //   setSelectedAccount(allAccounts[0]);
-  //   setAccount(allAccounts[0]);
-  // };
-
-  // const handleConnect = () => {
-  //   getAccounts();
-  // };
 
   const handleConnect = () => {
     onConnect && onConnect();

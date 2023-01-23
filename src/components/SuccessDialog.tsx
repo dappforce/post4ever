@@ -17,6 +17,7 @@ const ReactIdenticon = dynamic(() => import("src/components/ReactIdenticon"), {
 import {
   SUBSOCIAL_TWITTER_URL,
   SUBSOCIAL_HASHTAG_TWITTER_URL,
+  POST4EVER_URL,
   polkaverseContentURL,
 } from "src/configs/urls";
 
@@ -71,8 +72,18 @@ const SuccessDialog = (props: SuccessDialogProps) => {
                 href={SUBSOCIAL_TWITTER_URL}>
                 @SubsocialChain
               </a>{" "}
-              network to make it censorship resistant by using https://post4ever.app/ 🔥 View it in
-              Subsocial{" "}
+              network to make it censorship resistant by using{" "}
+              <a
+                className="link link-hover whitespace-nowrap text-link-blue"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={POST4EVER_URL}>
+                https://post4ever.app/
+              </a>{" "}
+              🔥
+              <br />
+              <br />
+              View it on Subsocial here:
               <a
                 className="link link-hover text-link-blue"
                 target="_blank"

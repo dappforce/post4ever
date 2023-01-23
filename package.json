@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.13",
-    "@material-tailwind/react": "^1.2.4",
+    "@material-tailwind/react": "1.2.4",
     "@next/font": "^13.1.1",
-    "@polkadot/api": "^9.3.3",
+    "@polkadot/api": "latest",
     "@polkadot/extension-dapp": "latest",
     "@polkadot/react-identicon": "^2.9.14",
     "@polkadot/util-crypto": "^10.1.10",

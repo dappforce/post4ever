@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import WrapperCard from "./WrapperCard";
-import { Button, Card, Tooltip } from "react-daisyui";
+import { Button, Tooltip } from "react-daisyui";
 import { Select, Option } from "@material-tailwind/react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";

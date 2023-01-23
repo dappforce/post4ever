@@ -7,6 +7,8 @@ export const SUBSOCIAL_HASHTAG_TWITTER_URL =
 
 export const TWITTER_URL = "https://twitter.com";
 
+export const POST4EVER_URL = "https://post4ever.app/";
+
 export const polkaverseContentURL = (contentId: SuccessPayloadProps | undefined) =>
   `\nhttps://polkaverse.com/${contentId?.spaceId}/${contentId?.postId}`;
 
