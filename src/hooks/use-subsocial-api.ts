@@ -46,6 +46,7 @@ type SpaceId = string;
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
+  const [profileSpace, setProfileSpace] = useState<SpaceData | undefined>();
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
 
@@ -171,6 +172,20 @@ export const useSubSocialApiHook = () => {
         signer: injector.signer,
         toastId,
       });
+    } catch (error) {
+      console.warn({ error });
+    }
+  };
+
+  const checkProfileSpaceOwnedBy = async (myAddress: string) => {
+    try {
+      const subsocialApi = await initializeApi();
+
+      if (!subsocialApi) return null;
+
+      const profileSpace = await subsocialApi.findProfileSpace(myAddress);
+
+      setProfileSpace(profileSpace);
     } catch (error) {
       console.warn({ error });
     }
@@ -363,9 +378,11 @@ export const useSubSocialApiHook = () => {
     createPostWithSpaceId,
     successTx,
     spaces,
+    profileSpace,
     loadingSpaces,
     loadingCreatePost,
     checkSpaceOwnedBy,
+    checkProfileSpaceOwnedBy,
     postTransaction,
   };
 };
