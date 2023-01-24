@@ -1,5 +1,4 @@
 import initializeApi from "src/lib/SubsocialApi";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import type { SubsocialApi } from "@subsocial/api";
 import { bnsToIds, idToBn } from "@subsocial/utils";
 import type { SpaceData } from "@subsocial/api/types";
@@ -9,6 +8,7 @@ import { getNewIdsFromEvent } from "@subsocial/api/utils";
 
 import { useState } from "react";
 import { IpfsContent } from "@subsocial/api/substrate/wrappers";
+
 import toast from "react-hot-toast";
 
 import {
@@ -22,6 +22,7 @@ import { TweetUserProps, TweetWithAuthorProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
 import { parseTextToMarkdown } from "src/utils/string";
 import { TWITTER_URL } from "src/configs/urls";
+import { WalletAccount } from "@talismn/connect-wallets";
 
 type SavePostContentProps = {
   author: TweetUserProps;
@@ -45,6 +46,7 @@ type SpaceId = string;
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
+  const [profileSpace, setProfileSpace] = useState<SpaceData | undefined>();
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
 
@@ -148,7 +150,9 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("EverPost dapp");
 
-      const injector = await web3FromSource(account.meta.source);
+      const injector = await web3FromSource(account.source);
+
+      const subsocialApi = await initializeApi();
 
       const author = content.users?.find(user => user.id === content.author_id);
 
@@ -168,6 +172,20 @@ export const useSubSocialApiHook = () => {
         signer: injector.signer,
         toastId,
       });
+    } catch (error) {
+      console.warn({ error });
+    }
+  };
+
+  const checkProfileSpaceOwnedBy = async (myAddress: string) => {
+    try {
+      const subsocialApi = await initializeApi();
+
+      if (!subsocialApi) return null;
+
+      const profileSpace = await subsocialApi.findProfileSpace(myAddress);
+
+      setProfileSpace(profileSpace);
     } catch (error) {
       console.warn({ error });
     }
@@ -201,7 +219,7 @@ export const useSubSocialApiHook = () => {
     }
   };
 
-  const checkSpaceOwnedBy = async (account: InjectedAccountWithMeta) => {
+  const checkSpaceOwnedBy = async (account: WalletAccount) => {
     setLoadingSpaces(true);
 
     try {
@@ -242,15 +260,14 @@ export const useSubSocialApiHook = () => {
     const toastId = toast("Loading...");
 
     setLoadingCreatePost(true);
-
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
       const extensions = await web3Enable("EverPost dapp");
 
-      const subsocialApi = await initializeApi();
+      const injector = await web3FromSource(account.source);
 
-      const injector = await web3FromSource(account.meta.source);
+      const subsocialApi = await initializeApi();
 
       const author = content.users?.find(user => user.id === content.author_id);
 
@@ -290,7 +307,7 @@ export const useSubSocialApiHook = () => {
 
       const extensions = await web3Enable("EverPost dapp");
 
-      const injector = await web3FromSource(account.meta.source);
+      const injector = await web3FromSource(account.source);
 
       //Use already made space by current pair
       const spaceId = "1018";
@@ -361,9 +378,11 @@ export const useSubSocialApiHook = () => {
     createPostWithSpaceId,
     successTx,
     spaces,
+    profileSpace,
     loadingSpaces,
     loadingCreatePost,
     checkSpaceOwnedBy,
+    checkProfileSpaceOwnedBy,
     postTransaction,
   };
 };

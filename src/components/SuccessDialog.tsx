@@ -1,11 +1,13 @@
+import { useEffect } from "react";
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
-import { Button, Card } from "react-daisyui";
+import { Button, Card, Avatar } from "react-daisyui";
 
 import { trimMiddleString } from "src/utils/string";
 import { TwitterShareButton } from "react-share";
 
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 import XIcon from "public/images/XIcon.svg";
 
@@ -17,18 +19,27 @@ const ReactIdenticon = dynamic(() => import("src/components/ReactIdenticon"), {
 import {
   SUBSOCIAL_TWITTER_URL,
   SUBSOCIAL_HASHTAG_TWITTER_URL,
+  POST4EVER_URL,
   polkaverseContentURL,
 } from "src/configs/urls";
+
+import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 
 type SuccessDialogProps = {
   open: boolean;
   onClose: () => void;
   contentId: SuccessPayloadProps | undefined;
-  account: InjectedAccountWithMeta | null;
+  account: WalletAccount | null;
 };
 
 const SuccessDialog = (props: SuccessDialogProps) => {
   const { open, onClose, contentId, account } = props;
+
+  useEffect(() => {
+    if (account) checkProfileSpaceOwnedBy(account.address);
+  }, [account]);
+
+  const { profileSpace, checkProfileSpaceOwnedBy } = useSubSocialApiHook();
 
   if (!account) return null;
 
@@ -56,24 +67,45 @@ const SuccessDialog = (props: SuccessDialogProps) => {
         <Card bordered={false} className="rounded-lg border border-dark-gray bg-white">
           <Card.Body className="max-w-full gap-4 p-4 md:gap-6 md:p-6">
             <div className="flex flex-row items-center justify-center gap-2 self-start">
-              <ReactIdenticon address={account.address!} size={40} />
+              {profileSpace?.content?.image ? (
+                <Avatar
+                  src={`${SUB_IPFS_NODE_URL}/${profileSpace?.content?.image}`}
+                  size="xs"
+                  shape="circle"
+                />
+              ) : (
+                <ReactIdenticon address={account.address!} size={40} />
+              )}
               <div>
-                <div className="font-bold text-neutral">{account?.meta.name}</div>
+                <div className="font-bold text-neutral">
+                  {profileSpace?.content?.name ?? account.name}
+                </div>
                 <div className="font-normal text-gray-500">{trimMiddleString(account.address)}</div>
               </div>
             </div>
             <p className="text-base font-normal text-neutral">
               I just cross-posted a tweet to the{" "}
               <a
-                className="link link-hover whitespace-nowrap text-link-blue"
+                className="link-hover link whitespace-nowrap text-link-blue"
                 target="_blank"
                 rel="noopener noreferrer"
                 href={SUBSOCIAL_TWITTER_URL}>
                 @SubsocialChain
               </a>{" "}
-              network to make it censorship resistant!{" "}
+              network to make it censorship resistant by using{" "}
               <a
-                className="link link-hover text-link-blue"
+                className="link-hover link whitespace-nowrap text-link-blue"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={POST4EVER_URL}>
+                {POST4EVER_URL}
+              </a>{" "}
+              🔥
+              <br />
+              <br />
+              View it on Subsocial here:
+              <a
+                className="link-hover link text-link-blue"
                 target="_blank"
                 rel="noopener noreferrer"
                 href={polkaverseContentURL(contentId)}>
@@ -102,7 +134,7 @@ const SuccessDialog = (props: SuccessDialogProps) => {
         </TwitterShareButton>
         <Button
           onClick={onClose}
-          className="btn btn-outline btn-accent w-full whitespace-nowrap rounded-lg normal-case">
+          className="btn-outline btn-accent btn w-full whitespace-nowrap rounded-lg normal-case">
           <span>Cross-post another tweet</span>
         </Button>
       </DialogFooter>

@@ -1,13 +1,13 @@
 import create from "zustand";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import produce from "immer";
 import { persist } from "zustand/middleware";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 interface WalletState {
-  account: InjectedAccountWithMeta | null;
-  setAccount: (newAccount: InjectedAccountWithMeta | null) => void;
-  accounts: InjectedAccountWithMeta[];
-  setAccounts: (newAccounts: InjectedAccountWithMeta[]) => void;
+  account: WalletAccount | null;
+  setAccount: (newAccount: WalletAccount | null) => void;
+  accounts: WalletAccount[];
+  setAccounts: (newAccounts: WalletAccount[] | undefined) => void;
 }
 
 interface TwitterUserState {
@@ -26,9 +26,9 @@ export const useWalletStore = create<WalletState>()(
   persist(
     set => ({
       account: null,
-      setAccount: newAccount => set(state => ({ account: newAccount })),
+      setAccount: newAccount => set({ account: newAccount }),
       accounts: [],
-      setAccounts: newAccounts => set(state => ({ accounts: newAccounts })),
+      setAccounts: newAccounts => set({ accounts: newAccounts }),
     }),
     {
       name: "wallet-storage", // name of item in the storage (must be unique)

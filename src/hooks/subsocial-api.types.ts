@@ -1,20 +1,20 @@
 import { PostProps, TweetWithAuthorProps } from "src/types/common";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 export type PostTransactionProps = {
   savedPosts: PostProps[];
-  account: InjectedAccountWithMeta;
+  account: WalletAccount;
 };
 
 export type CreateSpaceProps = {
-  account: InjectedAccountWithMeta;
+  account: WalletAccount;
   content: TweetWithAuthorProps;
   successCallback?: (props: SuccessPayloadProps) => void;
 };
 
 export type CreatePostWithSpaceIdProps = {
   spaceId: string;
-  account: InjectedAccountWithMeta;
+  account: WalletAccount;
   content: TweetWithAuthorProps;
   successCallback?: (props: SuccessPayloadProps) => void;
 };

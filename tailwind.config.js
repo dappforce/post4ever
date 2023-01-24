@@ -27,6 +27,8 @@ module.exports = withMT({
         "disabled-gray": withOpacityValue("--disabled-gray"),
         "link-blue": withOpacityValue("--link-blue"),
         "light-blue": withOpacityValue("--light-blue"),
+        "base-blue": withOpacityValue("--base-blue"),
+        "base-pink": withOpacityValue("--base-pink"),
       },
       backdropBlur: {
         sm: "1px",
@@ -58,6 +60,8 @@ module.exports = withMT({
           "--disabled-gray": "disabled-gray",
           "--link-blue": "link-blue",
           "--light-blue": "light-blue",
+          "--base-blue": "base-blue",
+          "--base-pink": "base-pink",
         },
       },
     ],

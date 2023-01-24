@@ -2,60 +2,37 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { useWalletStore } from "src/store";
 
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import type { WalletAccount } from "@talismn/connect-wallets";
 
 import ReactIdenticon from "src/components/ReactIdenticon";
 import Post4Ever from "public/images/Post4Ever.svg";
 import P4 from "public/images/P4.svg";
-import NewLogoPolkadot from "public/images/NewLogoPolkadot.svg";
 import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/router";
 import { sidePadding } from "styles/common";
+import ConnectButton from "./wallet-connect/ConnectButton";
 
 type LayoutProps = {
+  account?: WalletAccount | null;
+  accounts?: WalletAccount[] | null;
+  onConnect?: () => void;
   children?: React.ReactNode;
 };
 
-const Layout = ({ children }: LayoutProps) => {
-  const {
-    account,
-    setAccount,
-    readyAccounts,
-    setAccounts: setReadyAccounts,
-  } = useWalletStore(state => ({
-    account: state.account,
+const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
+  const { setAccount } = useWalletStore(state => ({
     setAccount: state.setAccount,
-    readyAccounts: state.accounts,
-    setAccounts: state.setAccounts,
   }));
-
   const router = useRouter();
 
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>(readyAccounts);
-  const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(account);
   const [isOpen, setIsOpen] = useState(false);
 
-  const getAccounts = async () => {
-    const extensions = await web3Enable("EverPost dapp");
-    if (extensions.length === 0) {
-      return;
-    }
-    const allAccounts = await web3Accounts();
-    setAccounts(allAccounts);
-    setReadyAccounts(allAccounts);
-
-    setSelectedAccount(allAccounts[0]);
-    setAccount(allAccounts[0]);
-  };
-
   const handleConnect = () => {
-    getAccounts();
+    onConnect && onConnect();
   };
 
-  const handleChangeAccount = (account: InjectedAccountWithMeta | null) => {
-    setSelectedAccount(account);
+  const handleChangeAccount = (account: WalletAccount | null) => {
     setAccount(account);
 
     setIsOpen(false);
@@ -87,23 +64,17 @@ const Layout = ({ children }: LayoutProps) => {
               </button>
             </div>
             <div className="navbar-end">
-              {accounts && accounts.length && selectedAccount ? (
+              {accounts && accounts.length && account ? (
                 <button
                   className="btn-ghost rounded-lg p-0 text-base font-normal normal-case hover:bg-transparent"
                   onClick={() => setIsOpen(!isOpen)}>
                   <div className="flex items-center justify-center gap-2">
-                    <ReactIdenticon address={selectedAccount.address} />
-                    <div className="hidden md:block">{account?.meta.name}</div>
+                    <ReactIdenticon address={account.address} />
+                    <div className="hidden md:block">{account.name}</div>
                   </div>
                 </button>
               ) : (
-                <button
-                  id="connect-button"
-                  onClick={handleConnect}
-                  className="btn-gradient btn gap-2 border-0 normal-case">
-                  <NewLogoPolkadot />
-                  Connect wallet
-                </button>
+                <ConnectButton onConnect={handleConnect} />
               )}
             </div>
           </div>
