@@ -70,8 +70,6 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     }
   };
 
-  console.log({ fetchedTweet });
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetUrl(event.target.value);
   };
@@ -112,7 +110,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           <Button
             className={clsx({
               "btn-gradient w-full whitespace-nowrap rounded-lg": !fetchedTweet,
-              "btn btn-outline btn-accent": fetchedTweet,
+              "btn-outline btn-accent btn": fetchedTweet,
             })}
             disabled={loadingTweet}
             onClick={handleFetchTweet}>

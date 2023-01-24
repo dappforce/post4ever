@@ -40,16 +40,10 @@ const WalletSelectModal = ({ open, onClose }: WalletSelectModalProps) => {
       open={open}
       // Override the default header
       header={<h1>Select your wallet</h1>}
-      // Override the default footer
-      footer={<LinksOnFooter />}
       // If `showAccountsList={true}`, then account selection modal will show up after selecting the a wallet. Default is `false`.
       showAccountsList={true}
-      // Callback when the WalletSelect Modal is opened
-      // onWalletConnectOpen={wallets => console.log({ wallets })}
       // Callback when the WalletSelect Modal is closed
       onWalletConnectClose={handleClose}
-      // Callback when a wallet is selected on the WalletSelect Modal
-      // onWalletSelected={wallet => console.log({ wallet })}
       // Callback when the subscribed accounts for a selected wallet are updated
       onUpdatedAccounts={accounts => setAccounts(accounts)}
       // Callback when an account is selected on the WalletSelect Account Modal. Only relevant when `showAccountsList=true`
