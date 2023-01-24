@@ -98,7 +98,7 @@ const SuccessDialog = (props: SuccessDialogProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 href={POST4EVER_URL}>
-                https://post4ever.app/
+                {POST4EVER_URL}
               </a>{" "}
               🔥
               <br />
