@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import SkeletonCard from "components/cards/SkeletonCard";
-import { TweetWithAuthorProps } from "src/types/common";
+import { TweetWithIncludesProps } from "src/types/common";
 import { getAuthor } from "src/utils/tweet";
 
 import WrapperCard from "./WrapperCard";
@@ -12,7 +12,7 @@ import { rootInput } from "styles/common";
 
 type FetchTweetCardProps = {
   disabled: boolean;
-  onFetchTweet: (fetchedTweet: TweetWithAuthorProps | null) => void;
+  onFetchTweet: (fetchedTweet: TweetWithIncludesProps | null) => void;
 };
 
 const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
@@ -21,7 +21,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   const [tweetUrl, setTweetUrl] = useState("");
 
   const [loadingTweet, setLoadingTweet] = useState(false);
-  const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
+  const [fetchedTweet, setFetchedTweet] = useState<TweetWithIncludesProps | null>(null);
 
   const tweetAuthor = useMemo(() => {
     if (!fetchedTweet) return null;
@@ -47,17 +47,13 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
         });
 
         const { data, includes } = await response.json();
-
-        const { author_id, edit_history_tweet_ids, id, text } = data;
-        const { users, media } = includes;
+        const { users, media, tweets } = includes;
 
         const payload = {
-          author_id,
-          edit_history_tweet_ids,
-          id,
-          text,
+          ...data,
           users,
           media,
+          tweets,
         };
 
         setFetchedTweet(payload);

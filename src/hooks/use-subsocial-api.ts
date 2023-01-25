@@ -18,15 +18,13 @@ import {
   SuccessPayloadProps,
 } from "./subsocial-api.types";
 
-import { TweetUserProps, TweetWithAuthorProps } from "src/types/common";
+import { TweetUserProps, TweetContentProps, TweetWithIncludesProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
-import { parseTextToMarkdown } from "src/utils/string";
-import { TWITTER_URL } from "src/configs/urls";
 import { WalletAccount } from "@talismn/connect-wallets";
 
 type SavePostContentProps = {
   author: TweetUserProps;
-  content: TweetWithAuthorProps;
+  content: TweetWithIncludesProps;
   subsocialApi: SubsocialApi;
 };
 
@@ -59,15 +57,24 @@ export const useSubSocialApiHook = () => {
   };
 
   const savePostContent = async ({ author, content, subsocialApi }: SavePostContentProps) => {
+    const contentPayload: TweetContentProps = {
+      body: content.text,
+      ...(content.media && { image: content.media[0].url }),
+      tweet: {
+        id: content.id,
+        created_at: content.created_at,
+        username: author.username,
+        author_id: content.author_id,
+        edit_history_tweet_ids: content.edit_history_tweet_ids,
+        conversation_id: content.conversation_id,
+        in_reply_to_user_id: content.in_reply_to_user_id,
+        referenced_tweets: content.referenced_tweets,
+        attachments: content.attachments,
+        lang: content.lang,
+      },
+    };
+
     try {
-      const mdContent = parseTextToMarkdown(content.text);
-
-      const contentPayload = {
-        body: mdContent,
-        tweet: `${TWITTER_URL}/${author.username}/status/${content.id}`,
-        ...(content.media && { image: content.media[0].url }),
-      };
-
       const cid = await subsocialApi.ipfs.saveContentToOffchain(contentPayload);
 
       return cid;

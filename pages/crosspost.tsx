@@ -2,7 +2,7 @@ import type { NextPage, GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import React, { useCallback, useState } from "react";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { TweetWithAuthorProps } from "src/types/common";
+import { TweetWithIncludesProps } from "src/types/common";
 import FullScreenLoading from "src/components/FullScreenLoading";
 import { useSession } from "next-auth/react";
 import { useWalletStore } from "src/store";
@@ -31,9 +31,9 @@ const CrossPostPage: NextPage = ({ user }: Partial<AuthenticatedPageProps>) => {
     account: state.account,
   }));
 
-  const [fetchedTweet, setFetchedTweet] = useState<TweetWithAuthorProps | null>(null);
+  const [fetchedTweet, setFetchedTweet] = useState<TweetWithIncludesProps | null>(null);
 
-  const handleSetFetchedTweet = (fetchedTweet: TweetWithAuthorProps | null) => {
+  const handleSetFetchedTweet = (fetchedTweet: TweetWithIncludesProps | null) => {
     setFetchedTweet(fetchedTweet);
   };
 
