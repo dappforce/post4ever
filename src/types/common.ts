@@ -1,4 +1,21 @@
-import { MediaObjectV2, TweetAttachmentV2 } from "twitter-api-v2";
+import { MediaObjectV2, ReferencedTweetV2, TweetAttachmentV2 } from "twitter-api-v2";
+
+export type TweetContentProps = {
+  body: string;
+  image?: string;
+  tweet: {
+    id: string;
+    edit_history_tweet_ids: string[];
+    username: string;
+    created_at?: string;
+    author_id?: string;
+    conversation_id?: string;
+    in_reply_to_user_id?: string;
+    referenced_tweets?: ReferencedTweetV2[];
+    attachments?: TweetAttachmentV2;
+    lang?: string;
+  };
+};
 
 export type PostProps = ExpandedTweetProps & {
   image?: string;
@@ -12,12 +29,17 @@ export enum MediaType {
   VIDEO = "video",
 }
 
-export type TweetProps = {
-  edit_history_tweet_ids: string[];
+export type BaseTweetProps = {
   id: string;
+  edit_history_tweet_ids: string[];
   text: string;
+  in_reply_to_user_id?: string;
+  lang?: string;
   attachments?: TweetAttachmentV2;
-  medias?: MediaObjectV2[];
+  referenced_tweets?: ReferencedTweetV2[];
+  created_at?: string;
+  author_id?: string;
+  conversation_id?: string;
 };
 
 export type TweetUserProps = {
@@ -27,28 +49,18 @@ export type TweetUserProps = {
   username: string;
 };
 
-export type TweetMediaProps = {
-  height: number;
-  width: number;
-  media_key: string;
-  type: string;
-  url: string;
-  alt_text: string;
-  preview_image_url?: string;
-};
-
-export type TweetWithAuthorProps = TweetProps & {
-  author_id: string;
+export type TweetWithIncludesProps = BaseTweetProps & {
   users?: TweetUserProps[];
-  media?: TweetMediaProps[];
+  media?: MediaObjectV2[];
+  tweets?: BaseTweetProps[];
 };
 
-export type ExpandedTweetProps = TweetWithAuthorProps & {
+export type ExpandedTweetProps = TweetWithIncludesProps & {
   url?: string;
 };
 
 export type TweetsProps = {
-  tweets: TweetProps[];
+  tweets: BaseTweetProps[];
 };
 
 export type AuthenticatedPageProps = {

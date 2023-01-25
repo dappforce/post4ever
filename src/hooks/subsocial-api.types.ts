@@ -1,4 +1,4 @@
-import { PostProps, TweetWithAuthorProps } from "src/types/common";
+import { PostProps, TweetWithIncludesProps } from "src/types/common";
 import type { WalletAccount } from "@talismn/connect-wallets";
 
 export type PostTransactionProps = {
@@ -8,14 +8,14 @@ export type PostTransactionProps = {
 
 export type CreateSpaceProps = {
   account: WalletAccount;
-  content: TweetWithAuthorProps;
+  content: TweetWithIncludesProps;
   successCallback?: (props: SuccessPayloadProps) => void;
 };
 
 export type CreatePostWithSpaceIdProps = {
   spaceId: string;
   account: WalletAccount;
-  content: TweetWithAuthorProps;
+  content: TweetWithIncludesProps;
   successCallback?: (props: SuccessPayloadProps) => void;
 };
 

@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { unstable_getServerSession } from "next-auth/next";
 import Image from "next/image";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
-import { AuthenticatedPageProps, TweetProps } from "src/types/common";
+import { AuthenticatedPageProps, BaseTweetProps } from "src/types/common";
 import { Button } from "react-daisyui";
 import { useWalletStore, useTwitterUserStore } from "src/store";
 import TwitterUserProfileCard from "components/cards/TwitterUserProfileCard";
@@ -86,7 +86,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
     if (e.target.checked) {
       let selectedTweet =
         fetchedTweets &&
-        fetchedTweets.filter((tweet: TweetProps) => tweet.id === e.target.value)[0];
+        fetchedTweets.filter((tweet: BaseTweetProps) => tweet.id === e.target.value)[0];
 
       setSavedPosts(oldArray => [...oldArray, selectedTweet]);
     } else {

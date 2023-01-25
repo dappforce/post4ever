@@ -8,13 +8,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useSubSocialApiHook } from "src/hooks/use-subsocial-api";
 import { SuccessPayloadProps } from "src/hooks/subsocial-api.types";
 import { useWalletStore } from "src/store";
-import { TweetWithAuthorProps } from "src/types/common";
+import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
 
 type SendTweetCardProps = {
   disabled: boolean;
-  fetchedTweet: TweetWithAuthorProps | null;
+  fetchedTweet: TweetWithIncludesProps | null;
   onSuccess: (props: SuccessPayloadProps) => void;
 };
 
@@ -127,7 +127,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           <Button
             fullWidth
             className={clsx("w-full", {
-              "btn btn-disabled loading": loadingCreatePost,
+              "btn-disabled loading btn": loadingCreatePost,
               "btn-gradient": !loadingCreatePost,
             })}
             disabled={!fetchedTweet || loadingCreatePost}

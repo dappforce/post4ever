@@ -44,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         tweetObj = {
           ...tweet,
           author_id: user.id,
-          medias,
+          media: medias,
           url: `https://twitter.com/${user.username}/status/${tweet.id}`,
         };
       }
