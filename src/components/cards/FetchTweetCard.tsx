@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import SkeletonCard from "components/cards/SkeletonCard";
 import { TweetWithIncludesProps } from "src/types/common";
-import { getAuthor } from "src/utils/tweet";
+import { getAuthor, removeTrailingUrl } from "src/utils/tweet";
 
 import WrapperCard from "./WrapperCard";
 import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
@@ -47,10 +47,12 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
         });
 
         const { data, includes } = await response.json();
+        const { text } = data;
         const { users, media, tweets } = includes;
 
         const payload = {
           ...data,
+          text: removeTrailingUrl(text),
           users,
           media,
           tweets,

@@ -9,3 +9,16 @@ export const getAuthor = (tweet: TweetWithIncludesProps) => {
     return null;
   }
 };
+
+export const removeTrailingUrl = (text: string) => {
+  const textInArray = text.split(" ");
+  let result: string | undefined;
+
+  const STRING_TO_MATCH = new RegExp("^(http|https)://", "i");
+
+  result = STRING_TO_MATCH.test(textInArray[textInArray.length - 1])
+    ? textInArray.slice(0, -1).join(" ")
+    : text;
+
+  return result;
+};
