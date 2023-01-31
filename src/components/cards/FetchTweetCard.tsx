@@ -34,33 +34,29 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     setFetchedTweet(null);
 
     try {
-      if (session) {
-        const { token } = session;
-        const tweetId = tweetUrl.split("/")[5];
+      const tweetId = tweetUrl.split("/")[5];
 
-        const response = await fetch("/api/crosspost", {
-          method: "POST",
-          body: JSON.stringify({ tweetId, token }),
-          headers: {
-            "Content-type": "application/json",
-          },
-        });
+      const response = await fetch(`/api/crosspost?tweetId=${tweetId}`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
 
-        const { data, includes } = await response.json();
-        const { text } = data;
-        const { users, media, tweets } = includes;
+      const { data, includes } = await response.json();
+      const { text } = data;
+      const { users, media, tweets } = includes;
 
-        const payload = {
-          ...data,
-          text: removeTrailingUrl(text),
-          users,
-          media,
-          tweets,
-        };
+      const payload = {
+        ...data,
+        text: removeTrailingUrl(text),
+        users,
+        media,
+        tweets,
+      };
 
-        setFetchedTweet(payload);
-        onFetchTweet(payload);
-      }
+      setFetchedTweet(payload);
+      onFetchTweet(payload);
     } catch (error) {
       console.warn({ error });
     } finally {
@@ -80,7 +76,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
         className={clsx("text-lg font-bold text-neutral", {
           "text-disabled-gray": disabled,
         })}>
-        2. Find a tweet using URL
+        1. Find a tweet using URL
       </h2>
       <div id="input-tweet-url-root" className={rootInput}>
         <Input

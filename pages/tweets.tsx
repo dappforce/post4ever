@@ -75,11 +75,12 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
   };
 
   useEffect(() => {
-    setNewUser({
-      ...user,
-    });
-
-    handleFetchTweets(user);
+    if (user) {
+      setNewUser({
+        ...user,
+      });
+      handleFetchTweets(user);
+    }
   }, [user]);
 
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {

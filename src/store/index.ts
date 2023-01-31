@@ -1,7 +1,8 @@
-import create from "zustand";
+import { create } from "zustand";
 import produce from "immer";
 import { persist } from "zustand/middleware";
 import type { WalletAccount } from "@talismn/connect-wallets";
+import { TweetUserProps } from "src/types/common";
 
 interface WalletState {
   account: WalletAccount | null;
@@ -11,16 +12,9 @@ interface WalletState {
 }
 
 interface TwitterUserState {
-  user: TwitterUserProps;
-  setNewUser: (newUser: TwitterUserProps) => void;
+  user: TweetUserProps;
+  setNewUser: (newUser: TweetUserProps) => void;
 }
-
-type TwitterUserProps = {
-  id: string;
-  name: string;
-  profile_image_url: string;
-  username: string;
-};
 
 export const useWalletStore = create<WalletState>()(
   persist(
@@ -43,7 +37,7 @@ export const useTwitterUserStore = create<TwitterUserState>()(set => ({
     profile_image_url: "",
     username: "",
   },
-  setNewUser: (newUser: TwitterUserProps) =>
+  setNewUser: (newUser: TweetUserProps) =>
     set(
       produce((state: TwitterUserState) => {
         (state.user.id = newUser.id),

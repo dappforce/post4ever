@@ -65,5 +65,5 @@ export type TweetsProps = {
 
 export type AuthenticatedPageProps = {
   tweets: TweetsProps;
-  user: TweetUserProps;
+  user?: TweetUserProps;
 };
