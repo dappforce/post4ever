@@ -69,7 +69,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
         className={clsx("text-lg font-bold text-neutral", {
           "text-disabled-gray": disabled,
         })}>
-        3. Select a Subsocial Space
+        2. Select a Subsocial Space
       </h2>
 
       <div id="input-select-space-root" className={rootInput}>
@@ -120,7 +120,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
                 : "Please select a space first"
             }>
             <Button fullWidth className="normal-case" disabled>
-              Publish
+              Publish to Subsocial
             </Button>
           </Tooltip>
         ) : (

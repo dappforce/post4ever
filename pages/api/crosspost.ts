@@ -2,21 +2,18 @@ import { TwitterApi } from "twitter-api-v2";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    const { body } = req;
+  if (req.method === "GET") {
+    const { tweetId } = req.query;
 
-    if (!body.tweetId) {
+    if (!tweetId) {
       return res.status(400).json({ data: "Error: tweet id not found!" });
     }
 
-    if (!body.token) {
-      // Sends a HTTP bad request error code
-      return res.status(400).json({ data: "Error: authentication failed!" });
-    }
+    if (!process.env.TWITTER_BEARER_TOKEN) throw new Error("Problem with Twitter API");
 
-    const twitterClient = new TwitterApi(body.token);
+    const twitterClient = new TwitterApi(process.env.TWITTER_BEARER_TOKEN);
     const readOnlyClient = twitterClient.readOnly;
-    const { data, includes } = await readOnlyClient.v2.get(`tweets/${body.tweetId}`, {
+    const { data, includes } = await readOnlyClient.v2.get(`tweets/${tweetId}`, {
       expansions: [
         "author_id",
         "attachments.media_keys",
