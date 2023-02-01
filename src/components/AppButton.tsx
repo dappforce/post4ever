@@ -20,7 +20,7 @@ const AppButton = ({ size, text }: AppButtonProps) => {
   const EVERPOST_GFORM_URL = "https://forms.gle/gyMjWUdnXPN6Tv4PA";
 
   const handleClick = () => {
-    if (text === "Suggest Features") {
+    if (text === "Suggest feature") {
       window.open(EVERPOST_GFORM_URL, "_blank");
     } else {
       router.push("/crosspost");
@@ -29,13 +29,13 @@ const AppButton = ({ size, text }: AppButtonProps) => {
 
   return (
     <button
-      className={clsx("btn-gradient btn w-full !rounded-xl", {
-        "w-[121px]": size === "small",
+      className={clsx("btn-gradient btn !h-[60px] !rounded-[44px] border-none", {
+        "!h-[42px] !w-[140px]": size === "small",
         "w-[180px]": size === "medium",
-        "max-w-[200px]": size === "large",
+        "w-[200px]": size === "large",
       })}
       onClick={handleClick}>
-      <span className="text-[1rem] font-medium leading-[162%]">{text}</span>
+      <span className="text-[1.25rem] font-medium !leading-[130%]">{text}</span>
     </button>
   );
 };
