@@ -55,7 +55,7 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
               <button onClick={() => router.push("/")}>
                 <span className="text-2xl font-medium text-primary">
                   <div className="hidden md:inline">
-                    <Post4Ever />
+                    <Post4Ever className="h-4" />
                   </div>
                   <div className="md:hidden">
                     <P4 />
