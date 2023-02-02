@@ -6,8 +6,8 @@ const variants = {
   white: clsx(
     "bg-white",
     "text-base-pink",
-    "hover:bg-gray-100",
-    "focus:outline-base-blue focus:bg-gray-100",
+    "hover:bg-gray-200",
+    "focus:outline-base-blue focus:bg-gray-200",
   ),
 };
 const sizes = {
