@@ -30,7 +30,12 @@ export default function FeatureSuggestion(props: FeatureSuggestionProps) {
         target="_blank">
         Suggest Feature
       </Button>
-      <Image src={HalfSphere} className="absolute bottom-0" role="presentation" alt="" />
+      <Image
+        src={HalfSphere}
+        className="absolute bottom-0 w-full max-w-lg"
+        role="presentation"
+        alt=""
+      />
     </Card>
   );
 }
