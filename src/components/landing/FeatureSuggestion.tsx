@@ -19,7 +19,7 @@ export default function FeatureSuggestion(props: FeatureSuggestionProps) {
       <h2 className="text-center font-unbounded text-2xl font-medium lg:text-3xl">
         <GradientText>Feature suggestions</GradientText>
       </h2>
-      <p className="text-center font-bold">
+      <p className="text-center lg:text-lg">
         If you have any feature ideas for this app, please let us know.
       </p>
       <Button
