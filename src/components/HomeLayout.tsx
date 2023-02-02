@@ -10,17 +10,6 @@ type HomeLayoutProps = {
   children: React.ReactNode;
 };
 
-const logoSize = {
-  small: {
-    height: 12,
-    width: 105,
-  },
-  large: {
-    height: 19,
-    width: 165,
-  },
-};
-
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden">
