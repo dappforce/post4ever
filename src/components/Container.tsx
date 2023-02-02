@@ -11,7 +11,7 @@ export default function Container({ className, ...props }: ContainerProps) {
         "relative w-full",
         "xl:container 2xl:max-w-screen-xl",
         "mx-auto",
-        "px-4",
+        "px-4 md:px-6",
         className,
       )}
     />
