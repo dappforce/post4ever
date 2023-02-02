@@ -50,7 +50,7 @@ function StepCard({ text, number, ...props }: StepCardProps) {
     <div
       {...props}
       className={clsx(
-        "flex items-center rounded-3xl bg-white/25 p-8 backdrop-blur-md md:flex-col md:p-6 lg:p-12",
+        "flex items-center rounded-3xl bg-white/25 p-6 backdrop-blur-md md:flex-col md:p-6 lg:p-12",
         props.className,
       )}>
       <span className="mr-4 w-14 shrink-0 text-center font-unbounded text-6xl font-bold text-white/80 md:mr-0 md:mb-6 md:w-auto md:text-8xl">
