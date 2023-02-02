@@ -32,7 +32,7 @@ module.exports = withMT({
       },
       backgroundImage: {
         "primary-gradient":
-          "linear-gradient(93.08deg, hsl(var(--base-pink)) 5.1%, hsl(var(--base-blue)) 100%)",
+          "linear-gradient(93.08deg, hsl(var(--base-blue)) 5.1%, hsl(var(--base-pink)) 100%)",
       },
       backdropBlur: {
         sm: "1px",
