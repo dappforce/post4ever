@@ -30,6 +30,10 @@ module.exports = withMT({
         "base-blue": withOpacityValue("--base-blue"),
         "base-pink": withOpacityValue("--base-pink"),
       },
+      backgroundImage: {
+        "primary-gradient":
+          "linear-gradient(93.08deg, hsl(var(--base-pink)) 5.1%, hsl(var(--base-blue)) 100%)",
+      },
       backdropBlur: {
         sm: "1px",
       },
