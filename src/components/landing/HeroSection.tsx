@@ -31,6 +31,7 @@ const HeroSection = () => {
           className="origin-left sm:w-1/2 md:w-full md:scale-110"
           src={Diamond}
           role="presentation"
+          priority
           alt=""
         />
       </Container>
