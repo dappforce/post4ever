@@ -41,8 +41,8 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         </div>
       </main>
       <footer className="z-10 mt-auto flex w-full items-center bg-white py-8">
-        <Container>
-          <Post4Ever />
+        <Container className="flex justify-center md:justify-start">
+          <Post4Ever className="h-4" />
         </Container>
       </footer>
     </div>
