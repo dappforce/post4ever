@@ -8,7 +8,7 @@ import FeatureSuggestion from "components/landing/FeatureSuggestion";
 const Home: NextPage = () => {
   return (
     <HomeLayout>
-      <Container className="flex flex-col gap-12">
+      <Container className="flex flex-col gap-10">
         <IntroductionSection />
         <HowToSection />
         <FeatureSuggestion />

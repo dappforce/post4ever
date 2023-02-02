@@ -11,7 +11,7 @@ export type IntroductionSectionProps = CardProps;
 export default function IntroductionSection(props: IntroductionSectionProps) {
   return (
     <Card {...props} spacing="large" className={clsx("w-full !pt-0 md:!pt-8", props.className)}>
-      <div className="-mt-8 flex flex-col items-center md:m-0 md:grid md:grid-cols-[1fr,2fr]">
+      <div className="-mt-4 flex flex-col items-center md:m-0 md:grid md:grid-cols-[1fr,2fr]">
         <Image
           src={Cube}
           className="mb-4 w-1/2 md:w-full md:py-6 md:pr-8"
