@@ -23,7 +23,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           </div>
         </Container>
       </header>
-      <main className="flex-1 bg-light-gray">
+      <main className="flex flex-1 flex-col bg-light-gray">
         <HeroSection />
         <div className="flex flex-1 flex-col items-center justify-center bg-light-gray py-10">
           {children}
