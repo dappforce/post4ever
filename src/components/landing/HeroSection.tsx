@@ -9,10 +9,10 @@ const HeroSection = () => {
   const mdUp = useBreakpointThreshold("md");
   return (
     <div
-      className="flex items-center"
+      className="flex items-center 2xl:max-h-[800px]"
       style={{
         background: "linear-gradient(106.83deg, #ff3ec9 0.85%, #5239ce 103.97%)",
-        flexBasis: `min(calc(100vh - ${NAVBAR_HEIGHT_OFFSET}px), 1000px)`,
+        flexBasis: `calc(100vh - ${NAVBAR_HEIGHT_OFFSET}px)`,
       }}>
       <Container className="flex flex-col-reverse items-center gap-8 py-12 md:grid md:grid-cols-[1.25fr,1fr]">
         <div className="flex flex-col items-center justify-center md:items-start">
