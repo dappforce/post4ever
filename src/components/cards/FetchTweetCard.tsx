@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import clsx from "clsx";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import SkeletonCard from "components/cards/SkeletonCard";
 import { TweetWithIncludesProps } from "src/types/common";
 import { getAuthor, removeTrailingUrl } from "src/utils/tweet";
@@ -16,7 +16,7 @@ type FetchTweetCardProps = {
 };
 
 const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
   const [tweetUrl, setTweetUrl] = useState("");
 
@@ -68,7 +68,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     setTweetUrl(event.target.value);
   };
 
-  const formDisabled = !Boolean(session && status === "authenticated");
+  // const formDisabled = !Boolean(session && status === "authenticated");
 
   return (
     <WrapperCard id={"fetch-tweet-form-card"}>
@@ -84,7 +84,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           name="tweet-url"
           id="tweet-url"
           placeholder="Tweet URL"
-          disabled={formDisabled}
+          // disabled={formDisabled}
           value={tweetUrl}
           onChange={handleChange}
           required
