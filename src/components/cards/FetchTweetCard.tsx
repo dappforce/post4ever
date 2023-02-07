@@ -9,6 +9,7 @@ import WrapperCard from "./WrapperCard";
 import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
 import TweetBody from "../render/TweetBody";
 import { rootInput } from "styles/common";
+import { BaseTweetProps } from "src/types/common";
 
 type FetchTweetCardProps = {
   disabled: boolean;
@@ -47,9 +48,15 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       const { text } = data;
       const { users, media, tweets } = includes;
 
+      let isAnyReferencedTweet = false;
+
+      if (tweets) {
+        isAnyReferencedTweet = tweets.some((tweet: BaseTweetProps) => tweet.hasOwnProperty("id"));
+      }
+
       const payload = {
         ...data,
-        text: removeTrailingUrl(text),
+        text: isAnyReferencedTweet ? removeTrailingUrl(text, -2) : removeTrailingUrl(text),
         users,
         media,
         tweets,
