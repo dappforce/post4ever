@@ -135,7 +135,7 @@ const SuccessDialog = (props: SuccessDialogProps) => {
         <Button
           onClick={onClose}
           className="btn-outline btn-accent btn w-full whitespace-nowrap rounded-lg normal-case">
-          <span>Cross-post another tweet</span>
+          <span className="text-base">Cross-post another tweet</span>
         </Button>
       </DialogFooter>
     </Dialog>

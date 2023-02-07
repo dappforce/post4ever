@@ -1,9 +1,10 @@
 import Post4Ever from "public/images/Post4Ever.svg";
-import P4 from "public/images/P4.svg";
+import HeroSection from "./landing/HeroSection";
 
 import React from "react";
 
-import AppButton from "./AppButton";
+import Button from "./Button";
+import Container from "./Container";
 
 type HomeLayoutProps = {
   children: React.ReactNode;
@@ -11,26 +12,28 @@ type HomeLayoutProps = {
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
-    <div style={{ position: "relative" }}>
-      <header className="sticky top-0 z-10 flex min-h-[70px] items-center justify-between bg-white px-[0.5rem] py-[0.875rem] lg:px-[2rem]">
-        <div className="hidden sm:block">
-          <Post4Ever />
-        </div>
-        <div className="sm:hidden">
-          <P4 />
-        </div>
-        <div>
-          <AppButton size={"small"} text={"Enter App"} />
-        </div>
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden">
+      <header className="sticky top-0 z-10 bg-white py-4">
+        <Container className="flex items-center justify-between">
+          <Post4Ever className="h-3.5 md:h-4" />
+          <div>
+            <Button href="/crosspost" target="_blank">
+              Enter App
+            </Button>
+          </div>
+        </Container>
       </header>
-      <main className="flex flex-1 flex-col items-center justify-center bg-light-gray px-[8px] sm:px-[32px] lg:px-[90px]">
-        <>{children}</>
-        <footer className="z-10 flex min-h-[109px] w-full max-w-[1261px] items-center">
-          <Post4Ever />
-        </footer>
+      <main className="flex flex-1 flex-col bg-light-gray">
+        <HeroSection />
+        <div className="flex flex-1 flex-col items-center justify-center bg-light-gray py-10">
+          {children}
+        </div>
       </main>
-
-      <div className="absolute bottom-0 left-0 h-[109px] w-full bg-white"></div>
+      <footer className="z-10 mt-auto flex w-full items-center bg-white py-8">
+        <Container className="flex justify-center md:justify-start">
+          <Post4Ever className="h-4" />
+        </Container>
+      </footer>
     </div>
   );
 };

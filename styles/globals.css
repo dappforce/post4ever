@@ -63,11 +63,11 @@ select:-webkit-autofill:focus {
 
 .btn {
   text-transform: none;
+  line-height: 0;
   height: 2.5rem;
   min-height: 2.5rem;
   border-radius: 0.5rem;
   padding: 8px 22px;
-  line-height: 0;
 }
 
 .btn:focus-visible {
@@ -85,8 +85,14 @@ select:-webkit-autofill:focus {
 }
 
 .btn-gradient {
-  background: linear-gradient(93.08deg, hsl(var(--base-blue)) 5.1%, hsl(var(--base-pink)) 100%);
-  @apply border-0 hover:brightness-110;
+  @apply bg-primary-gradient border-0 hover:brightness-110;
+}
+
+.btn-outline.btn-accent {
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(to right, hsla(327, 83%, 56%, 1), hsla(213, 75%, 61%, 1)) border-box;
+  border-radius: 10px;
+  border: 1px solid transparent;
 }
 
 .btn-outline.btn-accent {
