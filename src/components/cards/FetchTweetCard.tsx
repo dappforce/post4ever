@@ -16,6 +16,9 @@ type FetchTweetCardProps = {
   onFetchTweet: (fetchedTweet: TweetWithIncludesProps | null) => void;
 };
 
+const returnRemovedUrlIdx = (firstCondition: boolean, secondCondition: boolean) =>
+  firstCondition && secondCondition ? -2 : -1;
+
 const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   // const { data: session, status } = useSession();
 
@@ -48,15 +51,17 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       const { text } = data;
       const { users, media, tweets } = includes;
 
+      let isAnyMedia = false;
       let isAnyReferencedTweet = false;
 
       if (tweets) {
         isAnyReferencedTweet = tweets.some((tweet: BaseTweetProps) => tweet.hasOwnProperty("id"));
       }
+      if (media && media.length) isAnyMedia = true;
 
       const payload = {
         ...data,
-        text: isAnyReferencedTweet ? removeTrailingUrl(text, -2) : removeTrailingUrl(text),
+        text: removeTrailingUrl(text, returnRemovedUrlIdx(isAnyMedia, isAnyReferencedTweet)),
         users,
         media,
         tweets,
