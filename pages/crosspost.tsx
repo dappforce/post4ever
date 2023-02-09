@@ -66,10 +66,7 @@ const CrossPostPage: NextPage = () => {
               // />
             }
 
-            <FetchTweetCard
-              disabled={!isAccountExist || (isAccountExist && isTweetExist)}
-              onFetchTweet={handleSetFetchedTweet}
-            />
+            <FetchTweetCard disabled={isTweetExist} onFetchTweet={handleSetFetchedTweet} />
 
             <SendTweetCard
               disabled={!isAccountExist || !isTweetExist}

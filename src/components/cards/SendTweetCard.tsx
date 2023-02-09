@@ -39,6 +39,8 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
 
   const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
 
+  const BUTTON_TEXT = "Publish to Subsocial";
+
   const handleChangeSpaceId = (value?: React.ReactNode) => {
     const spaceId = value as string;
     if (spaceId) {
@@ -120,7 +122,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
                 : "Please select a space first"
             }>
             <Button fullWidth className="normal-case" disabled>
-              Publish to Subsocial
+              {BUTTON_TEXT}
             </Button>
           </Tooltip>
         ) : (
@@ -133,7 +135,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             disabled={!fetchedTweet || loadingCreatePost}
             loading={loadingCreatePost}
             onClick={spaces ? handleCreatePostWithSpaceId : handleCreateSpaceWithTweet}>
-            <span>{loadingCreatePost ? "Sign and open console" : "Publish"}</span>
+            <span>{loadingCreatePost ? "Sign and open console" : BUTTON_TEXT}</span>
           </Button>
         )}
       </div>

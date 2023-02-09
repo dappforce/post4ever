@@ -10,7 +10,6 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@heroicons/react": "^2.0.13",
     "@material-tailwind/react": "1.2.4",
     "@next/font": "^13.1.1",
     "@polkadot/api": "latest",
