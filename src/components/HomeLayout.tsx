@@ -12,8 +12,8 @@ type HomeLayoutProps = {
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden">
-      <header className="sticky top-0 z-10 bg-white py-4">
+    <div className="relative flex min-h-screen flex-col">
+      <header className="sticky top-0 z-20 bg-white py-4">
         <Container className="flex items-center justify-between">
           <Post4Ever className="h-3.5 md:h-4" />
           <div>
@@ -23,7 +23,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           </div>
         </Container>
       </header>
-      <main className="flex flex-1 flex-col bg-light-gray">
+      <main className="flex flex-1 flex-col overflow-x-hidden bg-light-gray">
         <HeroSection />
         <div className="flex flex-1 flex-col items-center justify-center bg-light-gray py-10">
           {children}
