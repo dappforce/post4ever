@@ -13,7 +13,7 @@ export default function FeatureSuggestion(props: FeatureSuggestionProps) {
     <Card
       spacing="large"
       className={clsx(
-        "relative flex flex-col items-center gap-4 overflow-hidden !pb-32 lg:gap-6 lg:!pb-36",
+        "relative flex flex-col items-center gap-4 overflow-hidden !pb-32 sm:!pb-36 lg:gap-6",
         props.className,
       )}>
       <h2 className="text-center font-unbounded text-2xl font-medium lg:text-3xl">
