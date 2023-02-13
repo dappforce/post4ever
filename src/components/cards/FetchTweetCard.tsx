@@ -96,7 +96,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           value={tweetUrl}
           // disabled={formDisabled}
           onChange={handleChange}
-          className="bg-[#FAFBFB]"
+          className="!rounded-lg bg-[#FAFBFB]"
         />
         {!tweetUrl ? (
           <Tooltip className="w-full" message="Please enter tweet URL">

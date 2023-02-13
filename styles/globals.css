@@ -66,8 +66,8 @@ select:-webkit-autofill:focus {
   line-height: 0;
   height: 2.5rem;
   min-height: 2.5rem;
-  border-radius: 0.5rem;
   padding: 8px 22px;
+  @apply rounded-lg;
 }
 
 .btn:focus-visible {
