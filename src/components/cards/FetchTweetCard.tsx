@@ -81,12 +81,14 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     setTweetUrl(event.target.value);
   };
 
+  const isTweetFetched = Boolean(fetchedTweet);
+
   // const formDisabled = !Boolean(session && status === "authenticated");
 
   return (
     <WrapperCard id={"fetch-tweet-form-card"}>
-      <h2 className={clsx("text-lg font-bold text-neutral")}>
-        {`1. Find a tweet using URL ${disabled ? "✅" : ""}`}
+      <h2 className={clsx("text-lg font-bold text-neutral", { "text-disabled-gray": disabled })}>
+        {`1. Find a tweet using URL ${isTweetFetched ? "✅" : ""}`}
       </h2>
       <div id="input-tweet-url-root" className={rootInput}>
         <Input
