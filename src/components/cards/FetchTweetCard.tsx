@@ -6,7 +6,8 @@ import { TweetWithIncludesProps } from "src/types/common";
 import { getAuthor, removeTrailingUrl } from "src/utils/tweet";
 
 import WrapperCard from "./WrapperCard";
-import { Avatar, Button, Card, Tooltip, Input } from "react-daisyui";
+import { Avatar, Button, Card, Tooltip } from "react-daisyui";
+import { Input } from "@material-tailwind/react";
 import TweetBody from "../render/TweetBody";
 import { rootInput } from "styles/common";
 import { BaseTweetProps } from "src/types/common";
@@ -89,16 +90,11 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       </h2>
       <div id="input-tweet-url-root" className={rootInput}>
         <Input
-          type="url"
-          name="tweet-url"
-          id="tweet-url"
-          placeholder="Tweet URL"
-          // disabled={formDisabled}
+          label="Tweet URL"
           value={tweetUrl}
+          // disabled={formDisabled}
           onChange={handleChange}
-          required
-          size="md"
-          className="w-full rounded-lg border border-light-gray bg-[#FAFBFB] py-2 text-sm focus:border-accent focus:bg-[#FAFBFB]"
+          className="bg-[#FAFBFB]"
         />
         {!tweetUrl ? (
           <Tooltip className="w-full" message="Please enter tweet URL">
