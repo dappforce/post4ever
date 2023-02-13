@@ -11,6 +11,7 @@ import { Input } from "@material-tailwind/react";
 import TweetBody from "../render/TweetBody";
 import { rootInput } from "styles/common";
 import { BaseTweetProps } from "src/types/common";
+import { urlMatcher } from "src/utils/string";
 
 type FetchTweetCardProps = {
   disabled: boolean;
@@ -24,6 +25,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   // const { data: session, status } = useSession();
 
   const [tweetUrl, setTweetUrl] = useState("");
+  const [errorInput, setErrorInput] = useState(false);
 
   const [loadingTweet, setLoadingTweet] = useState(false);
   const [fetchedTweet, setFetchedTweet] = useState<TweetWithIncludesProps | null>(null);
@@ -78,7 +80,20 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTweetUrl(event.target.value);
+    const text = event.target.value;
+    handleValidateUrl(text as string);
+    setTweetUrl(text);
+  };
+
+  const handleValidateUrl = (text: string) => {
+    if (typeof text === "string") {
+      const isMatched = urlMatcher(text, "https://twitter.com/");
+
+      if (!isMatched) {
+        setErrorInput(true);
+      }
+      if ((!isMatched && text.length === 0) || isMatched || text.length === 0) setErrorInput(false);
+    }
   };
 
   const isTweetFetched = Boolean(fetchedTweet);
@@ -96,9 +111,10 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           value={tweetUrl}
           // disabled={formDisabled}
           onChange={handleChange}
+          error={errorInput}
           className="!rounded-lg bg-[#FAFBFB]"
         />
-        {!tweetUrl ? (
+        {!tweetUrl || errorInput ? (
           <Tooltip className="w-full" message="Please enter tweet URL">
             <Button
               className="w-full whitespace-nowrap normal-case"
@@ -113,7 +129,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
               "btn-gradient w-full whitespace-nowrap rounded-lg": !fetchedTweet,
               "btn-outline btn-accent btn": fetchedTweet,
             })}
-            disabled={loadingTweet}
+            disabled={errorInput || loadingTweet}
             onClick={handleFetchTweet}>
             {loadingTweet ? "Fetching..." : "Find tweet"}
           </Button>
