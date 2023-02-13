@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import WrapperCard from "./WrapperCard";
-import { Button, Tooltip } from "react-daisyui";
+import { Alert, Button, Tooltip } from "react-daisyui";
 import { Select, Option } from "@material-tailwind/react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -11,6 +11,7 @@ import { useWalletStore } from "src/store";
 import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
+import { BsExclamationTriangle } from "react-icons/bs";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -31,13 +32,14 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     account: state.account,
   }));
 
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
+
   useEffect(() => {
+    setSelectedSpaceId(null);
     if (account) {
       checkSpaceOwnedBy(account);
     }
   }, [account]);
-
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
 
   const BUTTON_TEXT = "Publish to Subsocial";
 
@@ -106,9 +108,20 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
               ))}
             </Select>
           ) : (
-            <Select label="Space" value="Select" className="bg-[#FAFBFB]">
-              <Option>Empty</Option>
-            </Select>
+            <div>
+              {!disabled && (
+                <Alert
+                  status="warning"
+                  className="mb-4 rounded-[7px] px-3 py-2.5 text-sm"
+                  icon={<BsExclamationTriangle className="mx-1 text-xl" />}>
+                  Uh oh, seems like you don&apos;t have a subsocial space yet. Please follow this
+                  link to create one first.
+                </Alert>
+              )}
+              <Select label="Space" value="Select" className="bg-[#FAFBFB]">
+                <Option>Empty</Option>
+              </Select>
+            </div>
           )}
         </div>
 
