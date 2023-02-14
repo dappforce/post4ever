@@ -110,9 +110,10 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           label="Tweet URL"
           value={tweetUrl}
           // disabled={formDisabled}
+          disabled={disabled}
           onChange={handleChange}
           error={errorInput}
-          className="!rounded-lg bg-[#FAFBFB]"
+          className={clsx("!rounded-lg bg-[#FAFBFB]", { "cursor-not-allowed": disabled })}
         />
         {!tweetUrl || errorInput ? (
           <Tooltip className="w-full cursor-not-allowed" message="Please enter tweet URL">
@@ -128,6 +129,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
             className={clsx({
               "btn-gradient w-full whitespace-nowrap rounded-lg": !fetchedTweet,
               "btn-outline btn-accent btn": fetchedTweet || loadingTweet,
+              "cursor-not-allowed": disabled,
             })}
             disabled={errorInput || loadingTweet}
             onClick={handleFetchTweet}>
