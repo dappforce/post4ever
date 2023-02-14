@@ -105,18 +105,17 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       <h2 className={clsx("text-lg font-bold text-neutral", { "text-disabled-gray": disabled })}>
         {`1. Find a tweet using URL ${isTweetFetched ? "✅" : ""}`}
       </h2>
-      <div id="input-tweet-url-root" className={clsx(rootInput, "!flex-row")}>
+      <div id="input-tweet-url-root" className={rootInput}>
         <Input
           label="Tweet URL"
           value={tweetUrl}
           // disabled={formDisabled}
-          disabled={disabled}
           onChange={handleChange}
           error={errorInput}
-          className={clsx("!rounded-lg bg-[#FAFBFB]", { "cursor-not-allowed": disabled })}
+          className="!rounded-lg bg-[#FAFBFB]"
         />
         {!tweetUrl || errorInput ? (
-          <Tooltip className="cursor-not-allowed" message="Please enter tweet URL">
+          <Tooltip className="w-full cursor-not-allowed" message="Please enter tweet URL">
             <Button
               className="w-full whitespace-nowrap normal-case"
               disabled
@@ -127,9 +126,8 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
         ) : (
           <Button
             className={clsx({
-              "btn-gradient whitespace-nowrap rounded-lg": !fetchedTweet,
+              "btn-gradient w-full whitespace-nowrap rounded-lg": !fetchedTweet,
               "btn-outline btn-accent btn": fetchedTweet || loadingTweet,
-              "cursor-not-allowed": disabled,
             })}
             disabled={errorInput || loadingTweet}
             onClick={handleFetchTweet}>
