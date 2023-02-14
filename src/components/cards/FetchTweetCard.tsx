@@ -128,7 +128,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           <Button
             className={clsx({
               "btn-gradient whitespace-nowrap rounded-lg": !fetchedTweet,
-              "btn-outline btn-accent btn": fetchedTweet,
+              "btn-outline btn-accent btn": fetchedTweet || loadingTweet,
               "cursor-not-allowed": disabled,
             })}
             disabled={errorInput || loadingTweet}
