@@ -26,17 +26,19 @@ export default function CopyText({
     <div
       {...props}
       className={clsx(
-        "flex items-center rounded-md border border-gray-400 bg-white py-2 px-3 pr-0",
+        "flex items-stretch overflow-hidden rounded-md border border-gray-400 bg-white px-3 pr-0",
         props.className,
       )}>
-      <div className={clsx("flex-1", textClassName)}>{text}</div>
+      <div className={clsx("flex-1 py-2", textClassName)}>{text}</div>
       <button
         onClick={onClickCopyToClipboard}
         className={clsx(
-          "border-l border-gray-400 px-3 text-xl text-gray-600",
+          "py-2 text-xl text-gray-600 hover:bg-gray-50 focus:bg-gray-50",
           copyButtonClassName,
         )}>
-        <MdContentCopy />
+        <span className="block border-l border-gray-400 px-3">
+          <MdContentCopy />
+        </span>
       </button>
     </div>
   );
