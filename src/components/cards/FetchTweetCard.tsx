@@ -154,7 +154,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-start py-2 font-normal text-neutral">
+            <div className="flex flex-col items-start pt-2 font-normal text-neutral">
               <TweetBody text={fetchedTweet.text} />
             </div>
             {fetchedTweet.media ? (
