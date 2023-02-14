@@ -30,8 +30,8 @@ export default function Link({
       <a
         {...props}
         {...anchorProps}
-        className={clsx("flex items-center gap-1 font-bold text-base-pink", props.className)}>
-        {props.children} {withArrowIcon && <HiArrowUpRight className="relative top-px" />}
+        className={clsx("gap-1 font-bold text-base-pink", props.className)}>
+        {props.children} {withArrowIcon && <HiArrowUpRight className="inline" />}
       </a>
     </NextLink>
   );
