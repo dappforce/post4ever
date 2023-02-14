@@ -20,9 +20,8 @@ export default function EnergyAlert() {
             <div>
               2. Paste the text into the energy-bot channel in our{" "}
               <Link href="https://discord.com/invite/w2Rqy2M" openInNewTab>
-                Discord
+                Discord.
               </Link>
-              .
             </div>
             <div>
               3. Wait until the bot finishes sending you energy (~10 seconds after the bot confirms
