@@ -2,14 +2,22 @@ import React, { HTMLProps } from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { UrlObject } from "url";
 import clsx from "clsx";
+import { HiArrowUpRight } from "react-icons/hi2";
 
 export type LinkProps = HTMLProps<HTMLAnchorElement> & {
   href: string | UrlObject;
   openInNewTab?: boolean;
   nextLinkProps?: Omit<NextLinkProps, "href">;
+  withArrowIcon?: boolean;
 };
 
-export default function Link({ nextLinkProps, openInNewTab, href, ...props }: LinkProps) {
+export default function Link({
+  nextLinkProps,
+  openInNewTab,
+  href,
+  withArrowIcon,
+  ...props
+}: LinkProps) {
   let anchorProps: HTMLProps<HTMLAnchorElement> = {};
   if (openInNewTab) {
     anchorProps = {
@@ -22,8 +30,9 @@ export default function Link({ nextLinkProps, openInNewTab, href, ...props }: Li
       <a
         {...props}
         {...anchorProps}
-        className={clsx("font-bold text-base-pink", props.className)}
-      />
+        className={clsx("flex items-center gap-1 font-bold text-base-pink", props.className)}>
+        {props.children} {withArrowIcon && <HiArrowUpRight className="relative top-px" />}
+      </a>
     </NextLink>
   );
 }

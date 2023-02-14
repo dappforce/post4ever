@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar";
 import { useRouter } from "next/router";
 import { sidePadding } from "styles/common";
 import ConnectButton from "./wallet-connect/ConnectButton";
+import Link from "./Link";
 
 type LayoutProps = {
   account?: WalletAccount | null;
@@ -20,11 +21,20 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
+const getLinks = (address: string): { text: string; href: string; openInNewTab?: boolean }[] => {
+  const savedTweetLink = `https://polkaverse.com/accounts/${address}#tweets`;
+  return [
+    { text: "Cross-post a tweet", href: "/crosspost" },
+    { text: "My Saved Tweets", href: savedTweetLink, openInNewTab: true },
+  ];
+};
+
 const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
   const { setAccount } = useWalletStore(state => ({
     setAccount: state.setAccount,
   }));
   const router = useRouter();
+  const { pathname } = router;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,6 +47,8 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
 
     setIsOpen(false);
   };
+
+  const linksList = getLinks(account?.address ?? "");
 
   return (
     <>
@@ -62,6 +74,23 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
                   </div>
                 </span>
               </button>
+            </div>
+            <div className="navbar-center flex items-center gap-8">
+              {linksList.map(({ href, text, openInNewTab }) => {
+                const activeClassName = "font-semibold text-dark-blue";
+                const inactiveClassName = "!font-normal text-gray-800";
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    href={href}
+                    openInNewTab={openInNewTab}
+                    withArrowIcon={openInNewTab}
+                    className={isActive ? activeClassName : inactiveClassName}
+                    key={href}>
+                    {text}
+                  </Link>
+                );
+              })}
             </div>
             <div className="navbar-end">
               {accounts && accounts.length && account ? (
