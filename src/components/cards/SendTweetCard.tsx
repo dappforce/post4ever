@@ -87,8 +87,11 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           ) : spaces ? (
             <Select
               label="Space"
+              disabled={disabled}
               onChange={value => handleChangeSpaceId(value)}
-              className="bg-[#FAFBFB]">
+              className={clsx("!rounded-lg bg-[#FAFBFB]", {
+                "cursor-not-allowed": disabled,
+              })}>
               {spaces.map(space => (
                 <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
@@ -112,11 +115,13 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
               ))}
             </Select>
           ) : (
-            <div>
-              <Select label="Space" value="Select" className="bg-[#FAFBFB]">
-                <Option>Empty</Option>
-              </Select>
-            </div>
+            <Select
+              disabled
+              label="Space"
+              value="Select"
+              className={clsx("cursor-not-allowed bg-[#FAFBFB]")}>
+              <Option>Empty</Option>
+            </Select>
           )}
         </div>
 
@@ -124,12 +129,13 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
 
         {!account || !fetchedTweet || !selectedSpaceId ? (
           <Tooltip
+            className="cursor-not-allowed"
             message={
               !account
                 ? "Please connect wallet first"
                 : !fetchedTweet
                 ? "Please find a tweet first"
-                : "Please select a space first"
+                : "Please connect wallet with space first"
             }>
             <Button fullWidth className="normal-case" disabled>
               {BUTTON_TEXT}
@@ -141,6 +147,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             className={clsx("w-full", {
               "btn-disabled loading btn": loadingCreatePost,
               "btn-gradient": !loadingCreatePost,
+              "cursor-not-allowed": disabled,
             })}
             disabled={!fetchedTweet || loadingCreatePost}
             loading={loadingCreatePost}
