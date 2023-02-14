@@ -82,7 +82,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             <Select
               label="Space"
               onChange={value => handleChangeSpaceId(value)}
-              className="bg-[#FAFBFB]">
+              className="!rounded-lg bg-[#FAFBFB]">
               {spaces.map(space => (
                 <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
                   <div className="flex items-center gap-2">

@@ -66,8 +66,8 @@ select:-webkit-autofill:focus {
   line-height: 0;
   height: 2.5rem;
   min-height: 2.5rem;
-  border-radius: 0.5rem;
   padding: 8px 22px;
+  @apply rounded-lg;
 }
 
 .btn:focus-visible {
@@ -85,7 +85,7 @@ select:-webkit-autofill:focus {
 }
 
 .btn-gradient {
-  @apply bg-primary-gradient border-0 hover:brightness-110;
+  @apply border-0 bg-primary-gradient hover:brightness-110;
 }
 
 .btn-outline.btn-accent {
@@ -132,4 +132,9 @@ select:-webkit-autofill:focus {
 
 img {
   display: block;
+}
+
+button + label,
+input + label {
+  @apply text-blue-gray-400 !important;
 }

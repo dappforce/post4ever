@@ -28,3 +28,13 @@ export const parseTextToMarkdown = (text: string) => {
 
   return markdownWithLinks;
 };
+
+export const urlMatcher = (text: string, urlToMatch: string) => {
+  let isMatch = false;
+
+  if (text.length) {
+    isMatch = text.startsWith(urlToMatch);
+  }
+
+  return isMatch;
+};
