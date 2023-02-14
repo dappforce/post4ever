@@ -37,9 +37,9 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
             Select an account
           </span>
           <li className="block max-h-[calc(100vh-108px)] w-full overflow-y-auto border-b-2 border-gray-100">
-            {accounts.map((account, idx) => (
+            {accounts.map(account => (
               <button
-                key={account.address + idx}
+                key={account.address}
                 className="flex w-full items-center text-left"
                 onClick={() => handleChangeAccount(account)}>
                 {account.name}
