@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import WrapperCard from "./WrapperCard";
 import { Alert, Button, Tooltip } from "react-daisyui";
@@ -11,7 +11,8 @@ import { useWalletStore } from "src/store";
 import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
-import { BsExclamationTriangle } from "react-icons/bs";
+import { HiOutlineExclamationTriangle } from "react-icons/hi2";
+import EnergyAlert from "components/EnergyAlert";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -24,9 +25,11 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     loadingSpaces,
     loadingCreatePost,
     spaces,
+    hasTokens,
     createSpaceWithTweet,
     createPostWithSpaceId,
     checkSpaceOwnedBy,
+    checkHasTokens,
   } = useSubSocialApiHook();
   const { account } = useWalletStore(state => ({
     account: state.account,
@@ -38,6 +41,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     setSelectedSpaceId(null);
     if (account) {
       checkSpaceOwnedBy(account);
+      checkHasTokens(account);
     }
   }, [account]);
 
@@ -109,21 +113,14 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             </Select>
           ) : (
             <div>
-              {!disabled && (
-                <Alert
-                  status="warning"
-                  className="mb-4 rounded-[7px] px-3 py-2.5 text-sm"
-                  icon={<BsExclamationTriangle className="mx-1 text-xl" />}>
-                  Uh oh, seems like you don&apos;t have a subsocial space yet. Please follow this
-                  link to create one first.
-                </Alert>
-              )}
               <Select label="Space" value="Select" className="bg-[#FAFBFB]">
                 <Option>Empty</Option>
               </Select>
             </div>
           )}
         </div>
+
+        {!hasTokens && !disabled && <EnergyAlert />}
 
         {!account || !fetchedTweet || !selectedSpaceId ? (
           <Tooltip

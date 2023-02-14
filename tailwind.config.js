@@ -29,6 +29,8 @@ module.exports = withMT({
         "light-blue": withOpacityValue("--light-blue"),
         "base-blue": withOpacityValue("--base-blue"),
         "base-pink": withOpacityValue("--base-pink"),
+        "light-yellow": withOpacityValue("--light-yellow"),
+        "base-yellow": withOpacityValue("--base-yellow"),
       },
       backgroundImage: {
         "primary-gradient":
@@ -59,6 +61,8 @@ module.exports = withMT({
           secondary: "hsla(165, 58%, 51%, 1)",
           accent: "hsla(224, 61%, 46%, 1)",
           neutral: "hsla(202, 13%, 16%, 1)",
+          "--light-yellow": "light-yellow",
+          "--base-yellow": "base-yellow",
           "--light-gray": "light-gray",
           "--dark-gray": "dark-gray",
           "--disabled-gray": "disabled-gray",
