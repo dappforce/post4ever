@@ -21,5 +21,5 @@ export default function useSubsocialEffect(
     const cleanup = effect(subsocialApi, substrateApi);
     return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps]);
+  }, [subsocialApi, substrateApi, ...deps]);
 }

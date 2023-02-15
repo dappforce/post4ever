@@ -4,7 +4,7 @@ import useSubsocialEffect from "./use-subsocial-effect";
 import { ApiPromise } from "@polkadot/api";
 import BN from "bn.js";
 
-export default function useMyBalance() {
+export default function useMyBalance(defaultHasToken = false) {
   const { address } = useWalletStore(state => ({
     address: state.account?.address.toString(),
   }));
@@ -34,6 +34,9 @@ export default function useMyBalance() {
 
   useSubsocialEffect(
     (_, substrateApi) => {
+      setBalance(undefined);
+      setEnergy(undefined);
+
       const unsub = subscribeBalanceAndEnergy(substrateApi, address ?? "");
       return unsub;
     },
@@ -46,9 +49,13 @@ export default function useMyBalance() {
 
   const isBalanceZero = new BN(balance || 0).isZero();
   const isEnergyZero = new BN(energy || 0).isZero();
+
+  const isLoading = balance === undefined || energy === undefined;
+  const hasToken = isLoading ? defaultHasToken : !isBalanceZero || !isEnergyZero;
+
   return {
     balance,
     energy,
-    hasToken: !isBalanceZero && !isEnergyZero,
+    hasToken,
   };
 }

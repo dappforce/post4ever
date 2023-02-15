@@ -29,7 +29,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     createPostWithSpaceId,
     checkSpaceOwnedBy,
   } = useSubSocialApiHook();
-  const { hasToken } = useMyBalance();
+  const { hasToken } = useMyBalance(true);
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
