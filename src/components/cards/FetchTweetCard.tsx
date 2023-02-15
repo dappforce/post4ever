@@ -106,15 +106,22 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
         {`1. Find a tweet using URL ${isTweetFetched ? "✅" : ""}`}
       </h2>
       <div id="input-tweet-url-root" className={rootInput}>
-        <Input
-          label="Tweet URL"
-          value={tweetUrl}
-          // disabled={formDisabled}
-          disabled={disabled}
-          onChange={handleChange}
-          error={errorInput}
-          className={clsx("!rounded-lg bg-[#FAFBFB]", { "cursor-not-allowed": disabled })}
-        />
+        <div className="flex flex-col gap-1">
+          <Input
+            label="Tweet URL"
+            value={tweetUrl}
+            // disabled={formDisabled}
+            disabled={disabled}
+            onChange={handleChange}
+            error={errorInput}
+            className={clsx("!rounded-lg bg-[#FAFBFB]", { "cursor-not-allowed": disabled })}
+          />
+          {errorInput && (
+            <label className="text-xs text-[#f44336]">
+              Invalid link, please enter the link to a tweet on Twitter.
+            </label>
+          )}
+        </div>
         {!tweetUrl || errorInput ? (
           <Tooltip className="w-full cursor-not-allowed" message="Please enter tweet URL">
             <Button
