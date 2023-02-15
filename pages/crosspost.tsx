@@ -12,6 +12,7 @@ import clsx from "clsx";
 import SuccessDialog from "components/SuccessDialog";
 import { sidePadding } from "styles/common";
 import WalletSelectModal from "components/wallet-connect/WalletSelectModal";
+import SavedTweetsLinks from "components/SavedTweetsLinks";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -73,6 +74,7 @@ const CrossPostPage: NextPage = () => {
               fetchedTweet={fetchedTweet}
               onSuccess={handleSuccessSendTweet}
             />
+            <SavedTweetsLinks className="flex justify-center" />
           </div>
         </div>
 

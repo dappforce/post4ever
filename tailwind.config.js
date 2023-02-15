@@ -31,7 +31,6 @@ module.exports = withMT({
         "base-pink": withOpacityValue("--base-pink"),
         "light-yellow": withOpacityValue("--light-yellow"),
         "base-yellow": withOpacityValue("--base-yellow"),
-        "dark-blue": withOpacityValue("--dark-blue"),
       },
       backgroundImage: {
         "primary-gradient":
@@ -71,7 +70,6 @@ module.exports = withMT({
           "--light-blue": "light-blue",
           "--base-blue": "base-blue",
           "--base-pink": "base-pink",
-          "--dark-blue": "dark-blue",
         },
       },
     ],
