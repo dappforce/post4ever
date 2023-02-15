@@ -2,6 +2,7 @@ import React, { HTMLProps } from "react";
 import { useWalletStore } from "src/store";
 import Link from "./Link";
 import clsx from "clsx";
+import { p4eSpace } from "src/configs/spaces";
 
 export type SavedTweetsLinksProps = HTMLProps<HTMLDivElement>;
 
@@ -9,8 +10,9 @@ const getLinks = (
   address: string,
 ): { text: string; href: string; openInNewTab?: boolean; authOnly?: boolean }[] => {
   const savedTweetLink = `https://polkaverse.com/accounts/${address}#tweets`;
+  const p4eSpaceLink = `https://polkaverse.com/${p4eSpace}`;
   return [
-    { text: "Post4Ever Tweets", href: "https://polkaverse.com", openInNewTab: true },
+    { text: "Twitter Backups", href: p4eSpaceLink, openInNewTab: true },
     { text: "My Saved Tweets", href: savedTweetLink, openInNewTab: true, authOnly: true },
   ];
 };
