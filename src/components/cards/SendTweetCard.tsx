@@ -12,7 +12,7 @@ import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
 import EnergyAlert from "components/EnergyAlert";
-import useMyBalance from "src/hooks/use-my-balance";
+import { useMyBalance } from "src/hooks/use-balance";
 
 type SendTweetCardProps = {
   disabled: boolean;
