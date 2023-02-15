@@ -51,7 +51,7 @@ const CrossPostPage: NextPage = () => {
   return (
     <>
       <Layout onConnect={handleOpenModal} account={account} accounts={readyAccounts}>
-        <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
+        <div className={clsx("flex max-w-full items-start justify-center pb-8", sidePadding)}>
           <Toaster
             position="bottom-right"
             toastOptions={{
