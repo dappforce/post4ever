@@ -45,11 +45,9 @@ type SpaceId = string;
 export const useSubSocialApiHook = () => {
   const [subsocialApi, setSubsocialApi] = useState<SubsocialApi | null>(null);
   const [spaces, setSpaces] = useState<SpaceData[] | null>(null);
-  const [hasTokens, setHasTokens] = useState(true);
   const [profileSpace, setProfileSpace] = useState<SpaceData | undefined>();
   const [loadingSpaces, setLoadingSpaces] = useState(false);
   const [loadingCreatePost, setLoadingCreatePost] = useState(false);
-  const [loadingHasToken, setLoadingHasToken] = useState(false);
 
   // Needed for confirmation after tx submitted
   const [successTx, setSuccessTx] = useState<string | null>(null);
@@ -266,25 +264,6 @@ export const useSubSocialApiHook = () => {
     }
   };
 
-  const checkHasTokens = async (account: WalletAccount) => {
-    setLoadingHasToken(true);
-    try {
-      const subsocialApi = await initializeApi();
-      const api = await subsocialApi.substrateApi;
-      if (!api) return null;
-
-      const [balances, energy] = await Promise.all([
-        api.derive.balances.all(account.address),
-        api.query.energy.energyBalance(account.address),
-      ]);
-      setHasTokens(!balances.freeBalance.isZero() || !energy.isZero());
-    } catch (error) {
-      console.warn({ error });
-    } finally {
-      setLoadingHasToken(false);
-    }
-  };
-
   const createPostWithSpaceId = async ({
     content,
     spaceId,
@@ -412,14 +391,11 @@ export const useSubSocialApiHook = () => {
     createPostWithSpaceId,
     successTx,
     spaces,
-    hasTokens,
     profileSpace,
     loadingSpaces,
-    loadingHasToken,
     loadingCreatePost,
     checkSpaceOwnedBy,
     checkProfileSpaceOwnedBy,
-    checkHasTokens,
     postTransaction,
   };
 };

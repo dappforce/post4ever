@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import WrapperCard from "./WrapperCard";
-import { Alert, Button, Tooltip } from "react-daisyui";
+import { Button, Tooltip } from "react-daisyui";
 import { Select, Option } from "@material-tailwind/react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -11,8 +11,8 @@ import { useWalletStore } from "src/store";
 import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
-import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 import EnergyAlert from "components/EnergyAlert";
+import useMyBalance from "src/hooks/use-my-balance";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -25,12 +25,11 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     loadingSpaces,
     loadingCreatePost,
     spaces,
-    hasTokens,
     createSpaceWithTweet,
     createPostWithSpaceId,
     checkSpaceOwnedBy,
-    checkHasTokens,
   } = useSubSocialApiHook();
+  const { hasToken } = useMyBalance();
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
@@ -41,7 +40,6 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     setSelectedSpaceId(null);
     if (account) {
       checkSpaceOwnedBy(account);
-      checkHasTokens(account);
     }
   }, [account]);
 
@@ -125,7 +123,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           )}
         </div>
 
-        {!hasTokens && !disabled && <EnergyAlert />}
+        {!hasToken && !disabled && <EnergyAlert />}
 
         {!account || !fetchedTweet || !selectedSpaceId ? (
           <Tooltip
