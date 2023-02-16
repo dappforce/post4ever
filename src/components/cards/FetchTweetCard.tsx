@@ -12,6 +12,7 @@ import TweetBody from "../render/TweetBody";
 import { rootInput } from "styles/common";
 import { BaseTweetProps } from "src/types/common";
 import { urlMatcher } from "src/utils/string";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 type FetchTweetCardProps = {
   disabled: boolean;
@@ -22,6 +23,7 @@ const returnRemovedUrlIdx = (firstCondition: boolean, secondCondition: boolean) 
   firstCondition && secondCondition ? -2 : -1;
 
 const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
+  const sendGaEvent = useSendGaUserEvent();
   // const { data: session, status } = useSession();
 
   const [tweetUrl, setTweetUrl] = useState("");
@@ -37,6 +39,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   }, [fetchedTweet]);
 
   const handleFetchTweet = async () => {
+    sendGaEvent("Click on find tweet button");
     setLoadingTweet(true);
     setFetchedTweet(null);
 

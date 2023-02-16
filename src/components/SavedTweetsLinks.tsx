@@ -2,22 +2,41 @@ import React, { HTMLProps } from "react";
 import { useWalletStore } from "src/store";
 import Link from "./Link";
 import clsx from "clsx";
-import { p4eSpace } from "src/configs/spaces";
+import { getP4ESpace } from "src/configs/spaces";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 export type SavedTweetsLinksProps = HTMLProps<HTMLDivElement>;
 
 const getLinks = (
   address: string,
-): { text: string; href: string; openInNewTab?: boolean; authOnly?: boolean }[] => {
+): {
+  text: string;
+  href: string;
+  openInNewTab?: boolean;
+  authOnly?: boolean;
+  gaEvent?: string;
+}[] => {
   const savedTweetLink = `https://polkaverse.com/accounts/${address}#tweets`;
-  const p4eSpaceLink = `https://polkaverse.com/${p4eSpace}`;
+  const p4eSpaceLink = `https://polkaverse.com/${getP4ESpace()}`;
   return [
-    { text: "Twitter Backups", href: p4eSpaceLink, openInNewTab: true },
-    { text: "My Saved Tweets", href: savedTweetLink, openInNewTab: true, authOnly: true },
+    {
+      text: "Twitter Backups",
+      href: p4eSpaceLink,
+      openInNewTab: true,
+      gaEvent: "Go to Twitter Backups Space",
+    },
+    {
+      text: "My Saved Tweets",
+      href: savedTweetLink,
+      openInNewTab: true,
+      authOnly: true,
+      gaEvent: "Go to My Saved Tweets",
+    },
   ];
 };
 
 export default function SavedTweetsLinks(props: SavedTweetsLinksProps) {
+  const sendGaEvent = useSendGaUserEvent();
   const { address } = useWalletStore(state => ({
     address: state.account?.address.toString(),
   }));
@@ -26,13 +45,15 @@ export default function SavedTweetsLinks(props: SavedTweetsLinksProps) {
 
   return (
     <div {...props} className={clsx("flex gap-6", props.className)}>
-      {linksList.map(({ href, text, openInNewTab }) => {
+      {linksList.map(({ href, text, openInNewTab, gaEvent, authOnly }) => {
+        if (authOnly && !address) return null;
         return (
           <Link
             href={href}
             openInNewTab={openInNewTab}
             withArrowIcon={openInNewTab}
             className="!font-normal text-base-blue"
+            onClick={() => gaEvent && sendGaEvent(gaEvent)}
             key={href}>
             {text}
           </Link>

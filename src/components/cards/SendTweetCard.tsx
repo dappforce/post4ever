@@ -13,6 +13,8 @@ import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
 import EnergyAlert from "components/EnergyAlert";
 import { useMyBalance } from "src/hooks/use-balance";
+import { getP4ESpace } from "src/configs/spaces";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -21,6 +23,7 @@ type SendTweetCardProps = {
 };
 
 const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps) => {
+  const sendGaEvent = useSendGaUserEvent();
   const {
     loadingSpaces,
     loadingCreatePost,
@@ -34,10 +37,10 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     account: state.account,
   }));
 
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(getP4ESpace());
 
   useEffect(() => {
-    setSelectedSpaceId(null);
+    setSelectedSpaceId(getP4ESpace());
     if (account) {
       checkSpaceOwnedBy(account);
     }
@@ -48,6 +51,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
   const handleChangeSpaceId = (value?: React.ReactNode) => {
     const spaceId = value as string;
     if (spaceId) {
+      sendGaEvent(`Change space id to ${spaceId}`);
       setSelectedSpaceId(spaceId);
     }
   };
@@ -60,6 +64,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
 
   const handleCreatePostWithSpaceId = () => {
     if (fetchedTweet && account && selectedSpaceId) {
+      sendGaEvent("Click on Publish to Subsocial button");
       createPostWithSpaceId({
         account,
         content: fetchedTweet,
@@ -68,6 +73,12 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
       });
     }
   };
+
+  let disabledButtonTooltip = "";
+  if (!account) disabledButtonTooltip = "Please connect wallet first";
+  else if (!fetchedTweet) disabledButtonTooltip = "Please find a tweet first";
+  else if (!hasToken) disabledButtonTooltip = "Please follow the command above to get some energy";
+  else if (!selectedSpaceId) disabledButtonTooltip = "Please select a space first";
 
   return (
     <WrapperCard id={"send-tweet-card"}>
@@ -82,14 +93,13 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
         <div>
           {loadingSpaces ? (
             <Skeleton className="h-[35px]" />
-          ) : spaces ? (
+          ) : spaces && !disabled ? (
             <Select
+              key="select-space"
+              value={selectedSpaceId ?? undefined}
               label="Space"
-              disabled={disabled}
               onChange={value => handleChangeSpaceId(value)}
-              className={clsx("!rounded-lg bg-[#FAFBFB]", {
-                "cursor-not-allowed": disabled,
-              })}>
+              className={clsx("!rounded-lg bg-[#FAFBFB]")}>
               {spaces.map(space => (
                 <Option key={space.id} value={`${space.id}`} className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
@@ -123,18 +133,10 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           )}
         </div>
 
-        {!hasToken && !disabled && <EnergyAlert />}
+        {!hasToken && !disabled && <EnergyAlert address={account?.address ?? ""} />}
 
-        {!account || !fetchedTweet || !selectedSpaceId ? (
-          <Tooltip
-            className="cursor-not-allowed"
-            message={
-              !account
-                ? "Please connect wallet first"
-                : !fetchedTweet
-                ? "Please find a tweet first"
-                : "Please connect wallet with space first"
-            }>
+        {disabledButtonTooltip ? (
+          <Tooltip className="cursor-not-allowed" message={disabledButtonTooltip}>
             <Button fullWidth className="normal-case" disabled>
               {BUTTON_TEXT}
             </Button>

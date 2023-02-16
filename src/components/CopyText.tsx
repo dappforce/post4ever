@@ -8,6 +8,7 @@ export type CopyTextProps = HTMLProps<HTMLDivElement> & {
   textToCopy?: string;
   textClassName?: string;
   copyButtonClassName?: string;
+  onCopyButtonClick?: () => void;
 };
 
 export default function CopyText({
@@ -15,9 +16,11 @@ export default function CopyText({
   textToCopy,
   textClassName,
   copyButtonClassName,
+  onCopyButtonClick,
   ...props
 }: CopyTextProps) {
   const onClickCopyToClipboard = () => {
+    onCopyButtonClick?.();
     navigator.clipboard.writeText(textToCopy || text);
     toast.success("Copied to clipboard!");
   };

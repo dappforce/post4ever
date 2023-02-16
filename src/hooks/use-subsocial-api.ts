@@ -21,7 +21,7 @@ import {
 import { TweetUserProps, TweetContentProps, TweetWithIncludesProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
 import { WalletAccount } from "@talismn/connect-wallets";
-import { p4eSpace } from "src/configs/spaces";
+import { getP4ESpace } from "src/configs/spaces";
 
 type SavePostContentProps = {
   author: TweetUserProps;
@@ -244,7 +244,7 @@ export const useSubSocialApiHook = () => {
       if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
       const convertedAllSpaceIds = [
-        p4eSpace,
+        getP4ESpace(),
         ...bnsToIds(myOwnSpaceIds),
         ...(editableSpaceIds || []),
       ];
