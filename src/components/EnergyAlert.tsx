@@ -1,11 +1,21 @@
-import { Alert } from "react-daisyui";
+import { Alert, AlertProps } from "react-daisyui";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 import CopyText from "./CopyText";
 import Link from "./Link";
+import clsx from "clsx";
+import { toSubsocialAddress } from "@subsocial/utils";
 
-export default function EnergyAlert() {
+export type EnergyAlertProps = AlertProps & {
+  address: string;
+};
+
+export default function EnergyAlert({ address, ...props }: EnergyAlertProps) {
+  if (!address) return null;
+
   return (
-    <Alert className="rounded-lg border border-base-yellow bg-light-yellow" dataTheme="warning">
+    <Alert
+      className={clsx("rounded-lg border border-base-yellow bg-light-yellow", props.className)}
+      dataTheme="warning">
       <div className="flex flex-col">
         <div className="flex gap-1">
           <HiOutlineExclamationTriangle className="text-2xl text-base-yellow" />
@@ -15,7 +25,7 @@ export default function EnergyAlert() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <span>1. Copy the text below.</span>
-              <CopyText text="!energy 3tcZkDwdQ3dR3PMgrn8rSXBfUcZJkwmtDPvzoV3sqApSHqBw" />
+              <CopyText text={`!energy ${toSubsocialAddress(address)}`} />
             </div>
             <div>
               2. Paste the text into the energy-bot channel in our{" "}

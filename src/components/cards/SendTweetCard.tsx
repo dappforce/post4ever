@@ -13,6 +13,7 @@ import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
 import EnergyAlert from "components/EnergyAlert";
 import { useMyBalance } from "src/hooks/use-balance";
+import { getP4ESpace } from "src/configs/spaces";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -34,7 +35,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     account: state.account,
   }));
 
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(getP4ESpace());
 
   useEffect(() => {
     setSelectedSpaceId(null);
@@ -123,7 +124,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
           )}
         </div>
 
-        {!hasToken && !disabled && <EnergyAlert />}
+        {!hasToken && !disabled && <EnergyAlert address={account?.address ?? ''} />}
 
         {!account || !fetchedTweet || !selectedSpaceId ? (
           <Tooltip
