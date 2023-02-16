@@ -50,7 +50,7 @@ jobs:
                   GH_NEXTAUTH_URL=https://${{ env.name }}-post4ever.subsocial.network
                   GH_NEXT_PUBLIC_OFFCHAIN_URL=https://staging-api.subsocial.network
                   GH_SUBSOCIAL_NODE_URL=wss://rco-para.subsocial.network
-                  GH_NEXT_PUBLIC_P4E_SPACE="1150"                  
+                  GH_NEXT_PUBLIC_P4E_SPACE=1150                  
                   GH_IPFS_URL=https://gw.crustfiles.app
                   GH_NEXT_PUBLIC_AUTH_URL=https://${{ env.name }}-post4ever.subsocial.network
                   GH_NEXT_PUBLIC_AUTH_HEADER=c3ViLTVGQTluUURWZzI2N0RFZDhtMVp5cFhMQm52TjdTRnhZd1Y3bmRxU1lHaU45VFRwdToweDEwMmQ3ZmJhYWQwZGUwNzFjNDFmM2NjYzQzYmQ0NzIxNzFkZGFiYWM0MzEzZTc5YTY3ZWExOWM0OWFlNjgyZjY0YWUxMmRlY2YyNzhjNTEwZGY4YzZjZTZhYzdlZTEwNzY2N2YzYTBjZjM5OGUxN2VhMzAyMmRkNmEyYjc1OTBi 
