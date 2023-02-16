@@ -19,7 +19,7 @@ const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: Side
   }));
 
   const handleChangeAccount = (account: WalletAccount | null) => {
-    sendGaEvent(`Change account to ${account?.name}`);
+    sendGaEvent(`Change account to ${account?.address}`);
     onChangeAccount(account);
   };
 
