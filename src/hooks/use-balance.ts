@@ -34,7 +34,9 @@ export function useBalance(address: string, defaultHasToken = false) {
       setBalance(undefined);
       setEnergy(undefined);
 
-      const unsub = subscribeBalanceAndEnergy(substrateApi, address ?? "");
+      if (!address) return
+
+      const unsub = subscribeBalanceAndEnergy(substrateApi, address);
       return unsub;
     },
     [subscribeBalanceAndEnergy, address],
