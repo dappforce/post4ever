@@ -45,7 +45,8 @@ export default function SavedTweetsLinks(props: SavedTweetsLinksProps) {
 
   return (
     <div {...props} className={clsx("flex gap-6", props.className)}>
-      {linksList.map(({ href, text, openInNewTab, gaEvent }) => {
+      {linksList.map(({ href, text, openInNewTab, gaEvent, authOnly }) => {
+        if (authOnly && !address) return null;
         return (
           <Link
             href={href}
