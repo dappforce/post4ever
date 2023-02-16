@@ -12,6 +12,7 @@ import clsx from "clsx";
 import SuccessDialog from "components/SuccessDialog";
 import { sidePadding } from "styles/common";
 import WalletSelectModal from "components/wallet-connect/WalletSelectModal";
+import SavedTweetsLinks from "components/SavedTweetsLinks";
 
 const Layout = dynamic(() => import("src/components/Layout"), {
   ssr: false,
@@ -50,7 +51,7 @@ const CrossPostPage: NextPage = () => {
   return (
     <>
       <Layout onConnect={handleOpenModal} account={account} accounts={readyAccounts}>
-        <div className={clsx("flex h-screen max-w-full items-start justify-center", sidePadding)}>
+        <div className={clsx("flex max-w-full items-start justify-center pb-8", sidePadding)}>
           <Toaster
             position="bottom-right"
             toastOptions={{
@@ -73,6 +74,7 @@ const CrossPostPage: NextPage = () => {
               fetchedTweet={fetchedTweet}
               onSuccess={handleSuccessSendTweet}
             />
+            <SavedTweetsLinks className="flex justify-center" />
           </div>
         </div>
 

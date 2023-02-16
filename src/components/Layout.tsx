@@ -9,9 +9,9 @@ import Post4Ever from "public/images/Post4Ever.svg";
 import P4 from "public/images/P4.svg";
 import Sidebar from "./Sidebar";
 
-import { useRouter } from "next/router";
 import { sidePadding } from "styles/common";
 import ConnectButton from "./wallet-connect/ConnectButton";
+import Link from "./Link";
 
 type LayoutProps = {
   account?: WalletAccount | null;
@@ -24,7 +24,6 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
   const { setAccount } = useWalletStore(state => ({
     setAccount: state.setAccount,
   }));
-  const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,16 +51,14 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
               sidePadding,
             )}>
             <div className="navbar-start">
-              <button onClick={() => router.push("/")}>
-                <span className="text-2xl font-medium text-primary">
-                  <div className="hidden md:inline">
-                    <Post4Ever className="h-4" />
-                  </div>
-                  <div className="md:hidden">
-                    <P4 />
-                  </div>
+              <Link href="/" className="text-2xl font-medium text-primary">
+                <span className="hidden md:inline">
+                  <Post4Ever className="h-4" />
                 </span>
-              </button>
+                <span className="md:hidden">
+                  <P4 />
+                </span>
+              </Link>
             </div>
             <div className="navbar-end">
               {accounts && accounts.length && account ? (

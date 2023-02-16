@@ -6,12 +6,14 @@
   :root {
     --light-gray: 200deg 13% 95%;
     --light-blue: 224deg 95% 48%;
+    --light-yellow: 54deg 91% 96%;
     --dark-gray: 0deg 0% 85%;
     --disabled-gray: 201deg 12% 67%;
     --link-blue: 222deg 90% 57%;
 
     --base-blue: 210deg 78% 60%;
     --base-pink: 327deg 82% 55%;
+    --base-yellow: 38deg 60% 47%;
 
     --side-padding: 0 90px;
 

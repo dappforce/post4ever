@@ -21,6 +21,7 @@ import {
 import { TweetUserProps, TweetContentProps, TweetWithIncludesProps } from "src/types/common";
 import { SubmittableResult } from "@polkadot/api";
 import { WalletAccount } from "@talismn/connect-wallets";
+import { p4eSpace } from "src/configs/spaces";
 
 type SavePostContentProps = {
   author: TweetUserProps;
@@ -131,11 +132,10 @@ export const useSubSocialApiHook = () => {
   }: SendSignedTxProps) => {
     if (!signer) throw new Error("No signer provided");
 
+    let unsub: (() => void) | undefined = undefined;
     try {
       const tx = await extrinsic.signAsync(address, { signer });
-      const unsub = await tx.send(result =>
-        onSuccessCallback(result, toastId, successCallback, spaceId),
-      );
+      unsub = await tx.send(result => onSuccessCallback(result, toastId, successCallback, spaceId));
     } catch (error) {
       if (error instanceof Error && error.message === "Cancelled") {
         toast("Cancelled!", {
@@ -144,6 +144,8 @@ export const useSubSocialApiHook = () => {
         setLoadingCreatePost(false);
       }
       console.warn({ error });
+    } finally {
+      unsub?.();
     }
   };
 
@@ -241,7 +243,11 @@ export const useSubSocialApiHook = () => {
 
       if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
-      const convertedAllSpaceIds = [...bnsToIds(myOwnSpaceIds), ...(editableSpaceIds || [])];
+      const convertedAllSpaceIds = [
+        p4eSpace,
+        ...bnsToIds(myOwnSpaceIds),
+        ...(editableSpaceIds || []),
+      ];
 
       const spaces = await subsocialApi.findPublicSpaces(convertedAllSpaceIds);
       if (spaces) {

@@ -135,7 +135,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           <Button
             className={clsx({
               "btn-gradient w-full whitespace-nowrap rounded-lg": !fetchedTweet,
-              "btn-outline btn-accent btn": fetchedTweet,
+              "btn-outline btn-accent btn": fetchedTweet || loadingTweet,
               "cursor-not-allowed": disabled,
             })}
             disabled={errorInput || loadingTweet}
@@ -161,7 +161,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-start py-2 font-normal text-neutral">
+            <div className="flex flex-col items-start pt-2 font-normal text-neutral">
               <TweetBody text={fetchedTweet.text} />
             </div>
             {fetchedTweet.media ? (

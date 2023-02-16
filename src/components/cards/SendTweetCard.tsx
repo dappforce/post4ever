@@ -11,6 +11,8 @@ import { useWalletStore } from "src/store";
 import { TweetWithIncludesProps } from "src/types/common";
 import { SUB_IPFS_NODE_URL } from "src/configs/sdk-network-config";
 import { rootInput } from "styles/common";
+import EnergyAlert from "components/EnergyAlert";
+import { useMyBalance } from "src/hooks/use-balance";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -27,17 +29,19 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
     createPostWithSpaceId,
     checkSpaceOwnedBy,
   } = useSubSocialApiHook();
+  const { hasToken } = useMyBalance(true);
   const { account } = useWalletStore(state => ({
     account: state.account,
   }));
 
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
+
   useEffect(() => {
+    setSelectedSpaceId(null);
     if (account) {
       checkSpaceOwnedBy(account);
     }
   }, [account]);
-
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
 
   const BUTTON_TEXT = "Publish to Subsocial";
 
@@ -118,6 +122,8 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
             </Select>
           )}
         </div>
+
+        {!hasToken && !disabled && <EnergyAlert />}
 
         {!account || !fetchedTweet || !selectedSpaceId ? (
           <Tooltip
