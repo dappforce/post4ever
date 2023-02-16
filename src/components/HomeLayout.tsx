@@ -5,19 +5,25 @@ import React from "react";
 
 import Button from "./Button";
 import Container from "./Container";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 type HomeLayoutProps = {
   children: React.ReactNode;
 };
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
+  const sendGaEvent = useSendGaUserEvent();
+  const onEnterAppClick = () => {
+    sendGaEvent("Click on Enter App button");
+  };
+
   return (
     <div className="relative flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 bg-white py-4">
         <Container className="flex items-center justify-between">
           <Post4Ever className="h-3.5 md:h-4" />
           <div>
-            <Button href="/crosspost" target="_blank">
+            <Button href="/crosspost" target="_blank" onClick={onEnterAppClick}>
               Enter App
             </Button>
           </div>
