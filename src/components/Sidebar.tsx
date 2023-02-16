@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@material-tailwind/react";
 import { useWalletStore } from "src/store";
 import type { WalletAccount } from "@talismn/connect-wallets";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 type SidebarProps = {
   checked: boolean;
@@ -12,15 +13,18 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ accounts, checked, onCheck, onChangeAccount, children }: SidebarProps) => {
+  const sendGaEvent = useSendGaUserEvent();
   const { setAccounts } = useWalletStore(state => ({
     setAccounts: state.setAccounts,
   }));
 
   const handleChangeAccount = (account: WalletAccount | null) => {
+    sendGaEvent(`Change account to ${account?.name}`);
     onChangeAccount(account);
   };
 
   const handleDisconnect = () => {
+    sendGaEvent("Disconnect wallet");
     setAccounts(undefined);
     handleChangeAccount(null);
   };

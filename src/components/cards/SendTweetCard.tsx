@@ -14,6 +14,7 @@ import { rootInput } from "styles/common";
 import EnergyAlert from "components/EnergyAlert";
 import { useMyBalance } from "src/hooks/use-balance";
 import { getP4ESpace } from "src/configs/spaces";
+import { useSendGaUserEvent } from "src/utils/ga/events";
 
 type SendTweetCardProps = {
   disabled: boolean;
@@ -22,6 +23,7 @@ type SendTweetCardProps = {
 };
 
 const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps) => {
+  const sendGaEvent = useSendGaUserEvent();
   const {
     loadingSpaces,
     loadingCreatePost,
@@ -49,6 +51,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
   const handleChangeSpaceId = (value?: React.ReactNode) => {
     const spaceId = value as string;
     if (spaceId) {
+      sendGaEvent(`Change space id to ${spaceId}`);
       setSelectedSpaceId(spaceId);
     }
   };
@@ -61,6 +64,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
 
   const handleCreatePostWithSpaceId = () => {
     if (fetchedTweet && account && selectedSpaceId) {
+      sendGaEvent("Click on Publish to Subsocial button");
       createPostWithSpaceId({
         account,
         content: fetchedTweet,
