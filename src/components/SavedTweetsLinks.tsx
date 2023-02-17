@@ -20,17 +20,17 @@ const getLinks = (
   const p4eSpaceLink = `https://polkaverse.com/${getP4ESpace()}`;
   return [
     {
-      text: "Twitter Backups",
-      href: p4eSpaceLink,
-      openInNewTab: true,
-      gaEvent: "Go to Twitter Backups Space",
-    },
-    {
       text: "My Saved Tweets",
       href: savedTweetLink,
       openInNewTab: true,
       authOnly: true,
       gaEvent: "Go to My Saved Tweets",
+    },
+    {
+      text: "Public Twitter Backups",
+      href: p4eSpaceLink,
+      openInNewTab: true,
+      gaEvent: "Go to Public Twitter Backups Space",
     },
   ];
 };
