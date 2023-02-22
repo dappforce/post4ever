@@ -93,14 +93,6 @@ select:-webkit-autofill:focus {
 .btn-outline.btn-accent {
   background: linear-gradient(white, white) padding-box,
     linear-gradient(to right, hsla(327, 83%, 56%, 1), hsla(213, 75%, 61%, 1)) border-box;
-  border-radius: 10px;
-  border: 1px solid transparent;
-}
-
-.btn-outline.btn-accent {
-  background: linear-gradient(white, white) padding-box,
-    linear-gradient(to right, hsla(327, 83%, 56%, 1), hsla(213, 75%, 61%, 1)) border-box;
-  border-radius: 10px;
   border: 1px solid transparent;
 }
 
