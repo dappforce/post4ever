@@ -75,7 +75,7 @@ const Layout = ({ onConnect, account, accounts, children }: LayoutProps) => {
               )}
             </div>
           </div>
-          <main className="relative">{children}</main>
+          <main className="relative text-base">{children}</main>
         </div>
       </Sidebar>
     </>
