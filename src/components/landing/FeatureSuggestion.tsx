@@ -25,7 +25,7 @@ export default function FeatureSuggestion(props: FeatureSuggestionProps) {
       <Button
         size="large"
         className="mt-2 lg:text-lg"
-        href="https://forms.clickup.com/9008022125/p/f/8ceq0kd-8261/FLJSBRH2PYGGK5K7Z9/suggestafeature"
+        href="https://post4e.hellonext.co/"
         rel="noopener noreferrer"
         target="_blank">
         Suggest Feature
