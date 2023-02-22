@@ -29,7 +29,7 @@ export default function EnergyAlert({ address, ...props }: EnergyAlertProps) {
       className={clsx("rounded-lg border border-base-yellow bg-light-yellow", props.className)}
       dataTheme="warning">
       <div className="flex flex-col">
-        <div className="flex gap-1">
+        <div className="flex items-center gap-1">
           <HiOutlineExclamationTriangle className="text-2xl text-base-yellow" />
           <span className="font-semibold text-base-yellow">You need energy to save a tweet</span>
         </div>

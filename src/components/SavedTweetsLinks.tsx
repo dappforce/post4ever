@@ -52,7 +52,7 @@ export default function SavedTweetsLinks(props: SavedTweetsLinksProps) {
             href={href}
             openInNewTab={openInNewTab}
             withArrowIcon={openInNewTab}
-            className="text-base !font-normal text-base-blue"
+            className="!font-normal text-base-blue"
             onClick={() => gaEvent && sendGaEvent(gaEvent)}
             key={href}>
             {text}
