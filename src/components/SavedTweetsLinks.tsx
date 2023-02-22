@@ -4,6 +4,7 @@ import Link from "./Link";
 import clsx from "clsx";
 import { getP4ESpace } from "src/configs/spaces";
 import { useSendGaUserEvent } from "src/utils/ga/events";
+import { toSubsocialAddress } from "@subsocial/utils";
 
 export type SavedTweetsLinksProps = HTMLProps<HTMLDivElement>;
 
@@ -16,7 +17,7 @@ const getLinks = (
   authOnly?: boolean;
   gaEvent?: string;
 }[] => {
-  const savedTweetLink = `https://polkaverse.com/accounts/${address}#tweets`;
+  const savedTweetLink = `https://polkaverse.com/accounts/${toSubsocialAddress(address)}#tweets`;
   const p4eSpaceLink = `https://polkaverse.com/${getP4ESpace()}`;
   return [
     {
