@@ -19,8 +19,10 @@ type FetchTweetCardProps = {
   onFetchTweet: (fetchedTweet: TweetWithIncludesProps | null) => void;
 };
 
-const returnRemovedUrlIdx = (firstCondition: boolean, secondCondition: boolean) =>
-  firstCondition && secondCondition ? -2 : -1;
+const returnRemovedUrlIdx = (firstCondition: boolean, secondCondition: boolean) => {
+  if (!firstCondition && !secondCondition) return 0;
+  return firstCondition && secondCondition ? -2 : -1;
+};
 
 const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
   const sendGaEvent = useSendGaUserEvent();
@@ -65,9 +67,18 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       }
       if (media && media.length) isAnyMedia = true;
 
+      let processedText = text;
+      const numOfRemovedUrl = returnRemovedUrlIdx(isAnyMedia, isAnyReferencedTweet);
+      if (numOfRemovedUrl > 0) {
+        processedText = removeTrailingUrl(
+          text,
+          returnRemovedUrlIdx(isAnyMedia, isAnyReferencedTweet),
+        );
+      }
+
       const payload = {
         ...data,
-        text: removeTrailingUrl(text, returnRemovedUrlIdx(isAnyMedia, isAnyReferencedTweet)),
+        text: processedText,
         users,
         media,
         tweets,
