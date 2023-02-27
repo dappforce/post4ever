@@ -46,7 +46,8 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
     setFetchedTweet(null);
 
     try {
-      const tweetId = tweetUrl.split("/")[5];
+      const [tweetWithoutUrl] = tweetUrl.split("?");
+      const tweetId = tweetWithoutUrl.split("/")[5];
 
       const response = await fetch(`/api/crosspost?tweetId=${tweetId}`, {
         method: "GET",
