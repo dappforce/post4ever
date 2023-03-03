@@ -9,12 +9,12 @@ type TweetBodyProps = {
 };
 
 const TweetBody = ({ text }: TweetBodyProps) => {
-  const parsedMD = useMemo(() => {
-    const result = parseTextToMarkdown(text);
-    return result;
-  }, [text]);
+  // const parsedMD = useMemo(() => {
+  //   const result = parseTextToMarkdown(text);
+  //   return result;
+  // }, [text]);
 
-  return <span>{JSON.stringify(parsedMD)}</span>;
+  return <span>asdfasdfads,{JSON.stringify(text)}</span>;
 };
 
 export default TweetBody;
