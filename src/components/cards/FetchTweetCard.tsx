@@ -162,8 +162,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       </div>
       {loadingTweet ? <SkeletonCard /> : <></>}
 
-      {fetchedTweet && JSON.stringify(fetchedTweet)}
-      {/* {fetchedTweet ? (
+      {fetchedTweet ? (
         <Card
           key={fetchedTweet.id}
           bordered={false}
@@ -179,7 +178,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
               </div>
             </div>
             <div className="flex flex-col items-start pt-2 font-normal text-neutral">
-              <TweetBody text={fetchedTweet.text} />
+              {/* <TweetBody text={fetchedTweet.text} /> */}
             </div>
             {fetchedTweet.media ? (
               <div className="twitter-image-container">
@@ -192,7 +191,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
             ) : null}
           </Card.Body>
         </Card>
-      ) : null} */}
+      ) : null}
     </WrapperCard>
   );
 };
