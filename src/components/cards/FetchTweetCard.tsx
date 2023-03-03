@@ -86,7 +86,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       };
 
       setFetchedTweet(payload);
-      // onFetchTweet(payload);
+      onFetchTweet(payload);
     } catch (error) {
       alert((error as any).message);
       console.warn({ error });
@@ -168,7 +168,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           bordered={false}
           className="h-fit rounded-lg border border-dark-gray bg-white shadow-[0px_4px_+13px_#E1E6E8]">
           <Card.Body className="card-body gap-[14px] px-4 py-5">
-            <div className="flex flex-row items-center justify-center gap-2 self-start">
+            {/* <div className="flex flex-row items-center justify-center gap-2 self-start">
               <Avatar src={tweetAuthor?.profile_image_url ?? ""} shape="circle" size="xs" />
               <div>
                 <div className="font-bold text-neutral">{tweetAuthor?.name ?? "Unknown name"}</div>
@@ -176,7 +176,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
                   {`@${tweetAuthor?.username ?? "Unknown username"}`}
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col items-start pt-2 font-normal text-neutral">
               {/* <TweetBody text={fetchedTweet.text} /> */}
             </div>
