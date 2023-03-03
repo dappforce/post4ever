@@ -15,14 +15,15 @@ const TweetBody = ({ text }: TweetBodyProps) => {
   }, [text]);
 
   return (
-    // <ReactMarkdown
-    //   linkTarget="_blank"
-    //   className="whitespace-pre-line"
-    //   components={{
-    //     a: ({ node, ...props }) => <a className="text-link-blue" {...props} />,
-    //   }}>
-    parsedMD
-    // </ReactMarkdown>
+    <ReactMarkdown
+    // linkTarget="_blank"
+    // className="whitespace-pre-line"
+    // components={{
+    //   a: ({ node, ...props }) => <a className="text-link-blue" {...props} />,
+    // }}>
+    >
+      {parsedMD}
+    </ReactMarkdown>
   );
 };
 
