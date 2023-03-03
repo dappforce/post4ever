@@ -86,7 +86,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       };
 
       setFetchedTweet(payload);
-      onFetchTweet(payload);
+      // onFetchTweet(payload);
     } catch (error) {
       alert((error as any).message);
       console.warn({ error });
