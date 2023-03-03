@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+// import ReactMarkdown from "react-markdown";
+// import remarkGfm from "remark-gfm";
 
 import { parseTextToMarkdown } from "src/utils/string";
 
@@ -14,17 +14,7 @@ const TweetBody = ({ text }: TweetBodyProps) => {
     return result;
   }, [text]);
 
-  return (
-    <ReactMarkdown
-    // linkTarget="_blank"
-    // className="whitespace-pre-line"
-    // components={{
-    //   a: ({ node, ...props }) => <a className="text-link-blue" {...props} />,
-    // }}>
-    >
-      {parsedMD}
-    </ReactMarkdown>
-  );
+  return <span>{parsedMD}</span>;
 };
 
 export default TweetBody;
