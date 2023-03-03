@@ -162,7 +162,8 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
       </div>
       {loadingTweet ? <SkeletonCard /> : <></>}
 
-      {fetchedTweet ? (
+      {fetchedTweet && JSON.stringify(fetchedTweet)}
+      {/* {fetchedTweet ? (
         <Card
           key={fetchedTweet.id}
           bordered={false}
@@ -191,7 +192,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
             ) : null}
           </Card.Body>
         </Card>
-      ) : null}
+      ) : null} */}
     </WrapperCard>
   );
 };
