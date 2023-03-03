@@ -14,7 +14,7 @@ const TweetBody = ({ text }: TweetBodyProps) => {
     return result;
   }, [text]);
 
-  return <span>{parsedMD}</span>;
+  return <span>{JSON.stringify(parsedMD)}</span>;
 };
 
 export default TweetBody;
