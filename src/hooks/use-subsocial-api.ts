@@ -231,14 +231,14 @@ export const useSubSocialApiHook = () => {
     try {
       alert("INIT API");
       const subsocialApi = await initializeApi();
-      alert("FINISH INIT API");
 
-      // const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
+      const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
 
-      // if (!subsocialApi) return null;
+      if (!subsocialApi) return null;
 
-      // const editableSpaceIds = spacesWithMyPermissions?.map(space => space.spaceId);
-      // const myOwnSpaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
+      const editableSpaceIds = spacesWithMyPermissions?.map(space => space.spaceId);
+      const myOwnSpaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
+      alert("FINISH my own space ids " + JSON.stringify(myOwnSpaceIds));
 
       // if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
