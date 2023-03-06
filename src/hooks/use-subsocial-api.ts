@@ -229,7 +229,9 @@ export const useSubSocialApiHook = () => {
     setLoadingSpaces(true);
 
     try {
+      alert("INIT API");
       const subsocialApi = await initializeApi();
+      alert("FINISH INIT API");
 
       // const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
 
