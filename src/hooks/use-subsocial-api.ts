@@ -251,6 +251,7 @@ export const useSubSocialApiHook = () => {
         setSpaces(null);
       }
     } catch (error) {
+      alert((error as any).message);
       console.warn({ error });
     } finally {
       setLoadingSpaces(false);
