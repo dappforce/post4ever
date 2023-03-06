@@ -240,11 +240,7 @@ export const useSubSocialApiHook = () => {
 
       if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
-      const convertedAllSpaceIds = [
-        getP4ESpace(),
-        ...bnsToIds(myOwnSpaceIds),
-        ...(editableSpaceIds || []),
-      ];
+      const convertedAllSpaceIds = [getP4ESpace(), ...myOwnSpaceIds, ...(editableSpaceIds || [])];
 
       const spaces = await subsocialApi.findPublicSpaces(convertedAllSpaceIds);
       if (spaces) {
