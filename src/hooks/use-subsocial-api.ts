@@ -133,8 +133,9 @@ export const useSubSocialApiHook = () => {
     if (!signer) throw new Error("No signer provided");
 
     try {
-      const tx = await extrinsic.signAsync(address, { signer });
-      tx.send(result => onSuccessCallback(result, toastId, successCallback, spaceId));
+      await extrinsic.signAndSend(address, { signer }, result =>
+        onSuccessCallback(result, toastId, successCallback, spaceId),
+      );
     } catch (error) {
       if (error instanceof Error && error.message === "Cancelled") {
         toast("Cancelled!", {
