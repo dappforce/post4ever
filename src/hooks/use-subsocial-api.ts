@@ -231,25 +231,25 @@ export const useSubSocialApiHook = () => {
     try {
       const subsocialApi = await initializeApi();
 
-      const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
+      // const spacesWithMyPermissions = await checkSpacesWithMyPermissions(account.address);
 
-      if (!subsocialApi) return null;
+      // if (!subsocialApi) return null;
 
-      const editableSpaceIds = spacesWithMyPermissions?.map(space => space.spaceId);
-      const myOwnSpaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
+      // const editableSpaceIds = spacesWithMyPermissions?.map(space => space.spaceId);
+      // const myOwnSpaceIds = await subsocialApi.blockchain.spaceIdsByOwner(account.address);
 
-      if (!myOwnSpaceIds && !editableSpaceIds) return null;
+      // if (!myOwnSpaceIds && !editableSpaceIds) return null;
 
-      const convertedAllSpaceIds = [getP4ESpace(), ...myOwnSpaceIds, ...(editableSpaceIds || [])];
+      // const convertedAllSpaceIds = [getP4ESpace(), ...myOwnSpaceIds, ...(editableSpaceIds || [])];
 
-      const spaces = await subsocialApi.findPublicSpaces(convertedAllSpaceIds);
-      if (spaces) {
-        setSpaces(spaces);
-      }
+      // const spaces = await subsocialApi.findPublicSpaces(convertedAllSpaceIds);
+      // if (spaces) {
+      //   setSpaces(spaces);
+      // }
 
-      if (spaces && !spaces.length) {
-        setSpaces(null);
-      }
+      // if (spaces && !spaces.length) {
+      //   setSpaces(null);
+      // }
     } catch (error) {
       alert((error as any).message);
       console.warn({ error });
