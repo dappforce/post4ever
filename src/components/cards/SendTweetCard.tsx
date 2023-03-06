@@ -82,6 +82,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
 
   return (
     <WrapperCard id={"send-tweet-card"}>
+      {JSON.stringify({ spaces })}
       <h2
         className={clsx("text-lg font-bold text-neutral", {
           "text-disabled-gray": disabled,
