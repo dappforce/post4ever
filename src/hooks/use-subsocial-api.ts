@@ -269,28 +269,38 @@ export const useSubSocialApiHook = () => {
     try {
       const { web3Enable, web3FromSource } = await import("@polkadot/extension-dapp");
 
+      alert("Enabling web3...");
       const extensions = await web3Enable("EverPost dapp");
 
+      alert("Awaiting injector...");
       const injector = await web3FromSource(account.source);
 
+      alert("Init api...");
       const subsocialApi = await initializeApi();
 
+      alert("finding author...");
       const author = content.users?.find(user => user.id === content.author_id);
 
+      alert("in if null return...");
       if (!extensions || !subsocialApi || !author) return null;
 
+      alert("save post content...");
       const cid = await savePostContent({ author, content, subsocialApi });
 
-      const substrateApi = await subsocialApi.blockchain.api;
+      alert("saving to subsocial... " + cid);
+      const substrateApi = await subsocialApi.substrateApi;
 
+      alert("finishing... ");
       if (!substrateApi) return new Error("Error when calling substrateApi");
 
+      alert("getting extrinsic... ");
       const extrinsic = substrateApi.tx.posts.createPost(
         spaceId,
         { RegularPost: null },
         IpfsContent(cid),
       );
 
+      alert("Extrinsic created, sending signed tx...");
       sendSignedTx({
         extrinsic,
         address: account.address,
@@ -299,8 +309,11 @@ export const useSubSocialApiHook = () => {
         toastId,
         successCallback,
       });
+      console.log("finished signing...");
     } catch (error) {
       console.warn({ error });
+      alert((error as any).message);
+      setLoadingCreatePost(false);
     }
   };
 
