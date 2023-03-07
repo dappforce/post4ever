@@ -2305,10 +2305,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subsocial/api@^0.7.9":
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/@subsocial/api/-/api-0.7.9.tgz#96082337d67698ae95741c62392793333df9d6ce"
-  integrity sha512-/gABxlARl2yuvmncriWOkDeVr5/Idty4W1Lsm7lW1ag/+vwytS6q7jQ9pc1SxnLn2iseqXN2gkjLFF8HIeL0AQ==
+"@subsocial/api@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@subsocial/api/-/api-0.8.2.tgz#82661576accce0fdf3e590d378bcc511a165b233"
+  integrity sha512-7eoUVwj0K4SVh9R+z356MDL4gvpOd4SoKqBPhLE4twg4oWtSDml2Y66EGOoFn6pSLdjcR7gvsmgB5KAM7CXxmg==
   dependencies:
     "@polkadot/api" latest
     "@polkadot/types" latest
@@ -2327,13 +2327,14 @@
     "@polkadot/api" latest
     lodash.camelcase "^4.3.0"
 
-"@subsocial/utils@latest":
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.7.9.tgz#7391812df03b8a324bde43776438611ee4116afb"
-  integrity sha512-uu8HtclBOEB8llt1Fxu4cnKFCDovYPQh/NOegnx2aZU8M/vbMRbRgzrVaSPHuQSbiZff3QcjmH0WltIdyWy7RQ==
+"@subsocial/utils@latest", "@subsocial/utils@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.8.2.tgz#f7d25b45288b5bc121208564fab8f9aa52e1c6d9"
+  integrity sha512-S3fwkph4bdWrA5JyzUSogW/DxPxYXywpQJssu6yv9+rICUBikrXc/SLso1RMf4KXjlDDN2RVqNonBdIisqjvHw==
   dependencies:
     "@polkadot/util-crypto" latest
     "@sindresorhus/slugify" "^1.1.0"
+    autolinker "^4.0.0"
     bignumber.js "^9.0.1"
     bn.js "^5.1.1"
     chalk "^3.0.0"
@@ -3066,6 +3067,13 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
+
+autolinker@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-4.0.0.tgz#aa1f9a52786b727b0ecee8cd7d4a97e0e3ef59f1"
+  integrity sha512-fl5Kh6BmEEZx+IWBfEirnRUU5+cOiV0OK7PEt0RBKvJMJ8GaRseIOeDU3FKf4j3CE5HVefcjHmhYPOcaVt0bZw==
+  dependencies:
+    tslib "^2.3.0"
 
 autoprefixer@^10.4.12:
   version "10.4.13"

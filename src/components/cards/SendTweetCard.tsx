@@ -79,6 +79,7 @@ const SendTweetCard = ({ disabled, fetchedTweet, onSuccess }: SendTweetCardProps
   else if (!fetchedTweet) disabledButtonTooltip = "Please find a tweet first";
   else if (!hasToken) disabledButtonTooltip = "Please follow the command above to get some energy";
   else if (!selectedSpaceId) disabledButtonTooltip = "Please select a space first";
+  else if (loadingSpaces) disabledButtonTooltip = "Loading spaces...";
 
   return (
     <WrapperCard id={"send-tweet-card"}>
