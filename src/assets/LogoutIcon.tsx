@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later.
+// Copyright (C) 2022-2023 DAPPFORCE PTE. LTD., aleksandr.siman@gmail.com.
+// Full Notice is available in the root folder.
+
 const LogoutIcon = (
   <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
