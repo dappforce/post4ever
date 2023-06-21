@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider>
         {/* <SessionProvider session={pageProps.session}> */}
         <main className={`${unbounded.variable} font-sans`}>
-          <GoogleAnalytics gtagUrl="/js/ga-stat.js" strategy="lazyOnload" trackPageViews />
+          <GoogleAnalytics strategy="lazyOnload" trackPageViews />
           <Component {...pageProps} />
         </main>
         {/* </SessionProvider> */}
