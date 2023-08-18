@@ -1,6 +1,6 @@
 # NOTICE
 
-post4ever — An app that makes tweets permanent and censorship-resistant. — by DAPPFORCE PTE. LTD.
+post4ever — An app that makes X posts permanent and censorship-resistant. — by DAPPFORCE PTE. LTD.
 
 Copyright (C) 2022-2023 DAPPFORCE PTE. LTD.
 

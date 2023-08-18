@@ -28,7 +28,7 @@ export default function HowToSection(props: HowToSectionProps) {
           className="mt-8 w-full md:w-auto lg:text-lg"
           href="/crosspost"
           target="_blank">
-          Save Tweets
+          Save X posts
         </Button>
       </div>
       <Image

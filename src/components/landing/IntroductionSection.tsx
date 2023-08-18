@@ -25,12 +25,12 @@ export default function IntroductionSection(props: IntroductionSectionProps) {
           <div className="flex flex-1 flex-col gap-4 lg:text-lg">
             <p>
               In fact, Twitter can remove your content at will, or even ban you, permanently
-              deleting all of your tweets.
+              deleting all of your X posts.
             </p>
             <p>
-              With SubTweet, you can easily cross-post your tweets to Subsocial’s decentralized
+              With Post4ever, you can easily cross-post your X posts to Subsocial’s decentralized
               network. This means your content is stored on a censorship-resistant blockchain – your
-              tweets will live forever.
+              X posts will live forever.
             </p>
             <div className="sm:mt-2 lg:mt-4">
               <Button
@@ -38,7 +38,7 @@ export default function IntroductionSection(props: IntroductionSectionProps) {
                 href="/crosspost"
                 target="_blank"
                 size="large">
-                Save Tweets
+                Save X posts
               </Button>
             </div>
           </div>

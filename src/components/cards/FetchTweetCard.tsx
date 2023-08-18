@@ -133,7 +133,7 @@ const FetchTweetCard = ({ disabled, onFetchTweet }: FetchTweetCardProps) => {
           />
           {errorInput && (
             <label className="text-xs text-[#f44336]">
-              Invalid link, please enter the link to a tweet on Twitter.
+              Invalid link, please enter the link to a tweet on X.
             </label>
           )}
         </div>

@@ -17,7 +17,7 @@ const HeroSection = () => {
       <Container className="flex flex-col-reverse items-center gap-8 py-12 md:grid md:grid-cols-[1.25fr,1fr]">
         <div className="flex flex-col items-center justify-center md:items-start">
           <h1 className="mb-6 text-center font-unbounded text-2xl font-medium !leading-snug text-white md:mb-8 md:text-left md:text-3xl lg:text-4xl">
-            Back up your tweets to Subsocial’s censorship resistant network
+            Back up your X posts to Subsocial’s censorship resistant network
           </h1>
           <div>
             <Button

@@ -140,7 +140,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
                         width="32"
                         height="32"
                       />
-                      <div>{session?.user?.name ?? "Twitter user"}</div>
+                      <div>{session?.user?.name ?? "X user"}</div>
                     </div>
                     <div className="flex flex-col items-start py-2 px-4">{tweet.text}</div>
                     <div className="flex items-center">
@@ -168,7 +168,7 @@ const TweetPage: NextPage<AuthenticatedPageProps> = ({ user }) => {
             </button>
             <a>{loadingCreatePost ? "Sending tx, open your console" : ""}</a>
             <a>
-              {savedPosts.length > 2 ? "Max 2 posts to be saved!" : "Select tweets to be saved"}
+              {savedPosts.length > 2 ? "Max 2 posts to be saved!" : "Select X posts to be saved"}
             </a>
           </div>
         </div>

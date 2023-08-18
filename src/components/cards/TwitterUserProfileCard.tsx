@@ -40,7 +40,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
         className={clsx("text-lg font-bold text-neutral", {
           "text-disabled-gray": disabled,
         })}>
-        1. Connect your Twitter account
+        1. Connect your X account
       </h2>
       <div
         className={clsx("flex flex-row justify-start gap-4", {
@@ -88,7 +88,7 @@ const TwitterUserProfileCard = ({ disabled, authenticatedUser }: TwitterUserProf
                 callbackUrl: `${process.env.NEXT_PUBLIC_AUTH_URL}/crosspost`,
               })
             }>
-            Connect Twitter
+            Connect X
           </Button>
         )}
       </div>

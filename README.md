@@ -1,4 +1,4 @@
-An app to help you save your tweets to [Subsocial](https://subsocial.network/), making them permanent and censorship-resistant in the blockchain. 
+An app to help you save your X posts to [Subsocial](https://subsocial.network/), making them permanent and censorship-resistant in the blockchain. 
 
 Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
@@ -6,22 +6,22 @@ Built using Next.js, Subsocial SDK, and node-twitter-api-v2.
 
 ✅ Login to your Twitter account (using NextAuth Provider)
 
-✅ Show your tweets (excluding replies, text-only)
+✅ Show your X posts (excluding replies, text-only)
 
-✅ Choose tweets to backup (limited to 2 tweets each submission)
+✅ Choose X posts to backup (limited to 2 X posts each submission)
 
-✅ Submit tweets to SoonSocialX (Subsocial testnet) via Subsocial SDK
+✅ Submit X posts to SoonSocialX (Subsocial testnet) via Subsocial SDK
 
 ## App Demo
 
 ![](login-and-create-posts.gif)
 
-Logging in using your own Twitter account and submitting tweets to be sent to Subsocial chain
+Logging in using your own Twitter account and submitting X posts to be sent to Subsocial chain
 
 
 ![](create-post-success.gif)
 
-Tweets sent and submission successful
+X posts sent and submission successful
 
 Example of succesful txs (connect to SoonSocialX network on Polkadot.js apps):
 
